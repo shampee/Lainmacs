@@ -31,5 +31,8 @@
 ;; Load Witchmacs theme
 (load-theme 'Witchmacs t)
 
+;; Set font
+(set-frame-font "Px437 Verite 8x16 12" nil t)
+
 ;; Load config.org for init.el configuration
 (org-babel-load-file (expand-file-name "~/.emacs.d/config.org"))
