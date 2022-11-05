@@ -36,6 +36,8 @@ Also, to get autocompletion on C, C++ and Java files, you'll need to install the
 (optional) =mvn= maven for java project handling through =meghanada=
 * Things-to-do
 - Add and configure some extra packages
+ + Configure Lisp
+ + Configure Scheme
 - +Make dashboard cooler+
  + Make dashboard EVEN cooler!
  + Maybe add rotating dashboard pictures
