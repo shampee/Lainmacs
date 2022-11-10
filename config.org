@@ -316,7 +316,7 @@ The frontend of Lainmacs; without this there'd be no Lain in your Emacs startup 
     (dashboard-setup-startup-hook)
     (setq dashboard-items '((recents . 5)))
     (setq dashboard-banner-logo-title "L A I N M A C S - The schizoid Emacs distribution!")
-    (setq dashboard-startup-banner "~/.emacs.d/ditherlainvector.png")
+    (setq dashboard-startup-banner "~/.emacs.d/lainvector.png")
     (setq dashboard-center-content t)
     (setq dashboard-show-shortcuts nil)
     (setq dashboard-set-init-info t)
@@ -665,9 +665,7 @@ I use meghanada to provide very neat autocompletion when editing Java files. I u
 **** Lisp
 #+BEGIN_SRC emacs-lisp
 
-#+END_SRC
-**** Scheme
-#+BEGIN_SRC emacs-lisp
+  ; Scheme
   (use-package geiser
     :defer nil
     :ensure t)
@@ -676,12 +674,12 @@ I use meghanada to provide very neat autocompletion when editing Java files. I u
     :defer nil
     :ensure t)
 
-  (use-package emacs-ac-geiser
-    :defer nil
-    :ensure t
-    :config
-    :hook
-    ((geiser-mode-hook geiser-repl-mode-hook) . ac-geiser-setup)
-    (eval-after-load "auto-complete" (add-to-list 'ac-modes 'geiser-repl-mode))
+  ;(use-package emacs-ac-geiser
+  ;  :defer nil
+  ;  :ensure t
+  ;  :config
+  ;  :hook
+  ;  ((geiser-mode-hook geiser-repl-mode-hook) . ac-geiser-setup)
+  ;  (eval-after-load "auto-complete" (add-to-list 'ac-modes 'geiser-repl-mode))
 
 #+END_SRC
