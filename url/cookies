@@ -1,16 +1,0 @@
-;; Emacs-W3 HTTP cookies file
-;; Automatically generated file!!! DO NOT EDIT!!!
-
-(setq url-cookie-storage
- '((".oracle.com"
-  [url-cookie "ak_bmsc" "7FC2C61818A63B0D2602CDB2F47BA0A6~000000000000000000000000000000~YAAQjQVJFwnseIqFAQAAUNQQxRIfXzwJEeombjM//61imnJT0ctkgqAo66mT0x4HR6QFhX1aPV4MBwKJkoouU1skhvL/IUyKkJw/SgmGnzMKXBxWenRak2zri3LiKpis7b59f6agmZcmACFZ+prX+OlBOp8Ep3e7LUE4qpOYgW7zxaoHHLjTVgbivkxRAzROBBSEnfsoU8ZATrbONeO47Hz6kEvRkzmhTjEI8YUxh4MSZIAbMEIFxGgNOJmBgogdQkhbHsE5ZQ4JH/Lmo+w/kxtppaVHtRMOVj9ACj1q2md7s6Spr1HIt4Yf5i6NmZzkkXdqUYjhXopu0iRaQBKStTquRzMfLwxcfvzeNLDQ9dNDOv0RQUEJ4Aib1g==" "ons jan 18 15:28:12 2023 GMT" "/" ".oracle.com" nil]))
-)
-(setq url-cookie-secure-storage
- '((".oracle.com"
-  [url-cookie "bm_sv" "BAA37666A1685DA27CCFF30B37CD13E2~YAAQjQVJF4iKeYqFAQAAjtcWxRLav2EHlIabnY1JAkQfYOB4DUAN4uSbvagL4p35Qecq9Ajt8SlIq1ot8CRTA2AHAFf4liR8KOi3a8gcyqike1XQsktPP/KJ9FEhIU+UKiP+PsJomFLROf3HI3PxhXNN29EZpfVZLRX1E2ZpwXKcJMYuGZC+AMUOX8hEVVAXf1Vz5ADPZHJ/Ao040kqZmrL+0ReVx6h4Vexg1yLAGrnKXajeRobvhh/6wzAidRA0~1" "ons jan 18 15:28:19 2023 GMT" "/" ".oracle.com" t]))
-)
-
-;; Local Variables:
-;; version-control: never
-;; no-byte-compile: t
-;; End:
