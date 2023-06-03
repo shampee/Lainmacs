@@ -16,3 +16,8 @@ ido.last
 .#config.org
 projects
 history
+irony
+bookmarks
+session.*
+.cask
+.cider-repl-history
