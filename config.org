@@ -977,7 +977,8 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
   ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
   (setq lsp-keymap-prefix "C-c l")
   :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
-         (clojure-mode . lsp)
+         ;(clojure-mode . lsp)
+         (go-mode . lsp)
          ;; if you want which-key integration
          (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp)
@@ -1030,7 +1031,6 @@ I use meghanada to provide very neat autocompletion when editing Java files. I u
 ** Lisp/Scheme
 *** Code
 #+BEGIN_SRC emacs-lisp
-  (setq inferior-lisp-program "ros -Q run")
 
   (defvar electrify-return-match
     "[\]}\)\"]"
@@ -1075,9 +1075,9 @@ I use meghanada to provide very neat autocompletion when editing Java files. I u
     :init
     (setq parinfer-rust-auto-download t)
     :config
-    :hook
-    ((lisp-mode scheme-mode emacs-lisp-mode) . parinfer-rust-mode))
-
+    ;:hook
+    ;((lisp-mode scheme-mode emacs-lisp-mode) . parinfer-rust-mode)
+    )
   ; Lispy
   (use-package lispy
     :defer nil
@@ -1095,6 +1095,7 @@ I use meghanada to provide very neat autocompletion when editing Java files. I u
     :defer nil
     :ensure t
     :config
+    (setq inferior-lisp-program "ros -Q run")
     (slime-setup '(slime-fancy slime-quicklisp slime-asdf)))
 
   (use-package slime-company
@@ -1123,7 +1124,7 @@ I use meghanada to provide very neat autocompletion when editing Java files. I u
         cider-repl-history-file ".cider-repl-history"  ;; not squiggly-related, but I like it
         nrepl-log-messages t)                          ;; not necessary, but useful for trouble-shooting
     (flycheck-clojure-setup))                        ;; run setup *after* cider load
-    
+
 
   (use-package flycheck-clojure
     :ensure t
@@ -1133,4 +1134,11 @@ I use meghanada to provide very neat autocompletion when editing Java files. I u
     (eval-after-load 'flycheck
        '(setq flycheck-display-errors-function #'flycheck-pos-tip-error-messages))
     (add-hook 'after-init-hook #'global-flycheck-mode))
+#+END_SRC
+
+** Go
+*** Code
+#+BEGIN_SRC emacs-lisp
+  (use-package go-mode
+  :defer t :ensure t)
 #+END_SRC
