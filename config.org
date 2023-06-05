@@ -1066,8 +1066,9 @@ I use meghanada to provide very neat autocompletion when editing Java files. I u
     (add-hook 'lisp-mode-hook 'setup-lisp-stuff)
     (add-hook 'scheme-mode-hook 'setup-lisp-stuff)
     (add-hook 'clojure-mode-hook 'setup-lisp-stuff)
+    (add-hook 'clojurec-mode-hook 'setup-lisp-stuff)
     :hook
-    ((lisp-mode scheme-mode emacs-lisp-mode clojure-mode) . paredit-mode))
+    ((lisp-mode scheme-mode emacs-lisp-mode clojure-mode clojurec-mode) . paredit-mode))
 
 
   ; Parinfer
