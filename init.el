@@ -34,7 +34,13 @@
 
 ;; Set font
 (set-frame-font "SGI Screen 10" nil t)
+(defun reload ()
+  (org-babel-load-file (expand-file-name "~/.emacs.d/config.org")))
 
+(defun open-init ()
+  (find-file "~/.emacs.d/init.el"))
+(defun open-conf ()
+  (find-file "~/.emacs.d/config.org"))
 ;; Load config.org for init.el configuration
 (org-babel-load-file (expand-file-name "~/.emacs.d/config.org"))
 (custom-set-variables
