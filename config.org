@@ -976,7 +976,7 @@ Company is the autocompletion frontend that takes all the backends and gives you
     (interactive)
     (company-abort)
     (insert " "))
-  (define-key company-active-map (kbd "SPC") #'company-abort-and-insert-space)
+  (define-key company-active-map (kbd "SPC") #'company-abort-and-insert-space))
 
   ;:hook
   ;((java-mode c-mode c++-mode) . company-mode))
@@ -1046,7 +1046,7 @@ Irony is the company backend for C and C++
 :ensure t
 :config
 :hook
-((c++-mode c-mode) . irony-mode)
+;((c++-mode c-mode) . irony-mode)
 ('irony-mode-hook) . 'irony-cdb-autosetup-compile-options)
 #+END_SRC
 ** Java
@@ -1068,7 +1068,6 @@ I use meghanada to provide very neat autocompletion when editing Java files. I u
 ** Lisp/Scheme
 *** Code
 #+BEGIN_SRC emacs-lisp
-
   (defvar electrify-return-match
     "[\]}\)\"]"
     "If this regexp matches the text after the cursor, do an \"electric\"
@@ -1083,13 +1082,11 @@ I use meghanada to provide very neat autocompletion when editing Java files. I u
         (if (looking-at electrify-return-match)
         (save-excursion (newline-and-indent)))
         (newline arg)
-        (indent-according-to-mode))))
+        (indent-according-to-mode)))
 
     ;; Using local-set-key in a mode-hook is a better idea.
-    (global-set-key (kbd "RET") 'electrify-return-if-match)
+    ;;;;(global-set-key (kbd "RET") 'electrify-return-if-match)
 
-  ; Paredit
-  (use-package paredit
     :defer nil
     :ensure t
     :config
