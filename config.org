@@ -948,6 +948,13 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
   ;; Manual preview key for `affe-grep'
   (consult-customize affe-grep :preview-key "M-."))
 #+END_SRC
+** Initialize =reformatter=
+*** Code
+#+BEGIN_SRC emacs-lisp
+  (use-package reformatter
+  :defer t :ensure t :diminish ormolu)
+#+END_SRC
+
 * Programming section
 ** Initialize =company=
 *** Description
