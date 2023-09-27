@@ -1087,9 +1087,6 @@ I use meghanada to provide very neat autocompletion when editing Java files. I u
     ;; Using local-set-key in a mode-hook is a better idea.
     ;;;;(global-set-key (kbd "RET") 'electrify-return-if-match)
 
-    :defer nil
-    :ensure t
-    :config
     (defun setup-lisp-stuff ()
         (paredit-mode t)
         (turn-on-eldoc-mode)
@@ -1097,6 +1094,12 @@ I use meghanada to provide very neat autocompletion when editing Java files. I u
         (local-set-key (kbd "RET") 'electrify-return-if-match)
         (eldoc-add-command 'electrify-return-if-match)
         (show-paren-mode t))
+
+  ; Paredit
+  (use-package paredit
+    :defer nil
+    :ensure t
+    :config
     (add-hook 'lisp-mode-hook 'setup-lisp-stuff)
     (add-hook 'scheme-mode-hook 'setup-lisp-stuff)
     (add-hook 'clojure-mode-hook 'setup-lisp-stuff)
