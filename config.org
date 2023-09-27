@@ -150,7 +150,7 @@ Super - Control - <arrow>
 #+END_SRC
 ** Set default browser
 #+BEGIN_SRC emacs-lisp
-(setq browse-url-browser-function 'eww-browse-url)
+;(setq browse-url-browser-function #'eww-browse-url)
 #+END_SRC
 * =Org= mode
 ** Description
@@ -161,7 +161,7 @@ One of the main selling points of Emacs! no Emacs distribution is complete witho
     :config
     (add-hook 'org-mode-hook 'org-indent-mode)
     (add-hook 'org-mode-hook
-              '(lambda ()
+              #'(lambda ()
                  (visual-line-mode 1))))
 
   (use-package org-indent
@@ -267,6 +267,20 @@ Eshell cannot handle ncurses programs and in certain interpreters (Python, GHCi)
 (global-set-key (kbd "<s-C-return>") 'eshell-other-window)
 #+END_SRC
 * Use-package section
+** Initialize =quelpa= and =quelpa-use-package=
+*** Code
+#+BEGIN_SRC emacs-lisp
+(unless (package-installed-p 'quelpa)
+  (with-temp-buffer
+    (url-insert-file-contents "https://raw.githubusercontent.com/quelpa/quelpa/master/quelpa.el")
+    (eval-buffer)
+    (quelpa-self-upgrade)))
+(quelpa
+ '(quelpa-use-package
+   :fetcher git
+   :url "https://github.com/quelpa/quelpa-use-package.git"))
+(require 'quelpa-use-package)
+#+END_SRC
 ** Initialize =auto-package-update=
 *** Description
 Auto-package-update automatically updates and removes old packages
@@ -335,6 +349,7 @@ I prefer powerline over spaceline, but the default powerline themes don't work f
    	(spaceline-spacemacs-theme)
    	:hook
    	('after-init-hook) . 'powerline-reset)
+  (spaceline-toggle-treesit-inspect-off)  ;; broken for some reason and needs to be off
 #+END_SRC
 ** Initialize =dashboard=
 *** Description
