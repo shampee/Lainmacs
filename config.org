@@ -453,9 +453,11 @@ When doing C-s to search, you get this very nice and neat mini-buffer that you c
 *** Code
 #+BEGIN_SRC emacs-lisp
 (use-package goggles
-:hook ((prog-mode text-mode) . goggles-mode)
-:config
-(setq-default goggles-pulse t)) ;; set to nil to disable pulsing
+  :ensure t
+  :defer nil
+  :hook ((prog-mode text-mode) . goggles-mode)
+  :config
+  (setq-default goggles-pulse t)) ;; set to nil to disable pulsing
 #+END_SRC
 ** Initialize =evil= mode
 *** Description
@@ -516,6 +518,8 @@ For the longest time I used the default way of switching and killing buffers in 
 *** Code
 #+BEGIN_SRC emacs-lisp
 (use-package ido
+  :ensure t
+  :defer nil
   :init
   (ido-mode 1)
   :config
@@ -661,7 +665,7 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
 
     ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
     ;; (setq vertico-cycle t)
-  
+
   (use-package vertico-posframe
    :defer  t
    :ensure t
@@ -702,6 +706,7 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
 
     ;; Optionally use the `orderless' completion style.
   (use-package orderless
+   :ensure t
    :init
     ;; Configure a custom style dispatcher (see the Consult wiki)
     ;; (setq orderless-style-dispatchers '(+orderless-dispatch)
@@ -889,6 +894,8 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
 *** Code
 #+BEGIN_SRC emacs-lisp
   (use-package corfu
+    :ensure t
+    :defer nil
     ;; Optional customizations
     ;; (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
     ;; (corfu-auto t)                 ;; Enable auto completion
