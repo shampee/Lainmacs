@@ -473,6 +473,11 @@ Vim keybindings in Emacs. Please note that Lainmacs has NO other evil-mode compa
   :config
   (evil-mode 1))
 
+(use-package evil-collection
+  :after evil
+  :ensure t
+  :config
+  (evil-collection-init))
 #+END_SRC
 ** Initialize =beacon=
 *** Description
