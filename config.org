@@ -22,7 +22,7 @@ Yes - No! layers! onions have layers! ogres have layers!
 #+END_QUOTE
 As opposed to many other Emacs distributions, Lainmacs has ZERO customization layers which means you can just jump in, look at the config file and start editing away! After all, Emacs works best when it's customized to your own liking!
 * Quick install
-#+BEGIN_SRC 
+#+BEGIN_SRC bash
 git clone https://github.com/shampee/Lainmacs ~/.emacs.d
 #+END_SRC
 After running this command, the first time you run Emacs will download all of the specified packages in the config.org file, so please be patient!
@@ -150,7 +150,7 @@ Super - Control - <arrow>
 #+END_SRC
 ** Set default browser
 #+BEGIN_SRC emacs-lisp
-;(setq browse-url-browser-function #'eww-browse-url)
+(setq browse-url-browser-function #'eww-browse-url)
 #+END_SRC
 * =Org= mode
 ** Description
@@ -652,8 +652,7 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
    :defer  t
    :ensure t
    :init
-   (vertico-mode)
-   (vertico-grid-mode))
+   (vertico-mode))
     ;; Different scroll margin
     ;; (setq vertico-scroll-margin 0)
 
@@ -917,7 +916,9 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
     ;; See also `corfu-excluded-modes'.
     :init
     (global-corfu-mode)
+    (corfu-popupinfo-mode)
     (setq corfu-auto t
+      corfu-popupinfo-delay (cons 0.5 0.5)
       corfu-quit-no-match 'separator)
     :config
     (define-key corfu-map (kbd "C-n") #'corfu-next)
@@ -1129,28 +1130,25 @@ I use meghanada to provide very neat autocompletion when editing Java files. I u
     ((lisp-mode scheme-mode emacs-lisp-mode clojure-mode) . lispy-mode))
 
   ; Slime
-  (use-package slime
+  (use-package sly
     :defer nil
     :ensure t
     :config
-    (setq inferior-lisp-program "ros -Q run")
-    (slime-setup '(slime-fancy slime-quicklisp slime-asdf)))
+    (setq inferior-lisp-program "ros -Q run"))
 
-  (use-package slime-company
-    :defer nil
-    :ensure t
-    :after (slime company)
-    :config (setq slime-company-completion 'fuzzy
-                slime-company-after-completion 'slime-company-just-one-space))
 
   ; Guile
   (use-package geiser
     :defer nil
-    :ensure t)
-    ;:config
-    ;(setq geiser-guile-load-init-file t)
+    :ensure t
+    :config
+    (setq geiser-guile-load-init-file t))
 
   (use-package geiser-guile
+    :defer nil
+    :ensure t)
+
+  (use-package geiser-chicken
     :defer nil
     :ensure t)
 
