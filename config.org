@@ -493,7 +493,7 @@ Avy is a very useful package; instead of having to move your cursor to a line th
 *** Code
 #+BEGIN_SRC emacs-lisp
 (use-package avy
-	:ensure t)
+	:ensure nil)
 	  ;; :bind
 	  ;; ("M-s" . avy-goto-char))
 #+END_SRC
