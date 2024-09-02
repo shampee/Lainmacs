@@ -29,11 +29,6 @@ After running this command, the first time you run Emacs will download all of th
 
 Also, to get autocompletion on C, C++ and Java files, you'll need to install the corresponding company backend servers first (you'll be automatically prompted to do so the first time you open a relevant file)
 * Dependencies
-=clang= as backend for C and C++ autocompletion
-
-=llvm= to install irony server
-
-(optional) =mvn= maven for java project handling through =meghanada=
 * Things-to-do
 - Add and configure some extra packages
  + Configure Lisp
@@ -1031,44 +1026,9 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
 ;; optionally if you want to use debugger
 (use-package dap-mode)
 #+END_SRC
-** C & C++
-*** Description
-Irony is the company backend for C and C++
+** Go
 *** Code
 #+BEGIN_SRC emacs-lisp
-(use-package company-c-headers
-:defer nil
-:ensure t)
-
-(use-package company-irony
-:defer nil
-:ensure t
-:config
-(setq company-backends '((company-c-headers
-                            company-dabbrev-code
-                            company-irony))))
-(use-package irony
-:defer nil
-:ensure t
-:config
-:hook
-;((c++-mode c-mode) . irony-mode)
-('irony-mode-hook) . 'irony-cdb-autosetup-compile-options)
-#+END_SRC
-** Java
-*** Description
-I use meghanada to provide very neat autocompletion when editing Java files. I use it mainly for autocompletion but there's a ton of other things it can do, automatic imports, for example.
-*** Code
-#+BEGIN_SRC emacs-lisp
-(use-package meghanada
-:ensure t
-:defer nil
-:config
-(add-hook 'java-mode-hook
-            (lambda ()
-            (meghanada-mode t)))
-(setq meghanada-java-path "java")
-(setq meghanada-maven-path "mvn"))
 #+END_SRC
 
 ** Lisp/Scheme
