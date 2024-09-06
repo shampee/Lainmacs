@@ -1069,10 +1069,6 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
 ;; optionally if you want to use debugger
 (use-package dap-mode)
 #+END_SRC
-** Go
-*** Code
-#+BEGIN_SRC emacs-lisp
-#+END_SRC
 
 ** Lisp/Scheme
 *** Code
