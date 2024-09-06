@@ -1025,6 +1025,7 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
     :load-path "lisp/chan"
     :config (require 'chan))
 #+END_SRC
+* Programming section
 ** Initialize =yasnippet=
 *** Description
 Yasnippet provides useful snippets, nothing to do with Company but still useful when used in conjuction with it
@@ -1069,8 +1070,7 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
 ;; optionally if you want to use debugger
 (use-package dap-mode)
 #+END_SRC
-
-** Lisp/Scheme
+** Lisp/Scheme/Racket
 *** Code
 #+BEGIN_SRC emacs-lisp
   (defvar electrify-return-match
@@ -1092,13 +1092,13 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
     ;; Using local-set-key in a mode-hook is a better idea.
     ;;;;(global-set-key (kbd "RET") 'electrify-return-if-match)
 
-    (defun setup-lisp-stuff ()
-        (paredit-mode t)
-        (turn-on-eldoc-mode)
-        (eldoc-add-command 'paredit-backward-delete 'paredit-close-round)
-        (local-set-key (kbd "RET") 'electrify-return-if-match)
-        (eldoc-add-command 'electrify-return-if-match)
-        (show-paren-mode t))
+  (defun setup-lisp-stuff ()
+      (paredit-mode t)
+      (turn-on-eldoc-mode)
+      (eldoc-add-command 'paredit-backward-delete 'paredit-close-round)
+      (local-set-key (kbd "RET") 'electrify-return-if-match)
+      (eldoc-add-command 'electrify-return-if-match)
+      (show-paren-mode t))
 
   ; Paredit
   (use-package paredit
@@ -1110,18 +1110,17 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
     (add-hook 'scheme-mode-hook 'setup-lisp-stuff)
     (add-hook 'clojure-mode-hook 'setup-lisp-stuff)
     (add-hook 'clojurec-mode-hook 'setup-lisp-stuff)
+    (add-hook 'racket-mode-hook 'setup-lisp-stuff)
     :hook
-    ((lisp-mode scheme-mode emacs-lisp-mode clojure-mode clojurec-mode) . paredit-mode))
-
+    ((racket-mode lisp-mode scheme-mode emacs-lisp-mode clojure-mode clojurec-mode) . paredit-mode))
 
   ; Parinfer
   (use-package parinfer-rust-mode
     :init
-    (setq parinfer-rust-auto-download t)
-    :config
+    (setq parinfer-rust-auto-download t))
     ;:hook
-    ;((lisp-mode scheme-mode emacs-lisp-mode) . parinfer-rust-mode)
-    )
+    ;((lisp-mode scheme-mode emacs-lisp-mode) . parinfer-rust-mode))
+
   ; Lispy
   (use-package lispy
     :defer nil
@@ -1133,17 +1132,44 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
         (lispy-mode 1)))
     (add-hook 'minibuffer-setup-hook 'conditionally-enable-lispy)
     :hook
-    ((lisp-mode scheme-mode emacs-lisp-mode clojure-mode) . lispy-mode))
+    ((racket-mode lisp-mode scheme-mode emacs-lisp-mode clojure-mode) . lispy-mode))
 
-  ; Slime
+  ; Elsa
+  (use-package elsa
+   :defer nil :ensure t
+   :config (elsa-setup-font-lock))
+
+  ; flycheck-elsa
+  (use-package flycheck-elsa
+   :defer nil :ensure t
+   :config (setq flycheck-elsa-backend 'eask)
+   :hook (emacs-lisp-mode . flycheck-elsa-setup))
+
+  ; Sly
   (use-package sly
-    :defer nil
     :ensure t
     :config
-    (setq inferior-lisp-program "ros -Q run"))
+    (setq inferior-lisp-program "sbcl"))
+  (use-package sly-asdf
+    :ensure t)
+  (use-package sly-overlay
+    :ensure t)
+  (use-package sly-quicklisp
+    :ensure t)
+  (use-package sly-macrostep
+    :ensure t)
+  (use-package sly-repl-ansi-color
+    :ensure t)
 
+  ;; ; Slime
+  ;; (use-package slime
+  ;;   :defer nil
+  ;;   :ensure t
+  ;;   :config
+  ;;   (slime-setup '(slime-fancy slime-quicklisp slime-asdf))
+  ;;   (setq inferior-lisp-program "sbcl"))
 
-  ; Guile
+  ; Schemes
   (use-package geiser
     :defer nil
     :ensure t
@@ -1163,10 +1189,12 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
     :ensure t :defer t
     :config
     (setq
-        cider-repl-history-file ".cider-repl-history"  ;; not squiggly-related, but I like it
-        nrepl-log-messages t)                          ;; not necessary, but useful for trouble-shooting
-    (flycheck-clojure-setup))                        ;; run setup *after* cider load
-
+        ;; not squiggly-related, but I like it
+        cider-repl-history-file ".cider-repl-history" 
+        ;; not necessary, but useful for trouble-shooting
+        nrepl-log-messages t)
+    ;; run setup *after* cider load
+    (flycheck-clojure-setup))
 
   (use-package flycheck-clojure
     :ensure t
@@ -1178,9 +1206,3 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
     (add-hook 'after-init-hook #'global-flycheck-mode))
 #+END_SRC
 
-** Go
-*** Code
-#+BEGIN_SRC emacs-lisp
-  (use-package go-mode
-  :defer t :ensure t)
-#+END_SRC
