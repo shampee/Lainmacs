@@ -989,7 +989,7 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
 *** Code
 #+BEGIN_SRC emacs-lisp
   (use-package reformatter
-  :defer t :ensure t :diminish ormolu)
+  :defer nil :ensure t)
 #+END_SRC
 
 * Programming section
