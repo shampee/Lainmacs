@@ -450,6 +450,7 @@ When doing C-s to search, you get this very nice and neat mini-buffer that you c
 (use-package goggles
   :ensure t
   :defer nil
+  :diminish (goggles-mode)
   :hook ((prog-mode text-mode) . goggles-mode)
   :config
   (setq-default goggles-pulse t)) ;; set to nil to disable pulsing
@@ -471,6 +472,7 @@ Vim keybindings in Emacs. Please note that Lainmacs has NO other evil-mode compa
 (use-package evil-collection
   :after evil
   :ensure t
+  :diminish (evil-collection-unimpaired-mode)
   :config
   (evil-collection-init))
 #+END_SRC
@@ -1066,6 +1068,7 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
   ; Paredit
   (use-package paredit
     :defer nil
+    :diminish (paredit-mode eldoc-mode)
     :ensure t
     :config
     (add-hook 'lisp-mode-hook 'setup-lisp-stuff)
@@ -1088,6 +1091,7 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
   (use-package lispy
     :defer nil
     :ensure t
+    :diminish (lispy-mode)
     :config
     (defun conditionally-enable-lispy ()
         (when (eq this-command 'eval-expression)
