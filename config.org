@@ -223,14 +223,14 @@ Eshell cannot handle ncurses programs and in certain interpreters (Python, GHCi)
       (lambda nil
         (concat
          (if (string= (eshell/pwd) (getenv "HOME"))
-             (propertize "~" 'face `(:foreground "#99CCFF"))
+             (propertize "~" 'face `(:foreground "#22CCFF"))
            (replace-regexp-in-string
             (getenv "HOME")
-            (propertize "~" 'face `(:foreground "#99CCFF"))
-            (propertize (eshell/pwd) 'face `(:foreground "#99CCFF"))))
+            (propertize "~" 'face `(:foreground "#22CCFF"))
+            (propertize (eshell/pwd) 'face `(:foreground "#22CCFF"))))
          (if (= (user-uid) 0)
-             (propertize " α " 'face `(:foreground "#FF6666"))
-          (propertize " λ " 'face `(:foreground "#A6E22E"))))))
+             (propertize " α " 'face `(:foreground "#226666"))
+          (propertize " λ " 'face `(:foreground "#06E22E"))))))
 
 (setq eshell-highlight-prompt nil)
 #+END_SRC
