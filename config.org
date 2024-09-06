@@ -553,13 +553,15 @@ Utilize asynchronous processes whenever possible
   :ensure t
   :diminish (page-break-lines-mode visual-line-mode))
 #+END_SRC
-** Initialize =undo-tree=
+** Initialize =form-feed-st=
 *** Code
 #+BEGIN_SRC emacs-lisp
-(use-package undo-tree
+(use-package form-feed-st
   :ensure t
-  :diminish undo-tree-mode)
+  :diminish (form-feed-st-mode)
+  :config (global-form-feed-st-mode))
 #+END_SRC
+** Initialize =undo-tree=
 ** Initialize =treemacs=
 *** Description
 Neat side-bar file and project explorer
