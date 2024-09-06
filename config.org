@@ -991,9 +991,32 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
   (use-package reformatter
   :defer nil :ensure t)
 #+END_SRC
+** Initialize =vterm=
 *** Code
 #+BEGIN_SRC emacs-lisp
+(use-package vterm
+  :ensure t)
+#+END_SRC
+** Initialize =eat=
+*** Code
+#+BEGIN_SRC emacs-lisp
+(use-package eat
+  :pin nongnu
+  :custom
+  (eat-kill-buffer-on-exit t)
   :config
+  (delete [?\C-u] eat-semi-char-non-bound-keys) ; make C-u work in Eat terminals like in normal terminals
+  (delete [?\C-g] eat-semi-char-non-bound-keys) ; ditto for C-g
+  (eat-update-semi-char-mode-map)
+  (global-set-key (kbd "s-<return>") 'eat)
+  ;; XXX: Awkward workaround for the need to call eat-reload after changing Eat's keymaps,
+  ;; but reloading from :config section causes infinite recursion because :config wraps with-eval-after-load.
+  (defvar eat--prevent-use-package-config-recursion nil)
+  (unless eat--prevent-use-package-config-recursion
+    (setq eat--prevent-use-package-config-recursion t)
+    (eat-reload))
+  (makunbound 'eat--prevent-use-package-config-recursion))
+#+END_SRC
 ** Initialize =yasnippet=
 *** Description
 Yasnippet provides useful snippets, nothing to do with Company but still useful when used in conjuction with it
