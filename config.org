@@ -564,6 +564,20 @@ Utilize asynchronous processes whenever possible
   :config (global-form-feed-st-mode))
 #+END_SRC
 ** Initialize =undo-tree=
+*** Code
+#+BEGIN_SRC emacs-lisp
+  (use-package undo-tree
+    :ensure t
+    :diminish (undo-tree-mode)
+    :init
+    (global-undo-tree-mode)
+    (evil-set-undo-system 'undo-tree)
+    :config
+    (setq
+     undo-tree-history-directory-alist
+     `(("." . ,(format "%s/.cache/undo" (getenv "HOME"))))))
+    (evil-set-undo-system 'undo-tree)
+#+END_SRC
 ** Initialize =treemacs=
 *** Description
 Neat side-bar file and project explorer
