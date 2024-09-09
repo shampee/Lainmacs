@@ -1008,7 +1008,6 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
   (delete [?\C-u] eat-semi-char-non-bound-keys) ; make C-u work in Eat terminals like in normal terminals
   (delete [?\C-g] eat-semi-char-non-bound-keys) ; ditto for C-g
   (eat-update-semi-char-mode-map)
-  (global-set-key (kbd "s-<return>") 'eat)
   ;; XXX: Awkward workaround for the need to call eat-reload after changing Eat's keymaps,
   ;; but reloading from :config section causes infinite recursion because :config wraps with-eval-after-load.
   (defvar eat--prevent-use-package-config-recursion nil)
