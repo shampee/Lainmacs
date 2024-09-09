@@ -1,3 +1,6 @@
+;;; init.el --- init file for Emacs  -*- lexical-binding: t; indent-tabs-mode: nil -*-
+
+
 ;; Make emacs startup faster
 (setq gc-cons-threshold 402653184
       gc-cons-percentage 0.6)
