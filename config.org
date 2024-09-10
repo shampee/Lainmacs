@@ -554,7 +554,7 @@ Utilize asynchronous processes whenever possible
 (use-package form-feed-st
   :ensure t
   :diminish (form-feed-st-mode)
-  :config (global-form-feed-st-mode))
+  :hook ((prog-mode text-mode) . form-feed-st-mode))
 #+END_SRC
 ** Initialize =undo-tree=
 *** Code
