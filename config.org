@@ -335,26 +335,24 @@ Diminish hides minor modes to prevent cluttering your mode line
 (use-package ef-themes
   :ensure t)
 #+END_SRC
-** Initialize =spaceline=
+** Initialize =simple-modeline=
 *** Description
-I tried spaceline and didn't like it. What I did like was its theme
+I tried spaceline, powerline and didn't like either.
 *** Code
 #+BEGIN_SRC emacs-lisp
-(use-package spaceline
-  :ensure t)
-#+END_SRC
-** Initialize =powerline= and utilize the spaceline theme
-*** Description
-I prefer powerline over spaceline, but the default powerline themes don't work for me for whatever reason, so I use the spaceline theme
-*** Code
-#+BEGIN_SRC emacs-lisp
-(use-package powerline
-   	:ensure t
-   	:init
-   	(spaceline-spacemacs-theme)
-   	:hook
-   	('after-init-hook) . 'powerline-reset)
-  (spaceline-toggle-treesit-inspect-off)  ;; broken for some reason and needs to be off
+  (use-package simple-modeline
+    :ensure t
+    :hook (after-init . simple-modeline-mode)
+    :config
+    (setq simple-modeline-segments
+    '((simple-modeline-segment-modified simple-modeline-segment-buffer-name simple-modeline-segment-position simple-modeline-segment-major-mode)
+        (simple-modeline-segment-minor-modes simple-modeline-segment-input-method simple-modeline-segment-eol simple-modeline-segment-encoding simple-modeline-segment-vc simple-modeline-segment-misc-info simple-modeline-segment-process)))
+    ;; Makes it so the misc section not unimportant anymore.
+    (defun simple-modeline-segment-misc-info ()
+      "Displays the current value of `mode-line-misc-info' in the mode-line."
+      (let ((misc-info (string-trim (format-mode-line mode-line-misc-info 'simple-modeline-important))))
+        (unless (string= misc-info "")
+          (concat " " misc-info)))))
 #+END_SRC
 ** Initialize =dashboard=
 *** Description
