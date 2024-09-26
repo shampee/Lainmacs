@@ -17,7 +17,7 @@
  
 (add-hook 'emacs-startup-hook 'startup/revert-file-name-handler-alist)
 (add-hook 'emacs-startup-hook 'startup/reset-gc)
-;
+
 
 ;; Initialize melpa repo
 (require 'package)
@@ -58,9 +58,8 @@
   (load bootstrap-file nil 'nomessage))
 
 ;; Load theme for Lainmacs
+(use-package ef-themes :ensure t)
 (load-theme 'ef-dream t)
-
-
 
 ;; Set font
 (set-frame-font "Iosevka Comfy Motion 12" nil t)
