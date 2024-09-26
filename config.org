@@ -203,6 +203,31 @@ One of the main selling points of Emacs! no Emacs distribution is complete witho
       (define-key org-remark-mode-map (kbd "C-c n r") #'org-remark-remove))
     :config (org-remark-global-tracking-mode +1))
 #+END_SRC
+* Secrets
+#+BEGIN_SRC emacs-lisp
+(defvar m/erc-nick nil                 "The ERC nick to use.")
+(defvar m/erc-password nil             "The ERC password to use.")
+(defvar m/erc-port nil                 "The ERC port to use.")
+(defvar m/erc-server nil               "The ERC server to use.")
+
+(defvar m/elfeed-feeds nil             "A list of RSS feeds for elfeed.")
+(defvar m/user-full-name nil           "The full name of user.")
+(defvar m/user-mail-address nil        "The email address of user.")
+(defvar m/mail-signature nil           "The mail signature.")
+
+(defvar m/mail-smtp-server nil         "The smtp server for mail.")
+(defvar m/mail-smtp-port nil           "The smtp port for mail.")
+(defvar m/mail-smtp-user nil           "The smtp user for mail.")
+
+(let ((m/secret-file "~/.emacs.d/.secret.el"))
+  (when (file-readable-p m/secret-file)
+    (load m/secret-file)))
+#+END_SRC
+* =password-store=
+#+BEGIN_SRC emacs-lisp
+  (use-package password-store
+    :ensure t)
+#+END_SRC
 * Eshell
 ** Why Eshell?
 We are using Emacs, so we might as well implement as many tools from our workflow into it as possible
