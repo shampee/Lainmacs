@@ -1,0 +1,41 @@
+alias .. cd .. $*
+alias ... cd ../.. $*
+alias A sudo apt $*
+alias _ sudo $*
+alias a apt $*
+alias aI A install -y $*
+alias aP A purge -y $*
+alias aR A remove -y $*
+alias aS apt search $*
+alias aSH apt show $*
+alias aU A upgrade -y $*
+alias aaR A autoremove -y $*
+alias aaa au;aU;aaR $*
+alias au A update $*
+alias cp $HOME/bin/cpg $*
+alias dL dpkg -L $*
+alias dir dir --color=auto $*
+alias dl dpkg -l $*
+alias egrep egrep --color=auto $*
+alias fd fdfind $*
+alias fdh fd --exclude ext $*
+alias fgrep fgrep --color=auto $*
+alias gi guix package -i $*
+alias gl guix package --list-installed $*
+alias gp guix package $*
+alias gpu guix pull && guix package -u $*
+alias gr guix package -r $*
+alias grep grep --color=auto $*
+alias gs guix package -s $*
+alias gsh guix shell $*
+alias l ls -cthrl $*
+alias la ls -ctrhal $*
+alias lg lazygit $*
+alias ll ls -ctrhAl $*
+alias ls ls --group-directories-first --color=auto $*
+alias mkdir mkdir -p $*
+alias mv $HOME/bin/mvg $*
+alias sctl _ systemctl $*
+alias usctl systemctl --user $*
+alias v nvim $*
+alias vdir vdir --color=auto $*
