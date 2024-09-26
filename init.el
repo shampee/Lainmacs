@@ -145,11 +145,15 @@
               (exwm-workspace-rename-buffer exwm-title))))
 
 (defun toggle-float ()
+  "Toggle between if the window should be floating or not."
   (exwm-floating-toggle-floating))
+
 (defun toggle-modeline ()
-	(exwm-layout-toggle-mode-line))
+  "Toggle between if the window should have a modeline or not."
+  (exwm-layout-toggle-mode-line))
+
 (defun toggle-float-and-modeline ()
-  "Does just that."
+  "Do just that."
   (toggle-float)
   (toggle-modeline))
 
