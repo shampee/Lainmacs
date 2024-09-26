@@ -86,7 +86,7 @@ Emacs breaks certain modes when it has line-numbers-mode enabled, (like docview 
   (setq-default standard-indent 4)
   (setq c-basic-offset tab-width)
   (setq-default electric-indent-inhibit t)
-  (setq-default indent-tabs-mode t)
+  (setq-default indent-tabs-mode nil) ;; fuark no!
   (setq backward-delete-char-untabify-method 'nil)
 #+END_SRC
 ** Enable prettify symbols mode
@@ -155,9 +155,7 @@ One of the main selling points of Emacs! no Emacs distribution is complete witho
   (use-package org
     :config
     (add-hook 'org-mode-hook 'org-indent-mode)
-    (add-hook 'org-mode-hook
-              #'(lambda ()
-                 (visual-line-mode 1))))
+    (add-hook 'org-mode-hook #'(lambda () (visual-line-mode 1))))
 
   (use-package org-indent
     :diminish org-indent-mode)
@@ -204,13 +202,7 @@ One of the main selling points of Emacs! no Emacs distribution is complete witho
       (define-key org-remark-mode-map (kbd "C-c n [") #'org-remark-view-prev)
       (define-key org-remark-mode-map (kbd "C-c n r") #'org-remark-remove))
     :config (org-remark-global-tracking-mode +1))
-
-
-
 #+END_SRC
-
-#+RESULTS:
-
 * Eshell
 ** Why Eshell?
 We are using Emacs, so we might as well implement as many tools from our workflow into it as possible
