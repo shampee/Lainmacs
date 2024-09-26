@@ -159,23 +159,41 @@
 ;; Configuring windows when they appear
 (defun configure-window-by-class ()
   "Configure window by class."
+  (interactive)
   (pcase exwm-class-name
-	("mpv" (toggle-float-and-modeline))
-	("pavucontrol" (toggle-float-and-modeline))
-	("Godot" (toggle-float-and-modeline))
-	("Blender" (toggle-float-and-modeline))
-	("Electrum" (toggle-float-and-modeline))
-	("gpa" (toggle-float-and-modeline))
-	("Tor Browser" (toggle-float-and-modeline))))
+    ;("Alacritty" (toggle-modeline))
+    ("Firefox-esr" (toggle-modeline))
+    ("xarchiver" (toggle-float-and-modeline))
+    ("mpv" (toggle-float-and-modeline))
+    ("pavucontrol" (toggle-float-and-modeline))
+    ("Godot" (toggle-float-and-modeline))
+    ("Blender" (toggle-float-and-modeline))
+    ("electrum" (toggle-float-and-modeline))
+    ("Gpa" (toggle-float-and-modeline))
+    ("Tor Browser" (toggle-float-and-modeline))))
 (add-hook 'exwm-manage-finish-hook #'configure-window-by-class)
 
-(require 's)
 (defun configure-window-by-title ()
   "Configure window by title."
+  (interactive)
   (pcase exwm-title
-	(`(lambda (,title) (s-contains-p "Godot" ,title)) (toggle-float-and-modeline))
-	("CEPL" (exwm-floating-toggle-floating))))
+    (`(lambda (,title) (s-contains-p "Godot" ,title)) (toggle-float-and-modeline))
+    ("CEPL" (exwm-floating-toggle-floating))
+    ("Volume Control" (toggle-float-and-modeline))))
 (add-hook 'exwm-manage-finish-hook #'configure-window-by-title)
+
+
+;; Helper functions for keybindings.
+
+(defun launch-terminal ()
+  "Launch terminal."
+  (interactive)
+  (start-process-shell-command "alacritty" nil "alacritty"))
+
+(defun show-free-mem ()
+  "Show how much memory is used and how much is available."
+  (interactive)
+  (shell-command "free -mh"))
 
 ;; Global keybindings can be defined with `exwm-input-global-keys'.
 ;; Here are a few examples:
@@ -187,8 +205,10 @@
         ([?\s-w] . exwm-workspace-switch)
         ;; Bind "s-m" to move workspace interactively.
         ([?\s-m] . exwm-workspace-move)
-        ;; Bind "s-f" to show used & available memory
-        ([?\s-f] . (shell-command "free -mh"))
+
+        ([?\s-f] . show-free-mem)
+        ([?\s-t] . launch-terminal)
+
         ;; Bind "s-0" to "s-9" to switch to a workspace by its index.
         ,@(mapcar (lambda (i)
                     `(,(kbd (format "s-%d" i)) .
@@ -199,18 +219,21 @@
         ;; Bind "s-d" to launch applications ('M-&' also works if the output
         ;; buffer does not bother you).
         ([?\s-d] . (lambda (command)
-					 (interactive (list (read-shell-command "$ ")))
-					 (start-process-shell-command command nil (format "LD_LIBRARY_PATH= %s" command))))))
+                     (interactive (list (read-shell-command "$ ")))
+                     (start-process-shell-command command nil (format "LD_LIBRARY_PATH= %s" command))))))
+
 
 
 
 ;;;; Randr
 (setq exwm-randr-workspace-monitor-plist '(0 "HDMI-1-3" 1 "DP-1"))
 (add-hook 'exwm-randr-screen-change-hook
-		  (lambda ()
-			(start-process-shell-command
-			 "xrandr" nil "xrandr --output DP-1 --mode 1920x1080 --rate 75 --left-of HDMI-1-3 --output HDMI-1-3 --mode 1920x1080 --rate 75")))
+	  (lambda ()
+	    (start-process-shell-command
+	      "xrandr" nil
+	      "xrandr --output DP-1 --mode 1920x1080 --rate 75 --left-of HDMI-1-3 --output HDMI-1-3 --mode 1920x1080 --rate 75")))
 (exwm-randr-mode 1)
+(start-process-shell-command "ForceCompositionPipeline" nil "$HOME/bin/force-comp")
 
 
 ;; System tray is disabled by default
@@ -242,7 +265,6 @@
         ([?\M-v] . [prior])
         ([?\C-v] . [next])
         ([?\C-d] . [delete])
-        ([?\C-u] . [up])
         ([?\C-k] . [S-end delete])
         ;; cut/paste.
         ([?\C-w] . [?\C-x])
@@ -251,14 +273,19 @@
         ;; search
         ([?\C-s] . [?\C-f])))
 
-(require 'dash) ;; include `-any'
-(defvar ignore-simulation-keys-apps '("ikatube" "Tor Browser" "qutebrowser" "Godot" "mpv"
-									  "Firefox" "Thunderbird" "gpa" "xfce4-terminal" "pavucontrol"))
-(add-hook 'exwm-manage-finish-hook
-		  (lambda ()
-			(when (and exwm-class-name
-					   (-any (lambda (name) (string= exwm-class-name name)) ignore-simulation-keys-apps))
-			  (exwm-input-set-local-simulation-keys nil))))
+
+(defvar ignore-simulation-keys-apps
+  '("Alacritty" "ikatube" "Tor Browser" "qutebrowser" "Godot" "zathura"
+    "Firefox-esr" "Thunderbird" "gpa" "mpv" "xfce4-terminal" "pavucontrol"))
+(require 'dash)
+(defun ignore-simkeys ()
+  "Ignore simulation keys for the applications in `ignore-simulation-keys-apps'."
+  (interactive)
+  (when (and exwm-class-name
+             (-any (lambda (name) (string= exwm-class-name name)) ignore-simulation-keys-apps))
+    ;; (exwm-input-set-simulation-key ...)
+    (exwm-input-set-local-simulation-keys nil)))
+(add-hook 'exwm-manage-finish-hook 'ignore-simkeys)
 
 
 
@@ -270,18 +297,45 @@
 ;; ready.  You can put it _anywhere_ in your configuration.
 (exwm-enable)
 
+(defun run-and-notify (init-entry)
+  "INIT-ENTRY is an alist of a command and a message.
+Run the command and send a notification that it has done so."
+  (let* ((init-entry (normalize-init-entry init-entry))
+         (program (car init-entry))
+         (message (cdr init-entry)))
+    (cl-flet
+        ((run (lambda (p) (start-process-shell-command p nil p)))
+         (notify (lambda (p m)
+                   (start-process-shell-command
+                    p nil
+                    (format "notify-send %S %S" m p)))))
+      (run program)
+      (notify program message))))
+
+;; Start dunst so we can see the notifications.
+(start-process-shell-command "dunst" nil "dunst")
+
+(let ((entries '(("sh $HOME/.fehbg")
+                 ("picom --blur-background-fixed -b" . "Starting picom to enable transparency"))))
+  (cl-loop for entry in entries
+           do (run-and-notify (normalize-init-entry entry))))
+
+
 
 
 
 ;; TODO: We should bind these!
 (defun open-init ()
   "Open Emacs init file."
+  (interactive)
   (find-file "~/.emacs.d/init.el"))
 (defun open-conf ()
   "Open config file."
+  (interactive)
   (find-file "~/.emacs.d/config.org"))
 (defun reload ()
   "Recompile `config.org' and reload the compiled elisp."
+  (interactive)
   (org-babel-load-file (expand-file-name "~/.emacs.d/config.org")))
 
 (custom-set-variables
