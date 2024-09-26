@@ -1,3 +1,6 @@
+.secret.el
+org-roam.db
+straight
 config.md
 config.el
 config.html
@@ -8,7 +11,8 @@ auto-save-list
 transient
 parinfer-rust
 semanticdb
-eshell
+eshell/history
+eshell/lastdir
 ido.last
 .last-package-update-day
 .cache
