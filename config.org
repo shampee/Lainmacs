@@ -224,6 +224,19 @@ One of the main selling points of Emacs! no Emacs distribution is complete witho
   (use-package org-noter
     :ensure t)
 
+  (use-package orgmdb
+    :ensure t
+    :config 
+    (setq orgmdb-omdb-apikey m/omdb-api-key
+          orgmdb-video-dir
+          (list (concat (getenv "HOME") "/xtra/kino")
+                (concat (getenv "HOME") "/ext")))
+    (with-eval-after-load 'orgmdb
+      (define-key org-mode-map (kbd "C-c a") #'orgmdb-act)
+      (define-key org-mode-map (kbd "C-c f") #'orgmdb-act-on-movie)
+      (define-key org-mode-map (kbd "C-c s") #'orgmdb-act-on-show)
+      (define-key org-mode-map (kbd "C-c e") #'orgmdb-act-on-episode)))
+
   (use-package org-remark
     :ensure t
     :config
