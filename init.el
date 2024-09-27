@@ -1,5 +1,7 @@
 ;;; init.el --- init file for Emacs  -*- lexical-binding: t; indent-tabs-mode: nil -*-
 
+
+;;;; Garbage collector stuff
 
 ;; Make emacs startup faster
 (setq gc-cons-threshold 402653184
@@ -17,6 +19,12 @@
  
 (add-hook 'emacs-startup-hook 'startup/revert-file-name-handler-alist)
 (add-hook 'emacs-startup-hook 'startup/reset-gc)
+
+;; Garbage-collect on focus-out.
+(add-function :after after-focus-change-function
+  (defun m/garbage-collect-maybe ()
+    (unless (frame-focus-state)
+      (garbage-collect))))
 
 
 ;; Initialize melpa repo
