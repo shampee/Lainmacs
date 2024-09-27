@@ -154,6 +154,8 @@ One of the main selling points of Emacs! no Emacs distribution is complete witho
 #+BEGIN_SRC emacs-lisp
   (use-package org
     :config
+    (setq org-todo-keywords
+          '((sequence "TODO(t)" "PROG(p)" "DONE(d)")))
     (add-hook 'org-mode-hook 'org-indent-mode)
     (add-hook 'org-mode-hook #'(lambda () (visual-line-mode 1))))
 
