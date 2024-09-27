@@ -1210,6 +1210,10 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
     :defer nil
     :ensure t)
 
+  (use-package geiser-chez
+    :defer nil
+    :ensure t)
+
   ; Clojure
   (use-package cider
     :ensure t :defer t
