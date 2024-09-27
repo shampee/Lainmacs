@@ -305,6 +305,16 @@
 ;; ready.  You can put it _anywhere_ in your configuration.
 (exwm-enable)
 
+;; For example: ("/usr/bin/firefox" "Running Firefox)
+(defun normalize-init-entry (lst)
+  "Make sure LST has a message."
+  (when lst
+    (let ((_ (car lst))
+          (message (cdr lst)))
+      (unless message
+        (setcdr lst "Running command"))))
+  lst)
+
 (defun run-and-notify (init-entry)
   "INIT-ENTRY is an alist of a command and a message.
 Run the command and send a notification that it has done so."
