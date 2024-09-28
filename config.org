@@ -1120,7 +1120,7 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
 ;; optionally if you want to use debugger
 (use-package dap-mode)
 #+END_SRC
-** Lisp/Scheme/Racket
+** Lisp/Scheme
 *** Code
 #+BEGIN_SRC emacs-lisp
   (defvar electrify-return-match
