@@ -69,6 +69,10 @@
 (use-package ef-themes :ensure t)
 (load-theme 'ef-dream t)
 
+(save-excursion
+  (exwm-workspace-switch-create 9)
+  (exwm-workspace-switch-create 0))
+
 ;; Set font
 (set-frame-font "Iosevka Comfy Motion 12" nil t)
 (add-to-list 'default-frame-alist '(font . "Iosevka Comfy Motion 12"))
