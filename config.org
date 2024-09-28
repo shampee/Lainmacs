@@ -253,6 +253,30 @@ One of the main selling points of Emacs! no Emacs distribution is complete witho
   (use-package password-store
     :ensure t)
 #+END_SRC
+* ERC
+#+BEGIN_SRC emacs-lisp
+(setq erc-track-shorten-start 8
+      erc-kill-buffer-on-part t
+      erc-fill-column 95
+      erc-fill-function 'erc-fill-static
+      erc-fill-static-center 5
+      erc-auto-query 'bury
+      erc-modules '(autoaway autojoin button completion fill irccontrols list log match menu move-to-prompt netsplit networks noncommands notify notifications readonly ring sound stamp track)
+      erc-public-away-p nil
+      erc-autoaway-mode t
+      erc-autoaway-idle-method 'user
+      erc-autoaway-idle-seconds 300
+      erc-autoaway-message ""
+      erc-autojoin-mode t
+      erc-autojoin-channels-alist '(("irc.libera.chat" "#clschool" "#commonlisp" "#ecl" "#lisp" "#scheme" "#guile" "#guix") ("irc.rizon.net" "#c0de" "#rice" "#bible")))
+      
+(erc-select :server "127.0.0.1" :port "6667" :nick "goober" :password "bellie9092")
+(erc-select :server "irc.libera.chat" :port "6667" :nick "gooba" :password "bajsa")
+(erc-select :server "irc.rizon.net" :port "6667" :nick "goober" :password "bajsa")
+erc-auto-query 'bury
+erc-modules
+   '(autoaway autojoin button completion fill irccontrols list log match menu move-to-prompt netsplit networks noncommands notify notifications readonly ring sound stamp track)
+#+END_SRC
 * Eshell
 ** Why Eshell?
 We are using Emacs, so we might as well implement as many tools from our workflow into it as possible
