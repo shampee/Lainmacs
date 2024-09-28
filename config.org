@@ -399,7 +399,7 @@ I tried spaceline, powerline and didn't like either.
     ;; Makes it so the misc section not unimportant anymore.
     (defun simple-modeline-segment-misc-info ()
       "Displays the current value of `mode-line-misc-info' in the mode-line."
-      (let ((misc-info (string-trim (format-mode-line mode-line-misc-info 'simple-modeline-important))))
+      (let ((misc-info (string-trim (format-mode-line mode-line-misc-info 'simple-modeline-space))))
         (unless (string= misc-info "")
           (concat " " misc-info)))))
 #+END_SRC
