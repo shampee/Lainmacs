@@ -105,20 +105,39 @@
 
 
 ;;;; Init
-(defun run-and-notify (program)
-  "Run PROGRAM and notify that it has done so."
-  (cl-flet ((run (lambda (p)
-				   (start-process-shell-command p nil p)))
-			(notify (lambda (p)
-					  (start-process-shell-command
-					   p nil
-					   (format "%s %S" "notify-send \"Running command\"" p)))))
-	(run program)
-	(notify program)))
 
-(let ((programs '("sh $HOME/.fehbg")))
-  (cl-loop for program in programs
-		   do (run-and-notify program)))
+(defun normalize-init-entry (lst)
+  "Make sure LST has a message.
+Populate the CDR of LST with message: \"Running command\"."
+  (when lst
+    (let ((_ (car lst))
+          (message (cdr lst)))
+      (unless message
+        (setcdr lst "Running command"))))
+  lst)
+
+(defun run-and-notify (init-entry)
+  "INIT-ENTRY is an alist of a command and a message.
+Run the command and send a notification that it has done so."
+  (let* ((init-entry (normalize-init-entry init-entry))
+         (program (car init-entry))
+         (message (cdr init-entry)))
+    (cl-flet
+        ((run (lambda (p) (start-process-shell-command p nil p)))
+         (notify (lambda (p m)
+                   (start-process-shell-command
+                    p nil
+                    (format "notify-send %S %S" m p)))))
+      (run program)
+      (notify program message))))
+
+;; Start dunst so we can see the notifications.
+(start-process-shell-command "dunst" nil "dunst")
+
+(let ((entries '(("sh $HOME/.fehbg" . "Setting wallpaper")
+                 ;("picom --blur-background-fixed -b" . "Starting picom to enable transparency")
+                 )))
+  (dolist (entry entries) (run-and-notify (normalize-init-entry entry))))
 
 
 ;;;; Below are configurations for EXWM.
