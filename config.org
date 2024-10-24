@@ -559,6 +559,22 @@ You might find beacon an unnecesary package but I find it very neat. It briefly 
   (use-package beacon
     :ensure nil)
 #+END_SRC
+** Initialize =hl-todo=
+*** Code
+#+BEGIN_SRC emacs-lisp
+  (use-package hl-todo
+    :ensure t
+    :diminish (hl-todo-mode)
+    :init
+    (global-hl-todo-mode 1))
+
+  (use-package flycheck-hl-todo
+    :ensure t
+    :diminish (flycheck-hl-todo-mode)
+    :init (flycheck-hl-todo-setup)
+    :config
+    (add-hook 'after-init-hook #'flycheck-hl-todo-enable))
+#+END_SRC
 ** Initialize =avy=
 *** Description
 Avy is a very useful package; instead of having to move your cursor to a line that is very far away, just do M - s and type the character that you want to move to
