@@ -1107,13 +1107,8 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
     (eat-reload))
   (makunbound 'eat--prevent-use-package-config-recursion))
 #+END_SRC
-** Initialize =chan=
 *** Code
 #+BEGIN_SRC emacs-lisp
-  ; https://github.com/yyyuuuuu/chan
-  (use-package chan
-    :load-path "lisp/chan"
-    :config (require 'chan))
 #+END_SRC
 * Programming section
 ** Initialize =yasnippet=
