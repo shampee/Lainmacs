@@ -346,6 +346,7 @@ Eshell cannot handle ncurses programs and in certain interpreters (Python, GHCi)
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
 #+END_SRC
+* Use-Package section
 ** Initialize =auto-package-update=
 *** Description
 Auto-package-update automatically updates and removes old packages
