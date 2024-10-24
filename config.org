@@ -157,10 +157,25 @@ Super - Control - <arrow>
 #+END_SRC
 * Secrets
 #+BEGIN_SRC emacs-lisp
-(defvar m/erc-nick nil                 "The ERC nick to use.")
-(defvar m/erc-password nil             "The ERC password to use.")
-(defvar m/erc-port nil                 "The ERC port to use.")
-(defvar m/erc-server nil               "The ERC server to use.")
+(defvar lib/server "irc.libera.chat")
+(defvar lib/nick nil                   "The ERC libera nick to use.")
+(defvar lib/password nil               "The ERC libera password to use.")
+(defvar lib/port nil                   "The ERC libera port to use.")
+
+(defvar riz/server "irc.rizon.net")
+(defvar riz/nick nil                   "The ERC rizon nick to use.")
+(defvar riz/password nil               "The ERC rizon password to use.")
+(defvar riz/port nil                   "The ERC rizon port to use.")
+
+(defvar lain/server "irc.lainchan.org")
+(defvar lain/nick nil                  "The ERC lainchan nick to use.")
+(defvar lain/password nil              "The ERC lainchan password to use.")
+(defvar lain/port nil                  "The ERC lainchan port to use.")
+
+(defvar m/erc-nick nil)
+(defvar m/erc-password nil)
+(defvar m/erc-port nil)
+(defvar m/erc-server nil)
 
 (defvar m/elfeed-feeds nil             "A list of RSS feeds for elfeed.")
 (defvar m/user-full-name nil           "The full name of user.")
@@ -257,25 +272,27 @@ One of the main selling points of Emacs! no Emacs distribution is complete witho
 #+BEGIN_SRC emacs-lisp
 (setq erc-track-shorten-start 8
       erc-kill-buffer-on-part t
-      erc-fill-column 95
+      erc-fill-column 75
       erc-fill-function 'erc-fill-static
       erc-fill-static-center 5
-      erc-auto-query 'bury
-      erc-modules '(autoaway autojoin button completion fill irccontrols list log match menu move-to-prompt netsplit networks noncommands notify notifications readonly ring sound stamp track)
+      erc-auto-query 'window-noselect ;; 'bury
       erc-public-away-p nil
+      erc-hide-list '("JOIN" "PART" "QUIT")
       erc-autoaway-mode t
       erc-autoaway-idle-method 'user
       erc-autoaway-idle-seconds 300
       erc-autoaway-message ""
+      erc-join-buffer 'bury
       erc-autojoin-mode t
-      erc-autojoin-channels-alist '(("irc.libera.chat" "#clschool" "#commonlisp" "#ecl" "#lisp" "#scheme" "#guile" "#guix") ("irc.rizon.net" "#c0de" "#rice" "#bible")))
-      
-(erc-select :server "127.0.0.1" :port "6667" :nick "goober" :password "bellie9092")
-(erc-select :server "irc.libera.chat" :port "6667" :nick "gooba" :password "bajsa")
-(erc-select :server "irc.rizon.net" :port "6667" :nick "goober" :password "bajsa")
-erc-auto-query 'bury
-erc-modules
-   '(autoaway autojoin button completion fill irccontrols list log match menu move-to-prompt netsplit networks noncommands notify notifications readonly ring sound stamp track)
+      erc-autojoin-channels-alist '(("Libera.Chat" "#clschool" "#commonlisp" "#ecl" "#lisp" "#scheme" "#guile" "#guix") ("Rizon.Net" "#c0de" "#rice" "#bible") ("Lainchan.Org" "#lainchan" "#questions"))
+      erc-modules
+      '(autoaway autojoin button completion fill irccontrols list log match menu move-to-prompt netsplit networks noncommands notifications readonly ring sound stamp track))
+
+(erc-select :server m/erc-server :port m/erc-port :nick m/erc-nick :password m/erc-password)
+(erc-select :server lib/server :port lib/port :nick lib/nick :password lib/password)
+;(erc-select :server riz/server :port riz/port :nick riz/nick :password riz/password)
+;(erc-send-line (format "/msg nickserv identify %s" riz/password) (lambda () (message "Sent rizon my password")))
+;(erc-tls :server lain/server :port lain/port :nick lain/nick :password lain/password)
 #+END_SRC
 * Eshell
 ** Why Eshell?
