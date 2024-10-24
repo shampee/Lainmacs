@@ -1246,14 +1246,7 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
   (use-package sly-repl-ansi-color
     :ensure t)
 
-  ;; ; Slime
-  ;; (use-package slime
-  ;;   :defer nil
-  ;;   :ensure t
-  ;;   :config
-  ;;   (slime-setup '(slime-fancy slime-quicklisp slime-asdf))
-  ;;   (setq inferior-lisp-program "sbcl"))
-
+  
   ; Schemes
   (use-package geiser
     :defer nil
