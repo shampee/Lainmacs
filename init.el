@@ -207,10 +207,14 @@ Run the command and send a notification that it has done so."
 (defun configure-window-by-title ()
   "Configure window by title."
   (interactive)
-  (pcase exwm-title
-    (`(lambda (,title) (s-contains-p "Godot" ,title)) (toggle-float-and-modeline))
-    ("CEPL" (exwm-floating-toggle-floating))
-    ("Volume Control" (toggle-float-and-modeline))))
+  (cl-flet
+      ((title= (lambda (str) (string= str exwm-title)))
+       (title-contains-p (lambda (str) (not (null (cl-search str exwm-title))))))
+    (cond
+     ((title= "CEPL") (toggle-float-and-modeline))
+     ((title= "Volume Control" ) (toggle-float-and-modeline))
+     ((title-contains-p "GNU Privacy Assistant") (toggle-float-and-modeline))
+     (t nil))))
 (add-hook 'exwm-manage-finish-hook #'configure-window-by-title)
 
 
