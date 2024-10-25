@@ -1153,6 +1153,15 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
     :config (notmuch-indicator-mode))
 #+END_SRC
 
+** Initialize =aria2=
+*** Code
+#+BEGIN_SRC emacs-lisp
+  (use-package aria2
+    :ensure t
+    :config
+    (setq aria2-add-evil-quirks t)) 
+#+END_SRC
+
 * Programming section
 ** Initialize =yasnippet=
 *** Description
