@@ -1123,6 +1123,36 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
   (use-package consult-projectile
     :ensure t)
 #+END_SRC
+** Initialize =notmuch=
+*** Code
+#+BEGIN_SRC emacs-lisp
+(use-package notmuch
+  :ensure t
+  :config 
+  ;; this doesn't work for some reason? only works through customize
+  (setq notmuch-search-oldest-first nil)
+  (evil-collection-init 'notmuch)
+
+  (defun my-next-unread ()
+    (interactive)
+    (let ((init (point)))
+      (catch 'break
+        (while t
+          (when (member "unread" (notmuch-show-get-tags))
+            (let ((props (notmuch-show-get-message-properties)))
+              (notmuch-show-message-visible props t)
+              (notmuch-show-mark-read)
+              (throw 'break t)))
+          (when (not (notmuch-show-goto-message-next))
+            (message "No more unread messages.")
+            (goto-char init)
+            (throw 'break t)))))))
+
+  (use-package notmuch-indicator
+    :ensure t
+    :config (notmuch-indicator-mode))
+#+END_SRC
+
 * Programming section
 ** Initialize =yasnippet=
 *** Description
