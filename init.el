@@ -309,6 +309,17 @@ Run the command and send a notification that it has done so."
         ([?\C-s] . [?\C-f])))
 
 
+(defvar auto-char-mode-by-class
+  '("Tor Browser" "Godot" "Thunderbird" "gpa" "electrum" "mpv" "pavucontrol" "Zathura"))
+(defvar auto-char-mode-by-title
+  '("ikatube"))
+
+(setq exwm-manage-configurations
+      '(((member exwm-class-name auto-char-mode-by-class)
+         char-mode t)
+        ((member exwm-title auto-char-mode-by-title)
+         char-mode t)))
+
 (defvar ignore-simulation-keys-apps
   '("Alacritty" "ikatube" "Tor Browser" "qutebrowser" "Godot" "zathura"
     "Firefox-esr" "Thunderbird" "gpa" "mpv" "xfce4-terminal" "pavucontrol"))
