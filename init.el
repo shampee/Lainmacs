@@ -331,6 +331,10 @@ Run the command and send a notification that it has done so."
   (interactive)
   (when (and exwm-class-name
              (-any (lambda (name) (string= exwm-class-name name)) ignore-simulation-keys-apps))
+  (when (or
+         (and exwm-class-name
+              (-any (lambda (name) (string= exwm-class-name name)) ignore-simulation-keys-apps))
+         (s-contains-p "ikatube" exwm-title))
     ;; (exwm-input-set-simulation-key ...)
     (exwm-input-set-local-simulation-keys nil)))
 (add-hook 'exwm-manage-finish-hook 'ignore-simkeys)
