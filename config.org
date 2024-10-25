@@ -575,6 +575,14 @@ You might find beacon an unnecesary package but I find it very neat. It briefly 
     :config
     (add-hook 'after-init-hook #'flycheck-hl-todo-enable))
 #+END_SRC
+** Initialize =highlight-defined=
+*** Code
+#+BEGIN_SRC emacs-lisp
+  (use-package highlight-defined
+   :ensure t
+   :commands highlight-defined-mode
+   :hook (prog-mode . highlight-defined-mode))
+#+END_SRC
 ** Initialize =avy=
 *** Description
 Avy is a very useful package; instead of having to move your cursor to a line that is very far away, just do M - s and type the character that you want to move to
