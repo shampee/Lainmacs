@@ -1115,8 +1115,13 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
     (eat-reload))
   (makunbound 'eat--prevent-use-package-config-recursion))
 #+END_SRC
+** Initialize =projectile=
 *** Code
 #+BEGIN_SRC emacs-lisp
+  (use-package projectile
+    :ensure t)
+  (use-package consult-projectile
+    :ensure t)
 #+END_SRC
 * Programming section
 ** Initialize =yasnippet=
