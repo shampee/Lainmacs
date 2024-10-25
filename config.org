@@ -1306,6 +1306,10 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
     :config
     (setq geiser-guile-load-init-file t))
 
+  (use-package macrostep-geiser
+    :defer nil
+    :ensure t)
+
   (use-package geiser-guile
     :defer nil
     :ensure t)
