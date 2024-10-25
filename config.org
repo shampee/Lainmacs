@@ -519,17 +519,6 @@ When doing C-s to search, you get this very nice and neat mini-buffer that you c
 #+BEGIN_SRC emacs-lisp
   ;(use-package swiper ;:ensure t ;:bind ("C-s" . 'swiper))
 #+END_SRC
-** Initialize =goggles=
-*** Code
-#+BEGIN_SRC emacs-lisp
-(use-package goggles
-  :ensure t
-  :defer nil
-  :diminish (goggles-mode)
-  :hook ((prog-mode text-mode) . goggles-mode)
-  :config
-  (setq-default goggles-pulse t)) ;; set to nil to disable pulsing
-#+END_SRC
 ** Initialize =evil= mode
 *** Description
 Vim keybindings in Emacs. Please note that Lainmacs has NO other evil-mode compatibility packages because I like to KISS. This might change in the future
