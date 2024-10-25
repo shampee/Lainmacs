@@ -404,7 +404,7 @@ Diminish hides minor modes to prevent cluttering your mode line
 #+END_SRC
 ** Initialize =simple-modeline=
 *** Description
-I tried spaceline, powerline and didn't like either.
+I tried spaceline and powerline and didn't like either.
 *** Code
 #+BEGIN_SRC emacs-lisp
   (use-package simple-modeline
