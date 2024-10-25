@@ -1,5 +1,7 @@
 ;;; init.el --- init file for Emacs  -*- lexical-binding: t; indent-tabs-mode: nil -*-
 
+(require 's)
+
 
 ;;;; Garbage collector stuff
 
@@ -323,7 +325,7 @@ Run the command and send a notification that it has done so."
 (defvar ignore-simulation-keys-apps
   '("Alacritty" "ikatube" "Tor Browser" "qutebrowser" "Godot" "zathura"
     "Firefox-esr" "Thunderbird" "gpa" "mpv" "xfce4-terminal" "pavucontrol"))
-(require 'dash)
+
 (defun ignore-simkeys ()
   "Ignore simulation keys for the applications in `ignore-simulation-keys-apps'."
   (interactive)
