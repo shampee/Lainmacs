@@ -540,14 +540,6 @@ Vim keybindings in Emacs. Please note that Lainmacs has NO other evil-mode compa
   :config
   (evil-collection-init))
 #+END_SRC
-** Initialize =beacon=
-*** Description
-You might find beacon an unnecesary package but I find it very neat. It briefly highlights the cursor position when switching to a new window or buffer
-*** Code
-#+BEGIN_SRC emacs-lisp
-  (use-package beacon
-    :ensure nil)
-#+END_SRC
 ** Initialize =hl-todo=
 *** Code
 #+BEGIN_SRC emacs-lisp
