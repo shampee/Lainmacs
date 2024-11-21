@@ -110,7 +110,7 @@
 
 (defun normalize-init-entry (lst)
   "Make sure LST has a message.
-Populate the CDR of LST with message: \"Running command\"."
+Populate the CDR of LST with message \"Running command\" if there is none."
   (when lst
     (let ((_ (car lst))
           (message (cdr lst)))
