@@ -422,7 +422,7 @@ Run the command and send a notification that it has done so."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(beacon git-gutter zig-mode yasnippet-snippets which-key vertico-posframe undo-tree treemacs-icons-dired treemacs-evil tracking switch-window spaceline sly-asdf rustic ranger rainbow-delimiters quelpa-use-package paredit page-break-lines org-roam org-remark org-ref org-noter orderless mix marginalia magit lua-mode lsp-ui lsp-ivy lsp-haskell lispy lfe-mode ivy-youtube ido-vertical-mode hl-todo goggles go-mode glue geiser-guile geiser-chicken flymake-lua flycheck-clojure fennel-mode exunit evil-collection embark-consult elixir-mode diminish deadgrep dashboard dap-mode corfu copilot consult-lsp consult-hoogle chatgpt carp-emacs cape auto-package-update async affe a)))
+   '())
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
