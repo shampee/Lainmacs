@@ -215,6 +215,7 @@ Run the command and send a notification that it has done so."
      ((title= "CEPL") (toggle-float-and-modeline))
      ((title= "Volume Control" ) (toggle-float-and-modeline))
      ((title-contains-p "GNU Privacy Assistant") (toggle-float-and-modeline))
+     ((title-contains-p "xarchiver") (toggle-float-and-modeline))
      (t nil))))
 (add-hook 'exwm-manage-finish-hook #'configure-window-by-title)
 
