@@ -232,6 +232,11 @@ Run the command and send a notification that it has done so."
   (interactive)
   (shell-command "free -mh"))
 
+(defun open-emacs-terminal ()
+  "Start up an Eat terminal."
+  (interactive)
+  (eat))
+
 ;; Global keybindings can be defined with `exwm-input-global-keys'.
 ;; Here are a few examples:
 (setq exwm-input-global-keys
