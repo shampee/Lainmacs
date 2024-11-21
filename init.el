@@ -237,6 +237,17 @@ Run the command and send a notification that it has done so."
   (interactive)
   (eat))
 
+(defun toggle-ld-lib ()
+  "Toggle between setting LD_LIBRARY_PATH to an empty string and LIBRARY_PATH."
+  (interactive)
+  (pcase (getenv "LD_LIBRARY_PATH")
+    ("" (progn
+          (setenv "LD_LIBRARY_PATH"
+                  (concat "/usr/lib/x86_64-linux-gnu:" (getenv "LIBRARY_PATH")))
+          (message "Setting LD_LIBRARY_PATH to %S" (getenv "LD_LIBRARY_PATH"))))
+    (_ (progn (message "Unsetting LD_LBIRARY_PATH.")
+              (setenv "LD_LIBRARY_PATH" "")))))
+
 ;; Global keybindings can be defined with `exwm-input-global-keys'.
 ;; Here are a few examples:
 (setq exwm-input-global-keys
