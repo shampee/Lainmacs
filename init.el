@@ -137,8 +137,7 @@ Run the command and send a notification that it has done so."
 (start-process-shell-command "dunst" nil "dunst")
 
 (let ((entries '(("sh $HOME/.fehbg" . "Setting wallpaper")
-                 ;("picom --blur-background-fixed -b" . "Starting picom to enable transparency")
-                 )))
+                 ("picom --blur-background-fixed -b" . "Starting picom to enable transparency"))))
   (dolist (entry entries) (run-and-notify (normalize-init-entry entry))))
 
 
