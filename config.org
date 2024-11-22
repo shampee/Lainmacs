@@ -593,6 +593,14 @@ Vim keybindings in Emacs. Please note that Lainmacs has NO other evil-mode compa
    :commands highlight-defined-mode
    :hook (prog-mode . highlight-defined-mode))
 #+END_SRC
+** Initialize exec-path-from-shell
+*** Description
+Get environment variables such as $PATH from the shell.
+*** Code
+#+BEGIN_SRC emacs-lisp
+  (use-package exec-path-from-shell
+   :ensure t)
+#+END_SRC
 ** Initialize =avy=
 *** Description
 Avy is a very useful package; instead of having to move your cursor to a line that is very far away, just do M - s and type the character that you want to move to
