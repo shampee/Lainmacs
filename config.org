@@ -300,14 +300,21 @@ One of the main selling points of Emacs! no Emacs distribution is complete witho
          ("irc.rizon.net" "#c0de" "#rice" "#bible")
          ("irc.lainchan.org" "#lainchan" "#questions"))
       erc-modules
-      '(autoaway autojoin button completion fill irccontrols list log match menu move-to-prompt netsplit networks noncommands notifications readonly ring sound stamp track))
+      '(autoaway autojoin button completion fill irccontrols list log match menu move-to-prompt netsplit networks noncommands notifications readonly ring sound stamp track image hl-nicks spelling))
 
 (erc-select :server m/erc-server :port m/erc-port :nick m/erc-nick :password m/erc-password)
 (erc-select :server lib/server :port lib/port :nick lib/nick :password lib/password)
 ;(erc-select :server riz/server :port riz/port :nick riz/nick :password riz/password)
 ;(erc-send-line (format "/msg nickserv identify %s" riz/password) (lambda () (message "Sent rizon my password")))
 ;(erc-tls :server lain/server :port lain/port :nick lain/nick :password lain/password)
+
+(use-package erc-hl-nicks
+  :ensure t)
+  
+(use-package erc-image
+  :ensure t)
 #+END_SRC
+
 * Eshell
 ** Why Eshell?
 We are using Emacs, so we might as well implement as many tools from our workflow into it as possible
