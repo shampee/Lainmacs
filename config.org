@@ -159,6 +159,10 @@ Super - Control - <arrow>
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'load-path "~/.emacs.d/site-lisp")
 #+END_SRC
+** Ergonomic Info directory
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'Info-default-directory-list "~/emacs.d/info")
+#+END_SRC
 * Secrets
 #+BEGIN_SRC emacs-lisp
 (defvar lib/server "irc.libera.chat")
