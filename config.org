@@ -295,7 +295,10 @@ One of the main selling points of Emacs! no Emacs distribution is complete witho
       erc-autoaway-message ""
       erc-join-buffer 'bury
       erc-autojoin-mode t
-      erc-autojoin-channels-alist '(("Libera.Chat" "#clschool" "#commonlisp" "#ecl" "#lisp" "#scheme" "#guile" "#guix") ("Rizon.Net" "#c0de" "#rice" "#bible") ("Lainchan.Org" "#lainchan" "#questions"))
+      erc-autojoin-channels-alist
+       '(("Libera.Chat" "#clschool" "#commonlisp" "#ecl" "#lisp" "#scheme" "#guile" "#guix" "#chicken" "#clojure")
+         ("irc.rizon.net" "#c0de" "#rice" "#bible")
+         ("irc.lainchan.org" "#lainchan" "#questions"))
       erc-modules
       '(autoaway autojoin button completion fill irccontrols list log match menu move-to-prompt netsplit networks noncommands notifications readonly ring sound stamp track))
 
