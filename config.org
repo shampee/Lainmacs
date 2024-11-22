@@ -1118,6 +1118,7 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
 *** Code
 #+BEGIN_SRC emacs-lisp
 (use-package eat
+  :ensure t
   :pin nongnu
   :custom
   (eat-kill-buffer-on-exit t)
