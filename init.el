@@ -82,7 +82,7 @@
 (org-babel-load-file (expand-file-name "~/.emacs.d/config.org"))
 
 
-;; Exwm 
+;; Exwm
 
 ;; Disable menu-bar, tool-bar and scroll-bar to increase the usable space.
 (menu-bar-mode -1)
@@ -272,8 +272,10 @@ Run the command and send a notification that it has done so."
         ;; Bind "s-d" to launch applications ('M-&' also works if the output
         ;; buffer does not bother you).
         ([?\s-d] . (lambda (command)
-                     (interactive (list (read-shell-command "$ ")))
-                     (start-process-shell-command command nil (format "LD_LIBRARY_PATH= %s" command))))))
+                     (interactive
+                      (list (read-shell-command "$ ")))
+                     (start-process-shell-command command nil command)))))
+
 
 
 
@@ -345,8 +347,6 @@ Run the command and send a notification that it has done so."
 (defun ignore-simkeys ()
   "Ignore simulation keys for the applications in `ignore-simulation-keys-apps'."
   (interactive)
-  (when (and exwm-class-name
-             (-any (lambda (name) (string= exwm-class-name name)) ignore-simulation-keys-apps))
   (when (or
          (and exwm-class-name
               (-any (lambda (name) (string= exwm-class-name name)) ignore-simulation-keys-apps))
@@ -357,6 +357,10 @@ Run the command and send a notification that it has done so."
 
 
 
+
+;; Do this before exwm-init
+;(perspective-exwm-mode)
+
 ;; You can hide the minibuffer and echo area when they're not used, by
 ;; uncommenting the following line.
 ;(setq exwm-workspace-minibuffer-position 'bottom)
@@ -366,7 +370,7 @@ Run the command and send a notification that it has done so."
 (exwm-enable)
 
 
-
+;;;; misc
 
 ;; TODO: We should bind these!
 (defun open-init ()
@@ -395,9 +399,4 @@ Run the command and send a notification that it has done so."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- 
  
