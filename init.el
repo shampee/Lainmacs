@@ -365,40 +365,6 @@ Run the command and send a notification that it has done so."
 ;; ready.  You can put it _anywhere_ in your configuration.
 (exwm-enable)
 
-;; For example: ("/usr/bin/firefox" "Running Firefox)
-(defun normalize-init-entry (lst)
-  "Make sure LST has a message."
-  (when lst
-    (let ((_ (car lst))
-          (message (cdr lst)))
-      (unless message
-        (setcdr lst "Running command"))))
-  lst)
-
-(defun run-and-notify (init-entry)
-  "INIT-ENTRY is an alist of a command and a message.
-Run the command and send a notification that it has done so."
-  (let* ((init-entry (normalize-init-entry init-entry))
-         (program (car init-entry))
-         (message (cdr init-entry)))
-    (cl-flet
-        ((run (lambda (p) (start-process-shell-command p nil p)))
-         (notify (lambda (p m)
-                   (start-process-shell-command
-                    p nil
-                    (format "notify-send %S %S" m p)))))
-      (run program)
-      (notify program message))))
-
-;; Start dunst so we can see the notifications.
-(start-process-shell-command "dunst" nil "dunst")
-
-(let ((entries '(("sh $HOME/.fehbg")
-                 ("picom --blur-background-fixed -b" . "Starting picom to enable transparency"))))
-  (cl-loop for entry in entries
-           do (run-and-notify (normalize-init-entry entry))))
-
-
 
 
 
