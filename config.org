@@ -196,6 +196,9 @@ Super - Control - <arrow>
 
 (defvar m/omdb-api-key nil             "OMDb API key (1000 reqs/day)")
 
+(defvar m/smtp-server nil              "Our SMTP server")
+(defvar m/smtp-service nil             "Our SMTP service port")
+
 (let ((m/secret-file "~/.emacs.d/.secret.el"))
   (when (file-readable-p m/secret-file)
     (load m/secret-file)))
