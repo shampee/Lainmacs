@@ -1317,7 +1317,7 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
   (use-package sly-repl-ansi-color
     :ensure t)
 
-  
+
   ; Schemes
   (use-package geiser
     :defer nil
