@@ -101,7 +101,7 @@ Emacs breaks certain modes when it has line-numbers-mode enabled, (like docview 
                               (?\[ . ?\])
                               (?\" . ?\")))
                               
-  ;(electric-pair-mode t)
+  (electric-pair-mode t)
 #+END_SRC
 ** Creating a new window switches your cursor to it
 #+BEGIN_SRC emacs-lisp
