@@ -1169,7 +1169,7 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
 
   (use-package notmuch-indicator
     :ensure t
-    :config (notmuch-indicator-mode))
+    :init (notmuch-indicator-mode))
 #+END_SRC
 
 ** Initialize =aria2=
