@@ -441,11 +441,11 @@ I tried spaceline and powerline and didn't like either.
               (global-mode-string
                (" " global-mode-string))))
     (setq simple-modeline-segments
-    '((simple-modeline-segment-modified simple-modeline-segment-buffer-name simple-modeline-segment-position simple-modeline-segment-major-mode)
-        (simple-modeline-segment-minor-modes simple-modeline-segment-input-method simple-modeline-segment-eol simple-modeline-segment-encoding simple-modeline-segment-vc simple-modeline-segment-misc-info simple-modeline-segment-process)))
-    ;; Makes it so the misc section not unimportant anymore.
+          '((simple-modeline-segment-modified simple-modeline-segment-buffer-name simple-modeline-segment-position simple-modeline-segment-major-mode)
+            (simple-modeline-segment-minor-modes simple-modeline-segment-input-method simple-modeline-segment-eol simple-modeline-segment-encoding simple-modeline-segment-vc simple-modeline-segment-process simple-modeline-segment-misc-info)))
+    ;; Make the misc section not unimportant anymore.
     (defun simple-modeline-segment-misc-info ()
-      "Display the current value of `mode-line-misc-info' in the mode-line."
+      "Display the current value of `mode-line-misc-info' in the modeline."
       (let ((misc-info (string-trim (format-mode-line mode-line-misc-info 'simple-modeline-space))))
         (unless (string= misc-info "")
           (concat " " misc-info " ")))))
