@@ -1349,12 +1349,11 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
         ;; not squiggly-related, but I like it
         cider-repl-history-file ".cider-repl-history" 
         ;; not necessary, but useful for trouble-shooting
-        nrepl-log-messages t)
-    ;; run setup *after* cider load
-    (flycheck-clojure-setup))
+        nrepl-log-messages t))
 
   (use-package flycheck-clojure
     :ensure t
+    :after cider
     :defer t
     :commands (flycheck-clojure-setup)               ;; autoload
     :config
