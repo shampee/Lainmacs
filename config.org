@@ -428,10 +428,18 @@ Diminish hides minor modes to prevent cluttering your mode line
 I tried spaceline and powerline and didn't like either.
 *** Code
 #+BEGIN_SRC emacs-lisp
+  ;; server-after-make-frame-hook seems to work
   (use-package simple-modeline
     :ensure t
-    :hook (after-init . simple-modeline-mode)
+    :diminish (paredit-mode eldoc-mode lispy-mode)
+    :hook (server-after-make-frame-hook . simple-modeline-mode)
     :config
+    (setq mode-line-misc-info
+             '((notmuch-indicator-mode
+               (" "
+                (:eval notmuch-indicator--counters)))
+              (global-mode-string
+               (" " global-mode-string))))
     (setq simple-modeline-segments
     '((simple-modeline-segment-modified simple-modeline-segment-buffer-name simple-modeline-segment-position simple-modeline-segment-major-mode)
         (simple-modeline-segment-minor-modes simple-modeline-segment-input-method simple-modeline-segment-eol simple-modeline-segment-encoding simple-modeline-segment-vc simple-modeline-segment-misc-info simple-modeline-segment-process)))
