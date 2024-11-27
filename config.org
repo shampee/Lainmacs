@@ -1350,6 +1350,8 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
   (use-package cider
     :ensure t :defer t
     :config
+    (with-eval-after-load 'cider
+      (define-key cider-mode-map (kbd "C-c C-b") #'cider-eval-buffer))
     (setq
         ;; not squiggly-related, but I like it
         cider-repl-history-file ".cider-repl-history" 
