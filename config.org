@@ -690,12 +690,12 @@ Utilize asynchronous processes whenever possible
     :diminish (undo-tree-mode)
     :init
     (global-undo-tree-mode)
-    (evil-set-undo-system 'undo-tree)
     :config
+    (with-eval-after-load 'evil
+      (evil-set-undo-system 'undo-tree))
     (setq
      undo-tree-history-directory-alist
      `(("." . ,(format "%s/.cache/undo" (getenv "HOME"))))))
-    (evil-set-undo-system 'undo-tree)
 #+END_SRC
 ** Initialize =treemacs=
 *** Description
