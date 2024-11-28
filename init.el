@@ -248,6 +248,52 @@ Run the command and send a notification that it has done so."
     (_ (progn (message "Unsetting LD_LBIRARY_PATH.")
               (setenv "LD_LIBRARY_PATH" "")))))
 
+;; TODO: Possible cleanup.
+(defun ncspot-control (command &optional n)
+  "COMMAND being one of the following:
+playpause|pause, stop, prev, next, save|love, volup, voldown.
+N is optional and works in conjunction with [inc]/[dec]reasing volume by N.
+See: https://gist.github.com/shampee/0c38ab31b40c3b45a61c15fc7a258d81"
+  (if (string= command "status")
+      (string-trim (shell-command-to-string "ncspot-controller") "\"" "[\"\\\nla]+")
+    (async-start-process "ncspot-control" "ncspot-controller" 'ignore command (if (null n) "" n))))
+
+(defun ncspot-play/pause ()
+  "Play/pause toggle."
+  (interactive)
+  (ncspot-control "pause"))
+
+(defun ncspot-next ()
+  "Play next song."
+  (interactive)
+  (ncspot-control "next"))
+
+(defun ncspot-prev ()
+  "Play previous song."
+  (interactive)
+  (ncspot-control "prev"))
+
+(defun ncspot-save ()
+  "Save song."
+  (interactive)
+  (ncspot-control "save"))
+
+(defun ncspot-volup ()
+  "Increase the volume by 1."
+  (interactive)
+  (ncspot-control "volup"))
+
+(defun ncspot-voldown ()
+  "Decrease the volume by 1."
+  (interactive)
+  (ncspot-control "voldown"))
+
+(defun ncspot-status ()
+  "Return currently played song."
+  (interactive)
+  (ncspot-control "status"))
+
+
 ;; Global keybindings can be defined with `exwm-input-global-keys'.
 ;; Here are a few examples:
 (setq exwm-input-global-keys
