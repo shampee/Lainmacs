@@ -294,6 +294,21 @@ See: https://gist.github.com/shampee/0c38ab31b40c3b45a61c15fc7a258d81"
   (ncspot-control "status"))
 
 
+(defun exwm-input-set-keys (keybinds)
+  "KEYBINDS is a list of lists containing (keybind function)."
+  (dolist (key-commands keybinds)
+    (let ((keys (car key-commands))
+          (command (cadr key-commands)))
+      (exwm-input-set-key (kbd keys) command))))
+
+(exwm-input-set-keys '(("s-<return>" open-emacs-terminal)
+                       ("s-p" toggle-ld-lib)
+                       ("C-<XF86AudioPlay>" ncspot-play/pause)
+                       ("C-<XF86AudioNext>" ncspot-next)
+                       ("C-<XF86AudioPrev>" ncspot-prev)
+                       ("C-<XF86AudioLowerVolume>" ncspot-voldown)
+                       ("C-<XF86AudioRaiseVolume>" ncspot-volup)))
+
 ;; Global keybindings can be defined with `exwm-input-global-keys'.
 ;; Here are a few examples:
 (setq exwm-input-global-keys
