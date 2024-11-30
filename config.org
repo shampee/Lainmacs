@@ -286,6 +286,8 @@ One of the main selling points of Emacs! no Emacs distribution is complete witho
       erc-fill-column 75
       erc-fill-function 'erc-fill-static
       erc-fill-static-center 5
+      erc-sound-path '("~/.emacs.d/audio")
+      erc-default-sound "kalimba.wav"
       erc-auto-query 'window-noselect ;; 'bury
       erc-public-away-p nil
       erc-hide-list '("JOIN" "PART" "QUIT")
