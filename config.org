@@ -1338,7 +1338,7 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
     (add-hook 'clojurec-mode-hook 'setup-lisp-stuff)
     (add-hook 'racket-mode-hook 'setup-lisp-stuff)
     :hook
-    ((racket-mode lisp-mode scheme-mode emacs-lisp-mode clojure-mode clojurec-mode) . paredit-mode))
+    ((racket-mode lisp-mode ulisp-mode scheme-mode emacs-lisp-mode clojure-mode clojurec-mode) . paredit-mode))
 
   ; Parinfer
   (use-package parinfer-rust-mode
