@@ -1412,6 +1412,10 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
     :ensure t)
 
   ; Clojure
+  (use-package clojure-mode
+    :defer nil
+    :ensure t)
+
   (use-package cider
     :ensure t :defer t
     :config
