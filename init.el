@@ -67,6 +67,13 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
+(use-package exec-path-from-shell :ensure t)
+
+;; This sets $MANPATH, $PATH and exec-path from your shell,
+;; but only when executed in a GUI frame on OS X and Linux.
+(when (memq window-system '(mac ns x))
+  (exec-path-from-shell-initialize))
+
 ;; Load theme for Lainmacs
 (use-package ef-themes :ensure t)
 (load-theme 'ef-dream t)
