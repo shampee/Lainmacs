@@ -889,6 +889,7 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
 #+BEGIN_SRC emacs-lisp
   ;; Example configuration for Consult
   (use-package consult
+    :ensure t
     ;; Replace bindings. Lazily loaded due by `use-package'.
     :bind (;; C-c bindings (mode-specific-map)
            ("C-c M-x" . consult-mode-command)
