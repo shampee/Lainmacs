@@ -165,6 +165,12 @@ Super - Control - <arrow>
 (unless (file-directory-p "~/.emacs.d/info") (make-directory "~/.emacs.d/info"))
 (add-to-list 'Info-directory-list "~/emacs.d/info")
 #+END_SRC
+** Compilation mode ansi colors
+#+BEGIN_SRC emacs-lisp
+  (use-package ansi-color
+    :hook (compilation-filter . ansi-color-compilation-filter))
+#+END_SRC
+
 * Secrets
 #+BEGIN_SRC emacs-lisp
 (defvar lib/server "irc.libera.chat")
