@@ -298,6 +298,18 @@ See: https://gist.github.com/shampee/0c38ab31b40c3b45a61c15fc7a258d81"
   (interactive)
   (ncspot-control "status"))
 
+(defun screenshot-to-clipboard (&optional select)
+  (if select
+      (async-start-process "screenshot" "scr-to-clip" 'ignore "-s")
+    (async-start-process "screenshot" "scr-to-clip" 'ignore "")))
+
+(defun scr-clip ()
+  (interactive)
+  (screenshot-to-clipboard))
+
+(defun scr-clip-select ()
+  (interactive)
+  (screenshot-to-clipboard t))
 
 (defun exwm-input-set-keys (keybinds)
   "KEYBINDS is a list of lists containing (keybind function)."
@@ -308,6 +320,8 @@ See: https://gist.github.com/shampee/0c38ab31b40c3b45a61c15fc7a258d81"
 
 (exwm-input-set-keys '(("s-<return>" open-emacs-terminal)
                        ("s-p" toggle-ld-lib)
+                       ("<Print>" scr-clip)
+                       ("C-<Print>" scr-clip-select)
                        ("C-<XF86AudioPlay>" ncspot-play/pause)
                        ("C-<XF86AudioNext>" ncspot-next)
                        ("C-<XF86AudioPrev>" ncspot-prev)
