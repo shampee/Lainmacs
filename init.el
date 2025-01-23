@@ -367,7 +367,7 @@ See: https://gist.github.com/shampee/0c38ab31b40c3b45a61c15fc7a258d81"
 	  (lambda ()
 	    (start-process-shell-command
 	      "xrandr" nil
-	      "xrandr --output DP-1 --mode 1920x1080 --rate 75 --left-of HDMI-1-3 --output HDMI-1-3 --mode 1920x1080 --rate 75")))
+	      "xrandr --output DP-1 --mode 1920x1080 --rate 144 --left-of HDMI-1-3 --output HDMI-1-3 --mode 1920x1080 --rate 75")))
 (exwm-randr-mode 1)
 (start-process-shell-command "ForceCompositionPipeline" nil "$HOME/bin/force-comp")
 
