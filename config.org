@@ -1195,27 +1195,47 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
 ** Initialize =notmuch=
 *** Code
 #+BEGIN_SRC emacs-lisp
-(use-package notmuch
-  :ensure t
-  :config 
-  ;; this doesn't work for some reason? only works through customize
-  (setq notmuch-search-oldest-first nil)
-  (evil-collection-init 'notmuch)
+  (use-package notmuch
+    :ensure t
+    :config 
+    ;; this doesn't work for some reason? only works through customize
+    (evil-collection-init 'notmuch)
+    (setq notmuch-search-oldest-first nil)
+    (setq send-mail-function 'sendmail-send-it) 
 
-  (defun my-next-unread ()
-    (interactive)
-    (let ((init (point)))
-      (catch 'break
-        (while t
-          (when (member "unread" (notmuch-show-get-tags))
-            (let ((props (notmuch-show-get-message-properties)))
-              (notmuch-show-message-visible props t)
-              (notmuch-show-mark-read)
-              (throw 'break t)))
-          (when (not (notmuch-show-goto-message-next))
-            (message "No more unread messages.")
-            (goto-char init)
-            (throw 'break t)))))))
+    (defun my-next-unread ()
+      (interactive)
+      (let ((init (point)))
+        (catch 'break
+          (while t
+            (when (member "unread" (notmuch-show-get-tags))
+              (let ((props (notmuch-show-get-message-properties)))
+                (notmuch-show-message-visible props t)
+                (notmuch-show-mark-read)
+                (throw 'break t)))
+            (when (not (notmuch-show-goto-message-next))
+              (message "No more unread messages.")
+              (goto-char init)
+              (throw 'break t)))))))
+
+; (use-package notmuch-notify
+;   ;; :ensure t
+;   :straight t
+;   ;; (Recommended) activate stats message when refreshing `notmuch-hello' buffer
+;   :hook (notmuch-hello-refresh . notmuch-notify-hello-refresh-status-message)
+;   :config
+;   ;; (Recommended) activate system-wise notification timer
+;   (setq notmuch-notify-excluded-tags '("Org-Mode" "FromMe"))
+;   (setq notmuch-notify-refresh-interval 2)
+;   (setq notmuch-notify-alert-profiles
+;         `((:name "inbox"
+;            :search-term "tag:inbox"
+;            :severity urgent
+;            :title "Notmuch inbox:"
+;            :icon ,(expand-file-name "img/inbox.jpg" user-emacs-directory)
+;            :audio ,(expand-file-name "audio/kalimba.wav" user-emacs-directory))
+;           (:name "default")))
+;   (notmuch-notify-set-refresh-timer))
 
   (use-package notmuch-indicator
     :ensure t
