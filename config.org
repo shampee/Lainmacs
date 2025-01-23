@@ -265,6 +265,7 @@ One of the main selling points of Emacs! no Emacs distribution is complete witho
           orgmdb-video-dir
           (list (concat (getenv "HOME") "/xtra/kino")
                 (concat (getenv "HOME") "/ext")))
+    (require 'orgmdb)
     (with-eval-after-load 'orgmdb
       (define-key org-mode-map (kbd "C-c a") #'orgmdb-act)
       (define-key org-mode-map (kbd "C-c f") #'orgmdb-act-on-movie)
