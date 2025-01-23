@@ -320,6 +320,7 @@ See: https://gist.github.com/shampee/0c38ab31b40c3b45a61c15fc7a258d81"
 
 (exwm-input-set-keys '(("s-<return>" open-emacs-terminal)
                        ("s-p" toggle-ld-lib)
+                       ("s-?" dictionary-search)
                        ("<Print>" scr-clip)
                        ("C-<Print>" scr-clip-select)
                        ("C-<XF86AudioPlay>" ncspot-play/pause)
