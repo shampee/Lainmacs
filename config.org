@@ -574,7 +574,9 @@ Vim keybindings in Emacs. Please note that Lainmacs has NO other evil-mode compa
   (setq evil-want-keybinding nil)
   (setq evil-want-C-u-scroll t)
   :config
-  (evil-mode 1))
+  (evil-mode 1) 
+  (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
+  (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line))
 
 (use-package evil-collection
   :after evil
