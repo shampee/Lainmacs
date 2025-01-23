@@ -290,18 +290,26 @@ One of the main selling points of Emacs! no Emacs distribution is complete witho
 #+END_SRC
 * ERC
 #+BEGIN_SRC emacs-lisp
+(use-package erc-hl-nicks
+  :ensure t)
+  
+(use-package erc-image
+  :ensure t)
+  
 (setq erc-track-shorten-start 8
       erc-kill-buffer-on-part t
       erc-fill-column 75
       erc-fill-function 'erc-fill-static
       erc-fill-static-center 5
+      erc-image-inline-rescale 'window
       erc-sound-path '("~/.emacs.d/audio")
       erc-default-sound "kalimba.wav"
       erc-auto-query 'window-noselect ;; 'bury
       erc-public-away-p nil
       erc-hide-list '("JOIN" "PART" "QUIT")
-      erc-autoaway-mode t
-      erc-autoaway-idle-method 'user
+      erc-autoaway-mode nil
+      erc-auto-set-away nil
+      erc-autoaway-idle-method 'irc
       erc-autoaway-idle-seconds 300
       erc-autoaway-message ""
       erc-join-buffer 'bury
@@ -315,15 +323,10 @@ One of the main selling points of Emacs! no Emacs distribution is complete witho
 
 (erc-select :server m/erc-server :port m/erc-port :nick m/erc-nick :password m/erc-password)
 (erc-select :server lib/server :port lib/port :nick lib/nick :password lib/password)
-;(erc-select :server riz/server :port riz/port :nick riz/nick :password riz/password)
-;(erc-send-line (format "/msg nickserv identify %s" riz/password) (lambda () (message "Sent rizon my password")))
-;(erc-tls :server lain/server :port lain/port :nick lain/nick :password lain/password)
+(erc-select :server riz/server :port riz/port :nick riz/nick :password riz/password)
+(erc-tls :server lain/server :port lain/port :nick lain/nick :password lain/password)
+#+END_SRC
 
-(use-package erc-hl-nicks
-  :ensure t)
-  
-(use-package erc-image
-  :ensure t)
 #+END_SRC
 
 * Eshell
