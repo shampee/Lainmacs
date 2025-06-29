@@ -319,7 +319,7 @@ One of the main selling points of Emacs! no Emacs distribution is complete witho
          ("irc.rizon.net" "#c0de" "#rice" "#bible")
          ("irc.lainchan.org" "#lainchan" "#questions"))
       erc-modules
-      '(autoaway autojoin button completion fill irccontrols list log match menu move-to-prompt netsplit networks noncommands notifications readonly ring sound stamp track image hl-nicks spelling))
+      '(autojoin button completion fill irccontrols list log match menu move-to-prompt netsplit networks noncommands notifications readonly ring sound stamp track hl-nicks spelling))
 
 (erc-select :server m/erc-server :port m/erc-port :nick m/erc-nick :password m/erc-password)
 (erc-select :server lib/server :port lib/port :nick lib/nick :password lib/password)
@@ -567,14 +567,16 @@ When doing C-s to search, you get this very nice and neat mini-buffer that you c
 Vim keybindings in Emacs. Please note that Lainmacs has NO other evil-mode compatibility packages because I like to KISS. This might change in the future
 *** Code
 #+BEGIN_SRC emacs-lisp
+;; TODO: cleanup the mappings
 (use-package evil
   :ensure t
   :defer nil
   :init
-  (setq evil-want-keybinding nil)
   (setq evil-want-C-u-scroll t)
+  (setq evil-want-keybinding nil)
   :config
   (evil-mode 1) 
+  (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
   (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
   (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line))
 
@@ -582,7 +584,7 @@ Vim keybindings in Emacs. Please note that Lainmacs has NO other evil-mode compa
   :after evil
   :ensure t
   :diminish (evil-collection-unimpaired-mode)
-  :config
+  :config 
   (evil-collection-init))
 
 (use-package evil-surround
@@ -616,7 +618,7 @@ Vim keybindings in Emacs. Please note that Lainmacs has NO other evil-mode compa
 #+END_SRC
 ** Initialize =avy=
 *** Description
-Avy is a very useful package; instead of having to move your cursor to a line that is very far away, just do M - s and type the character that you want to move to
+Avy is a very useful package; instead of having to move your cursor to a line that is very far away, just do M - s and type the character that you want to move to. Maybe this is for you? It's not for me.
 *** Code
 #+BEGIN_SRC emacs-lisp
 (use-package avy
@@ -1190,6 +1192,7 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
       :workspace-index 4
       :persp-name "media"))))
 
+;(remove-hook 'exwm-manage-finish-hook #'my/exwm-configure-window)
 (add-hook 'exwm-manage-finish-hook #'my/exwm-configure-window)
 #+END_SRC
 ** Initialize =notmuch=
@@ -1251,6 +1254,12 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
     (setq aria2-add-evil-quirks t)) 
 #+END_SRC
 
+** Initialize =lingva=
+*** Code
+#+BEGIN_SRC emacs-lisp
+  (use-package lingva
+    :ensure t)
+#+END_SRC
 * Programming section
 ** Initialize =yasnippet=
 *** Description
@@ -1261,7 +1270,7 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
 :ensure t
 :diminish yas-minor-mode
 :hook
-((c-mode c++-mode) . yas-minor-mode)
+((c-mode c++-mode zig-mode python-mode) . yas-minor-mode)
 :config
 (yas-reload-all))
 
@@ -1331,12 +1340,6 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
     :defer nil
     :diminish (paredit-mode eldoc-mode)
     :ensure t
-    :config
-    (add-hook 'lisp-mode-hook 'setup-lisp-stuff)
-    (add-hook 'scheme-mode-hook 'setup-lisp-stuff)
-    (add-hook 'clojure-mode-hook 'setup-lisp-stuff)
-    (add-hook 'clojurec-mode-hook 'setup-lisp-stuff)
-    (add-hook 'racket-mode-hook 'setup-lisp-stuff)
     :hook
     ((racket-mode lisp-mode ulisp-mode scheme-mode emacs-lisp-mode clojure-mode clojurec-mode) . paredit-mode))
 
@@ -1352,13 +1355,8 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
     :defer nil
     :ensure t
     :diminish (lispy-mode)
-    :config
-    (defun conditionally-enable-lispy ()
-        (when (eq this-command 'eval-expression)
-        (lispy-mode 1)))
-    (add-hook 'minibuffer-setup-hook 'conditionally-enable-lispy)
     :hook
-    ((racket-mode lisp-mode scheme-mode emacs-lisp-mode clojure-mode) . lispy-mode))
+    ((racket-mode lisp-mode ulisp-mode scheme-mode emacs-lisp-mode clojure-mode) . lispy-mode))
 
   ; Elsa
   (use-package elsa
@@ -1375,7 +1373,9 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
   (use-package sly
     :ensure t
     :config
+    (define-key sly-mode-map (kbd "C-c C-b") #'sly-eval-buffer)
     (setq inferior-lisp-program "sbcl"))
+
   (use-package sly-asdf
     :ensure t)
   (use-package sly-overlay
@@ -1411,6 +1411,27 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
     :defer nil
     :ensure t)
 
+  (use-package geiser-chibi
+    :defer nil
+    :ensure t)
+
+  (use-package racket-mode
+    :defer nil
+    :ensure t
+    :config 
+    (define-key racket-mode-map (kbd "C-c C-d") #'racket-repl-describe))
+
+  (with-eval-after-load 'lsp-mode
+    (setq-default lsp-auto-guess-root t)
+
+    (lsp-register-client
+     (make-lsp-client :new-connection (lsp-stdio-connection "/usr/bin/racket-langserver")
+                      :major-modes '(racket-mode)
+                      :server-id 'racket-langserver
+                      :multi-root t))) ;; Ensures lsp-mode sends "workspaceFolders" to the server
+
+  (add-hook 'racket-mode-hook #'lsp-deferred)
+
   ; Clojure
   (use-package clojure-mode
     :defer nil
@@ -1437,4 +1458,74 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
        '(setq flycheck-display-errors-function #'flycheck-pos-tip-error-messages))
     (add-hook 'after-init-hook #'global-flycheck-mode))
 #+END_SRC
+** GLSL
+*** Code
+#+BEGIN_SRC emacs-lisp
+  (use-package glsl-mode
+    :ensure t
+    :mode ("\\.fs\\'" "\\.vs\\'"))
 
+  (with-eval-after-load 'lsp-mode
+    (setq-default lsp-auto-guess-root t)
+
+    (lsp-register-client
+     (make-lsp-client :new-connection (lsp-stdio-connection "/usr/bin/glsl_analyzer") ;; Adjust the path here
+                      :major-modes '(glsl-mode)
+                      :server-id 'glsl_analyzer
+                      :multi-root t))) ;; Ensures lsp-mode sends "workspaceFolders" to the server
+
+  (add-hook 'glsl-mode-hook #'lsp-deferred)
+#+END_SRC
+** Zig
+*** Code
+#+BEGIN_SRC emacs-lisp
+  (use-package zig-mode
+    :ensure t)
+
+  (use-package zig-ts-mode
+    :ensure t)
+#+END_SRC
+** Python
+*** Code
+#+BEGIN_SRC emacs-lisp
+  ;; (use-package auto-virtualenv
+  ;;   :ensure t
+  ;;   :config
+  ;;   (setq auto-virtualenv-verbose t)
+  ;;   (setq auto-virtualenv-reload-lsp t)
+  ;;   (setq auto-virtualenv-global-dirs
+  ;;     '("~/.virtualenvs/" "~/.pyenv/versions/" "~/.envs/" "~/.conda/" "~/.conda/envs/" "venv/" ".venv/"))
+  ;;   (auto-virtualenv-setup))
+#+END_SRC
+** Odin
+*** Code
+#+BEGIN_SRC emacs-lisp
+  (use-package odin-mode
+    :straight (odin-mode :type git :host github :repo "mattt-b/odin-mode")
+    :mode ("\\.odin\\'" . odin-mode)
+    :config 
+    (define-key odin-mode-map (kbd "C-c C-b")
+                (lambda () (interactive)
+                  (compile "odin build . -debug")))
+    (define-key odin-mode-map (kbd "C-c C-l")
+                (lambda () (interactive)
+                  (compile "odin build . -build-mode:shared -debug")))
+    (define-key odin-mode-map (kbd "C-c C-r")
+                (lambda () (interactive)
+                  (compile "odin run . -debug"))))
+
+    ;; Set up OLS as the language server for Odin, ensuring lsp-mode is loaded first
+  (with-eval-after-load 'lsp-mode
+    (setq-default lsp-auto-guess-root t) ;; Helps find the ols.json file with Projectile or project.el
+    (add-to-list 'lsp-language-id-configuration '(odin-mode . "odin"))
+    (add-to-list 'lsp-language-id-configuration '(odin-ts-mode . "odin"))
+
+    (lsp-register-client
+     (make-lsp-client :new-connection (lsp-stdio-connection "/home/goober/.local/bin/ols") ;; Adjust the path here
+                      :major-modes '(odin-mode odin-ts-mode)
+                      :server-id 'ols
+                      :multi-root t))) ;; Ensures lsp-mode sends "workspaceFolders" to the server
+
+  ;; Add a hook to autostart OLS
+  (add-hook 'odin-mode-hook #'lsp-deferred)
+#+END_SRC
