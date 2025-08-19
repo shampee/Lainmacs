@@ -193,10 +193,12 @@ Super - Control - <arrow>
 (defvar m/erc-port nil)
 (defvar m/erc-server nil)
 
+(defvar m/pleroma-token nil)
 (defvar m/elfeed-feeds nil             "A list of RSS feeds for elfeed.")
 (defvar m/user-full-name nil           "The full name of user.")
 (defvar m/user-mail-address nil        "The email address of user.")
 (defvar m/mail-signature nil           "The mail signature.")
+
 
 (defvar m/mail-smtp-server nil         "The smtp server for mail.")
 (defvar m/mail-smtp-port nil           "The smtp port for mail.")
@@ -226,11 +228,17 @@ One of the main selling points of Emacs! no Emacs distribution is complete witho
   (use-package org-indent
     :diminish org-indent-mode)
 
+  (use-package org-pandoc-import
+    :straight (:host github
+                     :repo "tecosaur/org-pandoc-import"
+                     :files ("*.el" "filters" "preprocessors")))
+
   (use-package htmlize
     :ensure t)
 
   (use-package org-ref
     :ensure t)
+
   (use-package org-roam
     :ensure t
     :custom
@@ -315,20 +323,18 @@ One of the main selling points of Emacs! no Emacs distribution is complete witho
       erc-join-buffer 'bury
       erc-autojoin-mode t
       erc-autojoin-channels-alist
-       '(("Libera.Chat" "#clschool" "#commonlisp" "#ecl" "#lisp" "#scheme" "#guile" "#guix" "#chicken" "#clojure")
+       '(("Libera.Chat" "#clschool" "#commonlisp" "#ecl" "#lisp" "#scheme" "#guile" "#guix" "#chicken" "#clojure" "#janet")
          ("irc.rizon.net" "#c0de" "#rice" "#bible")
          ("irc.lainchan.org" "#lainchan" "#questions"))
       erc-modules
       '(autojoin button completion fill irccontrols list log match menu move-to-prompt netsplit networks noncommands notifications readonly ring sound stamp track hl-nicks spelling))
-
-(erc-select :server m/erc-server :port m/erc-port :nick m/erc-nick :password m/erc-password)
-(erc-select :server lib/server :port lib/port :nick lib/nick :password lib/password)
-(erc-select :server riz/server :port riz/port :nick riz/nick :password riz/password)
-(erc-tls :server lain/server :port lain/port :nick lain/nick :password lain/password)
+(unless (and (boundp 'erc-initialized-p) erc-initialized-p)
+  (setq erc-initialized-p t)
+  (erc-select :server m/erc-server :port m/erc-port :nick m/erc-nick :password m/erc-password)
+  (erc-select :server lib/server :port lib/port :nick lib/nick :password lib/password)
+  (erc-select :server riz/server :port riz/port :nick riz/nick :password riz/password)
+  (erc-tls :server lain/server :port lain/port :nick lain/nick :password lain/password))
 #+END_SRC
-
-#+END_SRC
-
 * Eshell
 ** Why Eshell?
 We are using Emacs, so we might as well implement as many tools from our workflow into it as possible
@@ -341,14 +347,15 @@ Eshell cannot handle ncurses programs and in certain interpreters (Python, GHCi)
       (lambda nil
         (concat
          (if (string= (eshell/pwd) (getenv "HOME"))
-             (propertize "~" 'face `(:foreground "#22CCFF"))
+             (propertize "~" 'face `(:foreground "#b4daff"))
            (replace-regexp-in-string
             (getenv "HOME")
-            (propertize "~" 'face `(:foreground "#22CCFF"))
-            (propertize (eshell/pwd) 'face `(:foreground "#22CCFF"))))
+            (propertize "~" 'face `(:foreground  "#b4daff"))
+            (propertize (eshell/pwd) 'face `(:foreground  "#b4daff"))))
          (if (= (user-uid) 0)
              (propertize " α " 'face `(:foreground "#226666"))
-          (propertize " λ " 'face `(:foreground "#06E22E"))))))
+             (propertize " λ" 'face `(:foreground  "#b4daff")))
+          (propertize " " 'face `(:foreground  "#fafff6")))))
 
 (setq eshell-highlight-prompt nil)
 #+END_SRC
@@ -442,10 +449,12 @@ Diminish hides minor modes to prevent cluttering your mode line
 I tried spaceline and powerline and didn't like either.
 *** Code
 #+BEGIN_SRC emacs-lisp
+  ;https://www.gnu.org/software/emacs/manual/html_node/elisp/Standard-Hooks.html
+
   ;; server-after-make-frame-hook seems to work
   (use-package simple-modeline
     :ensure t
-    :diminish (paredit-mode eldoc-mode lispy-mode)
+    :diminish (paredit-mode eldoc-mode lispy-mode visual-line-mode dired-async-mode)
     :hook (server-after-make-frame-hook . simple-modeline-mode)
     :config
     (setq mode-line-misc-info
@@ -456,7 +465,7 @@ I tried spaceline and powerline and didn't like either.
                (" " global-mode-string))))
     (setq simple-modeline-segments
           '((simple-modeline-segment-modified simple-modeline-segment-buffer-name simple-modeline-segment-position simple-modeline-segment-major-mode)
-            (simple-modeline-segment-minor-modes simple-modeline-segment-input-method simple-modeline-segment-eol simple-modeline-segment-encoding simple-modeline-segment-vc simple-modeline-segment-process simple-modeline-segment-misc-info)))
+            (simple-modeline-segment-minor-modes simple-modeline-segment-input-method simple-modeline-segment-vc simple-modeline-segment-process simple-modeline-segment-misc-info)))
     ;; Make the misc section not unimportant anymore.
     (defun simple-modeline-segment-misc-info ()
       "Display the current value of `mode-line-misc-info' in the modeline."
@@ -551,7 +560,7 @@ Incredibly useful package; if you are in the middle of a command and don't know 
 #+BEGIN_SRC emacs-lisp
 (use-package which-key
   :ensure t
-  :diminish which-key-mode
+  :diminish (which-key-mode)
   :init
   (which-key-mode))
 #+END_SRC
@@ -1253,12 +1262,61 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
     :config
     (setq aria2-add-evil-quirks t)) 
 #+END_SRC
+** Initialize =ultra-scroll=
+*** Code
+#+BEGIN_SRC emacs-lisp
+  (use-package ultra-scroll
+    :ensure t
+    ;:vc (:url "https://github.com/jdtsmith/ultra-scroll") ; if desired (emacs>=v30)
+    :init
+    (setq scroll-conservatively 3 ; or whatever value you prefer, since v0.4
+            scroll-margin 0)        ; important: scroll-margin>0 not yet supported
+    :config
+    (ultra-scroll-mode 1))
 
+#+END_SRC
+** Initialize =discover=
+*** Code
+#+BEGIN_SRC emacs-lisp
+  (use-package discover
+    :ensure t)
+
+#+END_SRC
+** Initialize =mpv=
+*** Code
+#+BEGIN_SRC emacs-lisp
+  (use-package mpv
+    :ensure t)
+#+END_SRC
+** Initialize =emojify=
+*** Code
+#+BEGIN_SRC emacs-lisp
+  (use-package emojify
+    :ensure t)
+
+#+END_SRC
 ** Initialize =lingva=
 *** Code
 #+BEGIN_SRC emacs-lisp
   (use-package lingva
     :ensure t)
+#+END_SRC
+** Initialize =ligature=
+*** Code
+#+BEGIN_SRC emacs-lisp
+(use-package ligature
+  :straight t
+  :config
+  ;; Enable all Iosevka ligatures in programming modes
+  (ligature-set-ligatures
+   'prog-mode
+   '("<---" "<--"  "<<-" "<-" "->" "-->" "--->" "<->" "<-->" "<--->" "<---->" "<!--"
+     "<==" "<===" "<=" "=>" "=>>" "==>" "===>" ">=" "<=>" "<==>" "<===>" "<====>" "<!---"
+     "<~~" "<~" "~>" "~~>" "::" ":::" "==" "!=" "===" "!=="
+     ":=" ":-" ":+" "<*" "<*>" "*>" "<|" "<|>" "|>" "+:" "-:" "=:" "<******>" "++" "+++"))
+  ;; Enables ligature checks globally in all buffers. You can also do it
+  ;; per mode with `ligature-mode'.
+  (global-ligature-mode t))
 #+END_SRC
 * Programming section
 ** Initialize =yasnippet=
@@ -1268,7 +1326,7 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
 #+BEGIN_SRC emacs-lisp
 (use-package yasnippet
 :ensure t
-:diminish yas-minor-mode
+:diminish (yas-minor-mode)
 :hook
 ((c-mode c++-mode zig-mode python-mode) . yas-minor-mode)
 :config
@@ -1287,7 +1345,7 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
 (setq lsp-keymap-prefix "C-c l")
   :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
          ;(clojure-mode . lsp)
-         ((haskell-mode c-mode) . lsp)
+         ((haskell-mode c-mode scala-mode) . lsp)
          ;; if you want which-key integration
          (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp)
@@ -1335,20 +1393,37 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
       (eldoc-add-command 'electrify-return-if-match)
       (show-paren-mode t))
 
+  ;; FIXME: this is hacky and just for now
+  (add-to-list 'auto-mode-alist '("\\.gc\\'" . lisp-mode))
+  (add-hook 'lisp-mode-hook 'setup-goal)
+
+  (defun setup-goal ()
+  ;; if we are in a gc file, change indent settings for GOAL
+  (when (and (stringp buffer-file-name)
+              (string-match "\\.gc\\'" buffer-file-name))
+      (put 'with-pp      'common-lisp-indent-function 0)
+      (put 'while        'common-lisp-indent-function 1)
+      (put 'rlet         'common-lisp-indent-function 1)
+      (put 'until        'common-lisp-indent-function 1)
+      (put 'countdown    'common-lisp-indent-function 1)
+      (put 'defun-debug  'common-lisp-indent-function 2)
+      (put 'defenum      'common-lisp-indent-function 2)
+
+      ;; indent for common lisp, this makes it look nicer
+      (custom-set-variables '(lisp-indent-function 'common-lisp-indent-function))
+      (autoload 'common-lisp-indent-function "cl-indent" "Common Lisp indent.")))
+
+  (use-package emacs
+    :ensure t
+    :config (require 'ulisp-mode))
+
   ; Paredit
   (use-package paredit
     :defer nil
     :diminish (paredit-mode eldoc-mode)
     :ensure t
     :hook
-    ((racket-mode lisp-mode ulisp-mode scheme-mode emacs-lisp-mode clojure-mode clojurec-mode) . paredit-mode))
-
-  ; Parinfer
-  (use-package parinfer-rust-mode
-    :init
-    (setq parinfer-rust-auto-download t))
-    ;:hook
-    ;((lisp-mode scheme-mode emacs-lisp-mode) . parinfer-rust-mode))
+    ((racket-mode lisp-mode ulisp-mode scheme-mode emacs-lisp-mode clojure-mode clojurec-mode janet-ts-mode) . paredit-mode))
 
   ; Lispy
   (use-package lispy
@@ -1356,7 +1431,7 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
     :ensure t
     :diminish (lispy-mode)
     :hook
-    ((racket-mode lisp-mode ulisp-mode scheme-mode emacs-lisp-mode clojure-mode) . lispy-mode))
+    ((racket-mode lisp-mode ulisp-mode scheme-mode emacs-lisp-mode clojure-mode janet-ts-mode) . lispy-mode))
 
   ; Elsa
   (use-package elsa
@@ -1510,6 +1585,9 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
     (define-key odin-mode-map (kbd "C-c C-l")
                 (lambda () (interactive)
                   (compile "odin build . -build-mode:shared -debug")))
+    (define-key odin-mode-map (kbd "C-c C-t")
+                (lambda () (interactive)
+                  (compile "odin test .")))
     (define-key odin-mode-map (kbd "C-c C-r")
                 (lambda () (interactive)
                   (compile "odin run . -debug"))))
@@ -1524,8 +1602,97 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
      (make-lsp-client :new-connection (lsp-stdio-connection "/home/goober/.local/bin/ols") ;; Adjust the path here
                       :major-modes '(odin-mode odin-ts-mode)
                       :server-id 'ols
-                      :multi-root t))) ;; Ensures lsp-mode sends "workspaceFolders" to the server
+                      :multi-root nil)))
 
   ;; Add a hook to autostart OLS
   (add-hook 'odin-mode-hook #'lsp-deferred)
+#+END_SRC
+** Rust
+*** Code
+#+BEGIN_SRC emacs-lisp
+  (use-package rust-mode
+    :ensure t)
+
+  (with-eval-after-load 'lsp-mode
+    (setq-default lsp-auto-guess-root t) ;; Helps find the ols.json file with Projectile or project.el
+    (add-to-list 'lsp-language-id-configuration '(rust-mode . "rust")))
+    
+
+  (add-hook 'rust-mode-hook #'lsp-deferred)
+#+END_SRC
+** Go
+*** Code
+#+BEGIN_SRC emacs-lisp
+  (use-package go-mode
+    :ensure t)
+
+  (with-eval-after-load 'lsp-mode
+    (setq-default lsp-auto-guess-root t) ;; Helps find the ols.json file with Projectile or project.el
+
+    (lsp-register-client
+     (make-lsp-client :new-connection (lsp-stdio-connection "/usr/bin/racket-langserver")
+                      :major-modes '(racket-mode)
+                      :server-id 'racket-langserver
+                      :multi-root t))
+    (add-to-list 'lsp-language-id-configuration '(go-mode . "go")))
+    
+
+  (add-hook 'go-mode-hook #'lsp-deferred)
+#+END_SRC
+** Scala
+*** Code
+#+BEGIN_SRC emacs-lisp
+  (use-package scala-mode
+    :interpreter ("scala" . scala-mode)
+    :ensure t)
+
+  (use-package sbt-mode
+    :ensure t
+    :commands sbt-start sbt-command
+    :config
+    ;; WORKAROUND: https://github.com/ensime/emacs-sbt-mode/issues/31
+    ;; allows using SPACE when in the minibuffer
+    (substitute-key-definition
+      'minibuffer-complete-word
+      'self-insert-command
+      minibuffer-local-completion-map)
+      ;; sbt-supershell kills sbt-mode:  https://github.com/hvesalai/emacs-sbt-mode/issues/152
+      (setq sbt:program-options '("-Dsbt.supershell=false")))
+
+  (use-package lsp-metals
+    :ensure t)
+
+  ;; (with-eval-after-load 'lsp-mode
+  ;;   (setq-default lsp-auto-guess-root t) ;; Helps find the ols.json file with Projectile or project.el
+  ;;   (lsp-register-client
+  ;;     (make-lsp-client :new-connection (lsp-stdio-connection "/home/goober/.local/share/coursier/bin/metals")
+  ;;                      :major-modes '(scala-mode)
+  ;;                      :server-id 'lsp-metals
+  ;;                      :multi-root t)) ;; Ensures lsp-mode sends "workspaceFolders" to the server
+  ;;   (add-to-list 'lsp-language-id-configuration '(scala-mode . "scala")))
+    
+
+  ;; (add-hook 'scala-mode-hook #'lsp-deferred)
+#+END_SRC
+** Janet
+*** Code
+#+BEGIN_SRC emacs-lisp
+  (use-package janet-ts-mode
+    :straight (:host github
+               :repo "sogaiu/janet-ts-mode"
+               :files ("*.el")))
+
+  (require 'inf-janet)
+  (autoload 'inf-janet "inf-janet" "Run an inferior Janet process" t)
+  (add-hook 'janet-ts-mode-hook 'inf-janet-minor-mode)
+
+  (with-eval-after-load 'lsp-mode
+    (setq-default lsp-auto-guess-root t) ;; Helps find the ols.json file with Projectile or project.el
+
+    (lsp-register-client
+      (make-lsp-client :new-connection (lsp-stdio-connection "/usr/local/bin/janet-lsp")
+                       :major-modes '(janet-ts-mode)
+                       :server-id 'janet-lsp
+                       :multi-root t))
+  (add-to-list 'lsp-language-id-configuration '(janet-ts-mode . "janet")))
 #+END_SRC

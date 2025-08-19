@@ -1,7 +1,5 @@
 ;;; init.el --- init file for Emacs  -*- lexical-binding: t; indent-tabs-mode: nil -*-
 
-(require 's)
-
 
 ;;;; Garbage collector stuff
 
@@ -36,14 +34,6 @@
 (add-to-list 'package-archives '("nongnu" . "https://elpa.nongnu.org/nongnu/") t)
 (package-initialize)
 
-;; This sets $MANPATH, $PATH and exec-path from your shell,
-;; but only when executed in a GUI frame on OS X and Linux.
-(when (memq window-system '(mac ns x))
-  (exec-path-from-shell-initialize))
-
-;; If you run Emacs as a daemon through systemd.
-(when (daemonp)
-  (exec-path-from-shell-initialize))
 
 ;; Initialize use-package
 (unless (package-installed-p 'use-package)
@@ -75,21 +65,21 @@
   (exec-path-from-shell-initialize))
 
 ;; Load theme for Lainmacs
-(use-package ef-themes :ensure t)
-(load-theme 'ef-dream t)
-
-(save-excursion
-  (exwm-workspace-switch-create 9)
-  (exwm-workspace-switch-create 0))
+;; (use-package ef-themes :ensure t)
+;; (load-theme 'ef-dream t)
+(use-package timu-rouge-theme :ensure t)
+(load-theme 'timu-rouge t)
 
 ;; Set font
-(set-frame-font "Iosevka Comfy Motion 12" nil t)
-(add-to-list 'default-frame-alist '(font . "Iosevka Comfy Motion 12"))
+(set-frame-font "Aporetic Serif Mono 12" nil t)
+(add-to-list 'default-frame-alist '(font . "Aporetic Serif Mono 12"))
+; (setcar default-frame-alist '(font . "Iosevka Comfy 12"))
+
 ;; Load config.org for init.el configuration
 (org-babel-load-file (expand-file-name "~/.emacs.d/config.org"))
 
 
-;; Exwm
+;;;; Exwm
 
 ;; Disable menu-bar, tool-bar and scroll-bar to increase the usable space.
 (menu-bar-mode -1)
@@ -111,6 +101,10 @@
 ;; Emacs server is not required to run EXWM but it has some interesting uses
 ;; (see next section).
 (server-start)
+
+;; If you run Emacs as a daemon through systemd.
+(when (daemonp)
+  (exec-path-from-shell-initialize))
 
 
 ;;;; Init
@@ -198,13 +192,17 @@ Run the command and send a notification if NOTIFY-P is T."
   "Configure window by class."
   (interactive)
   (pcase exwm-class-name
-    ;("Alacritty" (toggle-modeline))
     ("Firefox-esr" (toggle-modeline))
+    ("google-chrome" (toggle-modeline))
+    ("game1" (toggle-float))
+    ("game2" (toggle-float))
+    ("Matplotlib" (toggle-float-and-modeline))
+    ("ghidra-Ghidra" (toggle-float-and-modeline))
     ("xarchiver" (toggle-float-and-modeline))
     ("mpv" (toggle-float-and-modeline))
     ("pavucontrol" (toggle-float-and-modeline))
     ("Godot" (toggle-float-and-modeline))
-    ("Blender" (toggle-float-and-modeline))
+    ("Blender" (and (exwm-floating--set-floating exwm--id) (exwm-layout-hide-mode-line)))
     ("electrum" (toggle-float-and-modeline))
     ("Gpa" (toggle-float-and-modeline))
     ("Tor Browser" (toggle-float-and-modeline))))
@@ -217,10 +215,12 @@ Run the command and send a notification if NOTIFY-P is T."
       ((title= (lambda (str) (string= str exwm-title)))
        (title-contains-p (lambda (str) (not (null (cl-search str exwm-title))))))
     (cond
+     ((title= "GAME") (toggle-float))
      ((title= "CEPL") (toggle-float-and-modeline))
      ((title= "Volume Control" ) (toggle-float-and-modeline))
      ((title-contains-p "GNU Privacy Assistant") (toggle-float-and-modeline))
      ((title-contains-p "xarchiver") (toggle-float-and-modeline))
+     ((title-contains-p "PCSX2") (and (exwm-floating--set-floating exwm--id) (exwm-layout-hide-mode-line)))
      (t nil))))
 (add-hook 'exwm-manage-finish-hook #'configure-window-by-title)
 
@@ -236,6 +236,16 @@ Run the command and send a notification if NOTIFY-P is T."
   "Show how much memory is used and how much is available."
   (interactive)
   (shell-command "free -mh"))
+
+;; FIXME: ME NO WORKY
+(defun toggle-line-char ()
+  "If we're in an EXWM buffer, toggle between 'line' and 'char' mode."
+  (interactive)
+  (if exwm-window-type
+      (if (= exwm--input-mode "line-mode")
+          (call-interactively #'exwm-input-release-keyboard)
+        (call-interactively #'exwm-input-grab-keyboard))
+    (message "Not on an EXWM window.")))
 
 (defun open-emacs-terminal ()
   "Start up an Eat terminal."
@@ -318,16 +328,31 @@ See: https://gist.github.com/shampee/0c38ab31b40c3b45a61c15fc7a258d81"
           (command (cadr key-commands)))
       (exwm-input-set-key (kbd keys) command))))
 
+
 (exwm-input-set-keys '(("s-<return>" open-emacs-terminal)
                        ("s-p" toggle-ld-lib)
                        ("s-?" dictionary-search)
-                       ("<Print>" scr-clip)
-                       ("C-<Print>" scr-clip-select)
+                       ("<print>" scr-clip)
+                       ("C-<print>" scr-clip-select)
                        ("C-<XF86AudioPlay>" ncspot-play/pause)
                        ("C-<XF86AudioNext>" ncspot-next)
                        ("C-<XF86AudioPrev>" ncspot-prev)
                        ("C-<XF86AudioLowerVolume>" ncspot-voldown)
                        ("C-<XF86AudioRaiseVolume>" ncspot-volup)))
+
+(let ((prev exwm-workspace-current-index))
+  (defun exwm-workspace-save-previous-index ()
+    (setq exwm-workspace-previous-index prev
+          prev exwm-workspace-current-index)))
+
+(setq exwm-workspace-switch-hook #'exwm-workspace-save-previous-index)
+
+(defun exwm-workspace-switch-to-previous ()
+  (interactive)
+  (exwm-workspace-switch-create exwm-workspace-previous-index))
+
+;; Can't figure out how to do it in the `exwm-input-global-keys`
+(global-set-key (kbd "s-<tab>") #'exwm-workspace-switch-to-previous)
 
 ;; Global keybindings can be defined with `exwm-input-global-keys'.
 ;; Here are a few examples:
@@ -339,6 +364,8 @@ See: https://gist.github.com/shampee/0c38ab31b40c3b45a61c15fc7a258d81"
         ([?\s-w] . exwm-workspace-switch)
         ;; Bind "s-m" to move workspace interactively.
         ([?\s-m] . exwm-workspace-move)
+
+        ([?\s-\t] . exwm-workspace-switch-to-previous)
 
         ([?\s-f] . show-free-mem)
         ([?\s-t] . launch-terminal)
@@ -401,7 +428,7 @@ See: https://gist.github.com/shampee/0c38ab31b40c3b45a61c15fc7a258d81"
         ([?\M-v] . [prior])
         ([?\C-v] . [next])
         ([?\C-d] . [delete])
-        ([?\C-k] . [S-end delete])
+        ;; ([?\C-k] . [S-end delete])
         ;; cut/paste.
         ([?\C-w] . [?\C-x])
         ([?\M-w] . [?\C-c])
@@ -411,36 +438,43 @@ See: https://gist.github.com/shampee/0c38ab31b40c3b45a61c15fc7a258d81"
 
 
 (defvar auto-char-mode-by-class
-  '("Tor Browser" "Godot" "Thunderbird" "gpa" "electrum" "mpv" "pavucontrol" "Zathura"))
+  '("Tor Browser" "Godot" "Thunderbird" "gpa" "electrum" "mpv" "pavucontrol" "Zathura" "qutebrowser"))
 (defvar auto-char-mode-by-title
-  '("ikatube"))
+  '("ikatube" "GNU Privacy Assistant"))
 
-(setq exwm-manage-configurations
-      '(((member exwm-class-name auto-char-mode-by-class)
-         char-mode t)
-        ((member exwm-title auto-char-mode-by-title)
-         char-mode t)))
+;; FIXME: WHAT THE _FUCK_ HAPPENED?
+;; (setq exwm-manage-configurations
+;;       '(((member exwm-class-name auto-char-mode-by-class)
+;;          char-mode t)
+;;         ((member exwm-title auto-char-mode-by-title)
+;;          char-mode t)))
 
 (defvar ignore-simulation-keys-apps
-  '("Alacritty" "ikatube" "Tor Browser" "qutebrowser" "Godot" "zathura"
+  '("Alacritty" "ikatube" "Tor Browser" "qutebrowser" "Godot" "zathura" "Firefox"
     "Firefox-esr" "Thunderbird" "gpa" "mpv" "xfce4-terminal" "pavucontrol"))
+
+;; (defun ignore-simkeys ()
+;;   "Ignore simulation keys for the applications in `ignore-simulation-keys-apps'."
+;;   (interactive)
+;;   (when (-any (lambda (name) (string= exwm-class-name name)) ignore-simulation-keys-apps)
+;;      (exwm-input-set-local-simulation-keys nil)))
 
 (defun ignore-simkeys ()
   "Ignore simulation keys for the applications in `ignore-simulation-keys-apps'."
   (interactive)
-  (when (or
-         (and exwm-class-name
-              (-any (lambda (name) (string= exwm-class-name name)) ignore-simulation-keys-apps))
-         (s-contains-p "ikatube" exwm-title))
+  (when (or (and exwm-class-name
+                 (-any (lambda (name) (string= exwm-class-name name)) ignore-simulation-keys-apps))
+            (and exwm-title
+                 (-any (lambda (name) (s-contains-p name exwm-title)) ignore-simulation-keys-apps)))
     ;; (exwm-input-set-simulation-key ...)
     (exwm-input-set-local-simulation-keys nil)))
 (add-hook 'exwm-manage-finish-hook 'ignore-simkeys)
 
 
 
-
-;; Do this before exwm-init
-;(perspective-exwm-mode)
+;; Do this before exwm-enable
+(perspective-exwm-mode)
+(persp-mode)
 
 ;; You can hide the minibuffer and echo area when they're not used, by
 ;; uncommenting the following line.
@@ -472,8 +506,39 @@ See: https://gist.github.com/shampee/0c38ab31b40c3b45a61c15fc7a258d81"
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '())
+ '(custom-safe-themes
+   '("130bda3c4c328c13e6f91009e429ebd7522c6a0d49af6fc32b9fa1bc9b8cf753"
+     "45333f79e4a7fdeff9924d5b6658f84fb468ef38f749455e5b58ba4154782007"
+     "59c36051a521e3ea68dc530ded1c7be169cd19e8873b7994bfc02a216041bf3b"
+     "19b62f442479efd3ca4c1cef81c2311579a98bbc0f3684b49cdf9321bd5dfdbf"
+     "6af300029805f10970ebec4cea3134f381cd02f04c96acba083c76e2da23f3ec"
+     "ac893acecb0f1cf2b6ccea5c70ea97516c13c2b80c07f3292c21d6eb0cb45239"
+     "aff0396925324838889f011fd3f5a0b91652b88f5fd0611f7b10021cc76f9e09"
+     "90185f1d8362727f2aeac7a3d67d3aec789f55c10bb47dada4eefb2e14aa5d01"
+     "b9c002dc827fb75b825da3311935c9f505d48d7ee48f470f0aa7ac5d2a595ab2"
+     "3d9938bbef24ecee9f2632cb25339bf2312d062b398f0dfb99b918f8f11e11b1"
+     "ae20535e46a88faea5d65775ca5510c7385cbf334dfa7dde93c0cd22ed663ba0"
+     "36c5acdaf85dda0dad1dd3ad643aacd478fb967960ee1f83981d160c52b3c8ac"
+     "d609d9aaf89d935677b04d34e4449ba3f8bbfdcaaeeaab3d21ee035f43321ff1"
+     "e85a354f77ae6c2e47667370a8beddf02e8772a02e1f7edb7089e793f4762a45"
+     "d6b369a3f09f34cdbaed93eeefcc6a0e05e135d187252e01b0031559b1671e97"
+     default))
+ '(elfeed-feeds '("https://sachachua.com/blog/feed"))
+ '(mastodon-images-in-notifs t)
+ '(mastodon-tl--show-avatars t)
+ '(notmuch-saved-searches
+   '((:name "inbox" :query "tag:inbox" :key "i")
+     (:name "unread" :query "tag:unread" :key "u")
+     (:name "flagged" :query "tag:flagged" :key "f")
+     (:name "sent" :query "tag:sent" :key "t")
+     (:name "drafts" :query "tag:draft" :key "d")
+     (:name "all mail" :query "*" :key "a")
+     (:name ":name" :query "fuck you")))
+ '(notmuch-search-oldest-first nil)
+ '(package-selected-packages 'nil)
+ '(send-mail-function 'sendmail-send-it)
+ '(simple-modeline-mode t)
+ '(virtualenv-root "~/src/python/cv/"))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

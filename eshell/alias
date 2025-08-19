@@ -1,41 +1,42 @@
-alias .. cd .. $*
-alias ... cd ../.. $*
-alias A sudo apt $*
-alias _ sudo $*
-alias a apt $*
-alias aI A install -y $*
-alias aP A purge -y $*
-alias aR A remove -y $*
-alias aS apt search $*
-alias aSH apt show $*
-alias aU A upgrade -y $*
-alias aaR A autoremove -y $*
-alias aaa au;aU;aaR $*
-alias au A update $*
-alias cp $HOME/bin/cpg $*
-alias dL dpkg -L $*
-alias dir dir --color=auto $*
-alias dl dpkg -l $*
-alias egrep egrep --color=auto $*
-alias fd fdfind $*
-alias fdh fd --exclude ext $*
-alias fgrep fgrep --color=auto $*
-alias gi guix package -i $*
-alias gl guix package --list-installed $*
-alias gp guix package $*
-alias gpu guix pull && guix package -u $*
-alias gr guix package -r $*
-alias grep grep --color=auto $*
-alias gs guix package -s $*
-alias gsh guix shell $*
-alias l ls -cthrl $*
-alias la ls -ctrhal $*
-alias lg lazygit $*
-alias ll ls -ctrhAl $*
-alias ls ls --group-directories-first --color=auto $*
-alias mkdir mkdir -p $*
-alias mv $HOME/bin/mvg $*
-alias sctl _ systemctl $*
-alias usctl systemctl --user $*
-alias v nvim $*
+alias ff find-file $1
 alias vdir vdir --color=auto $*
+alias v nvim $*
+alias usctl systemctl --user $*
+alias sctl _ systemctl $*
+alias mv $HOME/bin/mvg $*
+alias mkdir mkdir -p $*
+alias ls ls --group-directories-first --color=auto $*
+alias ll ls -ctrhAl $*
+alias lg lazygit $*
+alias la ls -ctrhal $*
+alias l ls -cthrl $*
+alias gsh guix shell $*
+alias gs guix package -s $*
+alias grep grep --color=auto $*
+alias gr guix package -r $*
+alias gpu guix pull && guix package -u $*
+alias gp guix package $*
+alias gl guix package --list-installed $*
+alias gi guix package -i $*
+alias fgrep fgrep --color=auto $*
+alias fdh fd --exclude ext $*
+alias fd fdfind $*
+alias egrep egrep --color=auto $*
+alias dl dpkg -l $*
+alias dir dir --color=auto $*
+alias dL dpkg -L $*
+alias cp $HOME/bin/cpg $*
+alias au A update $*
+alias aaa au;aU;aaR $*
+alias aaR A autoremove -y $*
+alias aU A upgrade -y $*
+alias aSH apt show $*
+alias aS apt search $*
+alias aR A remove -y $*
+alias aP A purge -y $*
+alias aI A install -y $*
+alias a apt $*
+alias _ sudo $*
+alias A sudo apt $*
+alias ... cd ../.. $*
+alias .. cd .. $*
