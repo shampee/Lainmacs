@@ -1319,6 +1319,15 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
   (global-ligature-mode t))
 #+END_SRC
 * Programming section
+** C/C++
+*** Code
+#+BEGIN_SRC emacs-lisp
+(defun my-c-mode-hook ()
+  (setq c-basic-offset 2
+        c-indent-level 2
+        c-default-style "gnu"))
+(add-hook 'c-mode-common-hook 'my-c-mode-hook)
+#+END_SRC
 ** Initialize =yasnippet=
 *** Description
 Yasnippet provides useful snippets, nothing to do with Company but still useful when used in conjuction with it
