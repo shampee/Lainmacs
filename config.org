@@ -454,7 +454,7 @@ I tried spaceline and powerline and didn't like either.
   ;; server-after-make-frame-hook seems to work
   (use-package simple-modeline
     :ensure t
-    :diminish (paredit-mode eldoc-mode lispy-mode visual-line-mode dired-async-mode)
+    :diminish (paredit-mode eldoc-mode lispy-mode visual-line-mode dired-async-mode auto-revert-mode abbrev-mode)
     :hook (server-after-make-frame-hook . simple-modeline-mode)
     :config
     (setq mode-line-misc-info
