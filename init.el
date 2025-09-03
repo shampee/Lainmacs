@@ -67,8 +67,9 @@
 ;; Load theme for Lainmacs
 ;; (use-package ef-themes :ensure t)
 ;; (load-theme 'ef-dream t)
-(use-package timu-rouge-theme :ensure t)
-(load-theme 'timu-rouge t)
+;; (use-package timu-rouge-theme :ensure t)
+(use-package doric-themes :ensure t)
+(load-theme 'doric-water t)
 
 ;; Set font
 (set-frame-font "Aporetic Serif Mono 12" nil t)
