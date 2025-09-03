@@ -820,6 +820,14 @@ Git porcelain for Emacs
   (global-set-key (kbd "C-h x") #'helpful-command)
   (global-set-key (kbd "C-c C-d") #'helpful-at-point))
 #+END_SRC
+** Initialize =devdocs=
+*** Code
+#+BEGIN_SRC emacs-lisp
+  (use-package devdocs
+    :defer nil :ensure t
+    :config
+    (global-set-key (kbd "C-h D") #'devdocs-lookup))
+#+END_SRC
 ** Initialize =vertico=
 *** Description
 Vertico provides a performant and minimalistic vertical completion UI based on the default completion system.
