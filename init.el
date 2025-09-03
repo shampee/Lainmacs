@@ -87,7 +87,7 @@
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 ;; Also shrink fringes to 1 pixel.
-(fringe-mode 1)
+(fringe-mode 0)
 
 ;; Turn on `display-time-mode' if you don't use an external bar.
 (setq display-time-default-load-average nil)
