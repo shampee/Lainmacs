@@ -1126,16 +1126,6 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
   ;; `completion-at-point' is often bound to M-TAB.
   (setq tab-always-indent 'complete))
 #+END_SRC
-
-** Initialize =affe=
-*** Code
-#+BEGIN_SRC emacs-lisp
-  (use-package affe
-  :defer t :ensure t
-  :config
-  ;; Manual preview key for `affe-grep'
-  (consult-customize affe-grep :preview-key "M-."))
-#+END_SRC
 ** Initialize =reformatter=
 *** Code
 #+BEGIN_SRC emacs-lisp
@@ -1289,13 +1279,14 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
 #+BEGIN_SRC emacs-lisp
   (use-package discover
     :ensure t)
-
 #+END_SRC
 ** Initialize =mpv=
 *** Code
 #+BEGIN_SRC emacs-lisp
   (use-package mpv
     :ensure t)
+  (defun mpv-at-point ()
+    (mpv-play-url (ffap-guesser)))
 #+END_SRC
 ** Initialize =emojify=
 *** Code
