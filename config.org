@@ -1646,11 +1646,6 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
   (with-eval-after-load 'lsp-mode
     (setq-default lsp-auto-guess-root t) ;; Helps find the ols.json file with Projectile or project.el
 
-    (lsp-register-client
-     (make-lsp-client :new-connection (lsp-stdio-connection "/usr/bin/racket-langserver")
-                      :major-modes '(racket-mode)
-                      :server-id 'racket-langserver
-                      :multi-root t))
     (add-to-list 'lsp-language-id-configuration '(go-mode . "go")))
     
 
