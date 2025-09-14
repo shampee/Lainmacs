@@ -1329,8 +1329,8 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
 ** C/C++
 *** Code
 #+BEGIN_SRC emacs-lisp
-  (define-key c-mode-map (kbd "C-c C-c") (lambda () (interactive) (compile "make -k")))
   (defun my-c-mode-hook ()
+    (define-key c-mode-map (kbd "C-c C-c") (lambda () (interactive) (compile "make -k")))
     (setq c-basic-offset 2
           c-indent-level 2
           c-default-style "gnu"))
