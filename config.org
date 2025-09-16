@@ -1325,6 +1325,16 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
   ;; per mode with `ligature-mode'.
   (global-ligature-mode t))
 #+END_SRC
+** Initialize =reader=
+*** Description
+A performant drop-in replacement for =doc-view= / =nov.el= / =pdf-tools=
+*** Code
+#+BEGIN_SRC emacs-lisp
+  (use-package reader
+      :straight '(reader :type git :host codeberg :repo "divyaranjan/emacs-reader"
+              :files ("*.el" "render-core.so")
+              :pre-build ("make" "all")))
+#+END_SRC
 * Programming section
 ** C/C++
 *** Code
