@@ -328,7 +328,7 @@ One of the main selling points of Emacs! no Emacs distribution is complete witho
          ("irc.lainchan.org" "#lainchan" "#questions"))
       erc-modules
       '(autojoin button completion fill irccontrols list log match menu move-to-prompt netsplit networks noncommands notifications readonly ring sound stamp track hl-nicks spelling))
-(unless (and (boundp 'erc-initialized-p) erc-initialized-p)
+(defun join-irc ()
   (setq erc-initialized-p t)
   (erc-select :server m/erc-server :port m/erc-port :nick m/erc-nick :password m/erc-password)
   (erc-select :server lib/server :port lib/port :nick lib/nick :password lib/password)
