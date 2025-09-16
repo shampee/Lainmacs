@@ -784,7 +784,7 @@ Neat side-bar file and project explorer
 
 (use-package treemacs-evil
   :after treemacs evil
-    :ensure t)
+  :ensure t)
 
 (use-package treemacs-icons-dired
   :after treemacs dired
@@ -1345,6 +1345,7 @@ A performant drop-in replacement for =doc-view= / =nov.el= / =pdf-tools=
           c-indent-level 2
           c-default-style "gnu"))
   (add-hook 'c-mode-common-hook 'my-c-mode-hook)
+
 #+END_SRC
 ** Initialize =yasnippet=
 *** Description
