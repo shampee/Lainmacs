@@ -169,7 +169,10 @@ Super - Control - <arrow>
 (use-package ansi-color
     :hook (compilation-filter . ansi-color-compilation-filter))
 #+END_SRC
-
+** Display column number in the modeline
+#+BEGIN_SRC emacs-lisp
+(column-number-mode t)
+#+END_SRC
 * Secrets
 #+BEGIN_SRC emacs-lisp
 (defvar lib/server "irc.libera.chat")
