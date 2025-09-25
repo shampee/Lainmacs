@@ -285,7 +285,7 @@ of `inf-janet-program').  Runs the hooks from
 (defun janet-print-output-to-echo (string)
   (message (car (split-string string "\n"))))
 
-(add-hook 'comint-output-filter-functions 'janet-print-output-to-echo)
+;; (add-hook 'comint-output-filter-functions 'janet-print-output-to-echo)
 
 (defun janet-eval-paragraph (&optional and-go)
   "Send the current paragraph to the inferior Janet process.

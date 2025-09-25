@@ -110,35 +110,35 @@
 
 ;;;; Init
 
-(defun normalize-init-entry (lst)
-  "Make sure LST has a message.
-Populate the CDR of LST with message \"Running command\" if there is none."
-  (when lst
-    (let ((_ (car lst))
-          (message (cdr lst)))
-      (unless message
-        (setcdr lst "Running command"))))
-  lst)
+;; (defun normalize-init-entry (lst)
+;;   "Make sure LST has a message.
+;; Populate the CDR of LST with message \"Running command\" if there is none."
+;;   (when lst
+;;     (let ((_ (car lst))
+;;           (message (cdr lst)))
+;;       (unless message
+;;         (setcdr lst "Running command"))))
+;;   lst)
 
-(defun run-and-notify (init-entry &optional notify-p)
-  "INIT-ENTRY is an alist of a command and a message.
-Run the command and send a notification if NOTIFY-P is T."
-  (let* ((init-entry (normalize-init-entry init-entry))
-         (program (car init-entry))
-         (message (cdr init-entry))
-         (run (lambda (p) (start-process-shell-command p nil p)))
-         (notify (lambda (p m) (notifications-notify :title m :body p))))
+;; (defun run-and-notify (init-entry &optional notify-p)
+;;   "INIT-ENTRY is an alist of a command and a message.
+;; Run the command and send a notification if NOTIFY-P is T."
+;;   (let* ((init-entry (normalize-init-entry init-entry))
+;;          (program (car init-entry))
+;;          (message (cdr init-entry))
+;;          (run (lambda (p) (start-process-shell-command p nil p)))
+;;          (notify (lambda (p m) (notifications-notify :title m :body p))))
     
-    (start-process-shell-command program nil program)
-    (when notify-p (notifications-notify :title message :body program))))
+;;     (start-process-shell-command program nil program)
+;;     (when notify-p (notifications-notify :title message :body program))))
 
 ;; Start dunst so we can see the notifications.
 (start-process-shell-command "dunst" nil "dunst")
 
-(let ((entries '(("sh $HOME/.fehbg" . "Setting wallpaper") ; t
-                 ;; ("picom --blur-background-fixed -b" . "Starting picom to enable transparency") ; nil
-                 )))
-  (dolist (entry entries) (run-and-notify (normalize-init-entry entry) t)))
+;; (let ((entries '(("sh $HOME/.fehbg" . "Setting wallpaper") ; t
+;;                  ;; ("picom --blur-background-fixed -b" . "Starting picom to enable transparency") ; nil
+;;                  )))
+;;   (dolist (entry entries) (run-and-notify (normalize-init-entry entry) t)))
 
 
 ;;;; Below are configurations for EXWM.
@@ -390,14 +390,14 @@ See: https://gist.github.com/shampee/0c38ab31b40c3b45a61c15fc7a258d81"
 
 
 ;;;; Randr
-(setq exwm-randr-workspace-monitor-plist '(0 "HDMI-1-3" 1 "DP-1"))
-(add-hook 'exwm-randr-screen-change-hook
-	  (lambda ()
-	    (start-process-shell-command
-	      "xrandr" nil
-	      "xrandr --output DP-1 --mode 1920x1080 --rate 144 --left-of HDMI-1-3 --output HDMI-1-3 --mode 1920x1080 --rate 75")))
-(exwm-randr-mode 1)
-(start-process-shell-command "ForceCompositionPipeline" nil "$HOME/bin/force-comp")
+;; (setq exwm-randr-workspace-monitor-plist '(0 "HDMI-1-3" 1 "DP-1"))
+;; (add-hook 'exwm-randr-screen-change-hook
+;; 	  (lambda ()
+;; 	    (start-process-shell-command
+;; 	      "xrandr" nil
+;; 	      "xrandr --output DP-1 --mode 1920x1080 --rate 144 --left-of HDMI-1-3 --output HDMI-1-3 --mode 1920x1080 --rate 75")))
+;; (exwm-randr-mode 1)
+;; (start-process-shell-command "ForceCompositionPipeline" nil "$HOME/bin/force-comp")
 
 
 ;; System tray is disabled by default
@@ -474,8 +474,8 @@ See: https://gist.github.com/shampee/0c38ab31b40c3b45a61c15fc7a258d81"
 
 
 ;; Do this before exwm-enable
-(perspective-exwm-mode)
-(persp-mode)
+;; (perspective-exwm-mode)
+;; (persp-mode)
 
 ;; You can hide the minibuffer and echo area when they're not used, by
 ;; uncommenting the following line.
@@ -483,7 +483,7 @@ See: https://gist.github.com/shampee/0c38ab31b40c3b45a61c15fc7a258d81"
 
 ;; Do not forget to enable EXWM. It will start by itself when things are
 ;; ready.  You can put it _anywhere_ in your configuration.
-(exwm-enable)
+;; (exwm-enable)
 
 
 ;;;; misc
@@ -508,7 +508,8 @@ See: https://gist.github.com/shampee/0c38ab31b40c3b45a61c15fc7a258d81"
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("130bda3c4c328c13e6f91009e429ebd7522c6a0d49af6fc32b9fa1bc9b8cf753"
+   '("d0c05a0b5a7619bca4c28d1bd2eeb15562afa634888a46c9e5b1d31b7d06ed36"
+     "130bda3c4c328c13e6f91009e429ebd7522c6a0d49af6fc32b9fa1bc9b8cf753"
      "45333f79e4a7fdeff9924d5b6658f84fb468ef38f749455e5b58ba4154782007"
      "59c36051a521e3ea68dc530ded1c7be169cd19e8873b7994bfc02a216041bf3b"
      "19b62f442479efd3ca4c1cef81c2311579a98bbc0f3684b49cdf9321bd5dfdbf"
@@ -525,6 +526,7 @@ See: https://gist.github.com/shampee/0c38ab31b40c3b45a61c15fc7a258d81"
      "d6b369a3f09f34cdbaed93eeefcc6a0e05e135d187252e01b0031559b1671e97"
      default))
  '(elfeed-feeds '("https://sachachua.com/blog/feed"))
+ '(lisp-indent-function 'common-lisp-indent-function)
  '(mastodon-images-in-notifs t)
  '(mastodon-tl--show-avatars t)
  '(notmuch-saved-searches
@@ -536,6 +538,7 @@ See: https://gist.github.com/shampee/0c38ab31b40c3b45a61c15fc7a258d81"
      (:name "all mail" :query "*" :key "a")
      (:name ":name" :query "fuck you")))
  '(notmuch-search-oldest-first nil)
+ '(org-agenda-files '("~/src/org/todo.org"))
  '(package-selected-packages 'nil)
  '(send-mail-function 'sendmail-send-it)
  '(simple-modeline-mode t)

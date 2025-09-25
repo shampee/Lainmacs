@@ -31,109 +31,108 @@ Also, to get autocompletion on C, C++ and Java files, you'll need to install the
 * Dependencies
 * Things-to-do
 - Add and configure some extra packages
- + +Configure Lisp+
- + +Configure Scheme+
+  + +Configure Lisp+
+  + +Configure Scheme+
 - +Make dashboard cooler+
- + Make dashboard EVEN cooler!
- + Maybe add rotating dashboard pictures
+  + Make dashboard EVEN cooler!
+  + Maybe add rotating dashboard pictures
 - +Make custom Lainmacs theme+
- + (Maybe) Make a random Lain pop up on the dashboard every time you launch.
+  + (Maybe) Make a random Lain pop up on the dashboard every time you launch.
 - +Clean up/organize init.el+
- + Clean up/organize config.org
+  + Clean up/organize config.org
 - Optimize startup time
 * QoL section
 Minor quality-of-life modifications for a more pleasant Emacs experience
 ** Enable line numbers
 Emacs breaks certain modes when it has line-numbers-mode enabled, (like docview or ansi-term) so I utilize the approach of only enabling it on some major modes rather than globally
 #+BEGIN_SRC emacs-lisp
-  (add-hook 'prog-mode-hook 'display-line-numbers-mode)
-  (add-hook 'text-mode-hook 'display-line-numbers-mode)
+(add-hook 'prog-mode-hook 'display-line-numbers-mode)
+(add-hook 'text-mode-hook 'display-line-numbers-mode)
 #+END_SRC
 ** Show parent parentheses
 #+BEGIN_SRC emacs-lisp
-  (show-paren-mode 1)
+(show-paren-mode 1)
 #+END_SRC
 ** Disable the default startup screen
 #+BEGIN_SRC emacs-lisp
-  (setq inhibit-startup-message t)
+(setq inhibit-startup-message t)
 #+END_SRC
 ** Disable most gui elements
 #+BEGIN_SRC emacs-lisp
-  (tool-bar-mode -1)
-  (menu-bar-mode -1)
-  (scroll-bar-mode -1)
+(tool-bar-mode -1)
+(menu-bar-mode -1)
+(scroll-bar-mode -1)
 #+END_SRC
 ** Enable copypasting outside of Emacs
 #+BEGIN_SRC emacs-lisp
-  (setq x-select-enable-clipboard t)
+(setq x-select-enable-clipboard t)
 #+END_SRC
 ** Disable automatic creation of backup files
 #+BEGIN_SRC emacs-lisp
-  (setq make-backup-files nil)
-  (setq auto-save-default nil)
+(setq make-backup-files nil)
+(setq auto-save-default nil)
 #+END_SRC
 ** Enable conservative scrolling
 #+BEGIN_SRC emacs-lisp
-  (setq scroll-conservatively 100)
+(setq scroll-conservatively 100)
 #+END_SRC
 ** Disable ring-bell
 #+BEGIN_SRC emacs-lisp
-  (setq ring-bell-function 'ignore)
+(setq ring-bell-function 'ignore)
 #+END_SRC
 ** Indentation
 #+BEGIN_SRC emacs-lisp
-  (setq-default tab-width 4)
-  (setq-default standard-indent 4)
-  (setq c-basic-offset tab-width)
-  (setq-default electric-indent-inhibit t)
-  (setq-default indent-tabs-mode nil) ;; fuark no!
-  (setq backward-delete-char-untabify-method 'nil)
+(setq-default tab-width 4)
+(setq-default standard-indent 4)
+(setq c-basic-offset tab-width)
+(setq-default electric-indent-inhibit t)
+(setq-default indent-tabs-mode nil) ;; fuark no!
+(setq backward-delete-char-untabify-method 'nil)
 #+END_SRC
 ** Enable prettify symbols mode
 #+BEGIN_SRC emacs-lisp
-  (global-prettify-symbols-mode t)
+(global-prettify-symbols-mode t)
 #+END_SRC
 ** Enable bracket pair-matching
 #+BEGIN_SRC emacs-lisp
-  (setq electric-pair-pairs '(
-                              (?\{ . ?\})
-                              (?\( . ?\))
-                              (?\[ . ?\])
-                              (?\" . ?\")))
-                              
-  (electric-pair-mode t)
+(setq electric-pair-pairs '((?\{ . ?\})
+                            (?\( . ?\))
+                            (?\[ . ?\])
+                            (?\" . ?\")))
+
+(electric-pair-mode t)
 #+END_SRC
 ** Creating a new window switches your cursor to it
 #+BEGIN_SRC emacs-lisp
-  (defun split-and-follow-horizontally ()
-     	(interactive)
-     	(split-window-below)
-     	(balance-windows)
-     	(other-window 1))
-  (global-set-key (kbd "C-x 2") 'split-and-follow-horizontally)
+(defun split-and-follow-horizontally ()
+  (interactive)
+  (split-window-below)
+  (balance-windows)
+  (other-window 1))
+(global-set-key (kbd "C-x 2") 'split-and-follow-horizontally)
 
-  (defun split-and-follow-vertically ()
-     	(interactive)
-     	(split-window-right)
-     	(balance-windows)
-     	(other-window 1))
-  (global-set-key (kbd "C-x 3") 'split-and-follow-vertically)
+(defun split-and-follow-vertically ()
+  (interactive)
+  (split-window-right)
+  (balance-windows)
+  (other-window 1))
+(global-set-key (kbd "C-x 3") 'split-and-follow-vertically)
 #+END_SRC
 ** Transform yes-or-no questions into y-or-n
 #+BEGIN_SRC emacs-lisp
-  (defalias 'yes-or-no-p 'y-or-n-p)
+(defalias 'yes-or-no-p 'y-or-n-p)
 #+END_SRC
 ** Easier resize bindigs
 Super - Control - <arrow>
 #+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "s-C-<left>") 'shrink-window-horizontally)
-  (global-set-key (kbd "s-C-<right>") 'enlarge-window-horizontally)
-  (global-set-key (kbd "s-C-<down>") 'shrink-window)
-  (global-set-key (kbd "s-C-<up>") 'enlarge-window)
+(global-set-key (kbd "s-C-<left>") 'shrink-window-horizontally)
+(global-set-key (kbd "s-C-<right>") 'enlarge-window-horizontally)
+(global-set-key (kbd "s-C-<down>") 'shrink-window)
+(global-set-key (kbd "s-C-<up>") 'enlarge-window)
 #+END_SRC
 ** Highlight current line
 #+BEGIN_SRC emacs-lisp
-  (global-hl-line-mode t)
+(global-hl-line-mode t)
 #+END_SRC
 ** Defer loading most packages for quicker startup times
 #+BEGIN_SRC emacs-lisp
@@ -167,7 +166,7 @@ Super - Control - <arrow>
 #+END_SRC
 ** Compilation mode ansi colors
 #+BEGIN_SRC emacs-lisp
-  (use-package ansi-color
+(use-package ansi-color
     :hook (compilation-filter . ansi-color-compilation-filter))
 #+END_SRC
 
@@ -219,7 +218,7 @@ One of the main selling points of Emacs! no Emacs distribution is complete witho
 ** Code
 #+BEGIN_SRC emacs-lisp
 (use-package org
-  :config
+    :config
   (setq org-fontify-whole-heading-line t
         org-adapt-indentation t
         org-hide-leading-stars t
@@ -230,13 +229,13 @@ One of the main selling points of Emacs! no Emacs distribution is complete witho
         org-src-tab-acts-natively t
         org-edit-src-content-indentation 0)
   (dolist (face '((org-level-1 . 1.35)
-              (org-level-2 . 1.3)
-              (org-level-3 . 1.2)
-              (org-level-4 . 1.1)
-              (org-level-5 . 1.1)
-              (org-level-6 . 1.1)
-              (org-level-7 . 1.1)
-              (org-level-8 . 1.1)))
+                  (org-level-2 . 1.3)
+                  (org-level-3 . 1.2)
+                  (org-level-4 . 1.1)
+                  (org-level-5 . 1.1)
+                  (org-level-6 . 1.1)
+                  (org-level-7 . 1.1)
+                  (org-level-8 . 1.1)))
     (set-face-attribute (car face) nil :font  "Aporetic Serif Mono" :weight 'bold :height (cdr face)))
   (set-face-attribute 'org-document-title nil :font "Aporetic Serif Mono" :weight 'bold :height 1.8)
   (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch :height 1.0)
@@ -254,18 +253,23 @@ One of the main selling points of Emacs! no Emacs distribution is complete witho
   (add-hook 'org-mode-hook 'olivetti-mode)
   (add-hook 'org-mode-hook #'(lambda () (visual-line-mode 1))))
 
-  (use-package org-pandoc-import
+(use-package org-indent
+    :config
+  (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
+  :diminish org-indent-mode)
+
+(use-package org-pandoc-import
     :straight (:host github
                      :repo "tecosaur/org-pandoc-import"
                      :files ("*.el" "filters" "preprocessors")))
 
-  (use-package htmlize
+(use-package htmlize
     :ensure t)
 
-  (use-package org-ref
+(use-package org-ref
     :ensure t)
 
-  (use-package org-roam
+(use-package org-roam
     :ensure t
     :custom
     (org-roam-directory (file-truename "~/src/org/"))
@@ -283,16 +287,16 @@ One of the main selling points of Emacs! no Emacs distribution is complete witho
     ;; If using org-roam-protocol
     (require 'org-roam-protocol))
 
-  (use-package org-roam-bibtex
+(use-package org-roam-bibtex
     :after org-roam
     :load-path "~/opt/org-roam-bibtex/" ; Modify with your own path where you cloned the repositorya<
     :config
     (require 'org-ref)) ; optional: if using Org-ref v2 or v3 citation links
 
-  (use-package org-noter
+(use-package org-noter
     :ensure t)
 
-  (use-package orgmdb
+(use-package orgmdb
     :ensure t
     :config 
     (setq orgmdb-omdb-apikey m/omdb-api-key
@@ -306,7 +310,7 @@ One of the main selling points of Emacs! no Emacs distribution is complete witho
       (define-key org-mode-map (kbd "C-c s") #'orgmdb-act-on-show)
       (define-key org-mode-map (kbd "C-c e") #'orgmdb-act-on-episode)))
 
-  (use-package org-remark
+(use-package org-remark
     :ensure t
     :config
     (define-key global-map (kbd "C-c n m") #'org-remark-mark)
@@ -319,17 +323,17 @@ One of the main selling points of Emacs! no Emacs distribution is complete witho
 #+END_SRC
 * =password-store=
 #+BEGIN_SRC emacs-lisp
-  (use-package password-store
+(use-package password-store
     :ensure t)
 #+END_SRC
 * ERC
 #+BEGIN_SRC emacs-lisp
 (use-package erc-hl-nicks
-  :ensure t)
-  
+    :ensure t)
+
 (use-package erc-image
-  :ensure t)
-  
+    :ensure t)
+
 (setq erc-track-shorten-start 8
       erc-kill-buffer-on-part t
       erc-fill-column 75
@@ -349,9 +353,9 @@ One of the main selling points of Emacs! no Emacs distribution is complete witho
       erc-join-buffer 'bury
       erc-autojoin-mode t
       erc-autojoin-channels-alist
-       '(("Libera.Chat" "#clschool" "#commonlisp" "#ecl" "#lisp" "#scheme" "#guile" "#guix" "#chicken" "#clojure" "#janet")
-         ("irc.rizon.net" "#c0de" "#rice" "#bible")
-         ("irc.lainchan.org" "#lainchan" "#questions"))
+      '(("Libera.Chat" "#clschool" "#commonlisp" "#ecl" "#lisp" "#scheme" "#guile" "#guix" "#chicken" "#clojure" "#janet")
+        ("irc.rizon.net" "#c0de" "#rice" "#bible")
+        ("irc.lainchan.org" "#lainchan" "#questions"))
       erc-modules
       '(autojoin button completion fill irccontrols list log match menu move-to-prompt netsplit networks noncommands notifications readonly ring sound stamp track hl-nicks spelling))
 (defun join-irc ()
@@ -380,8 +384,8 @@ Eshell cannot handle ncurses programs and in certain interpreters (Python, GHCi)
             (propertize (eshell/pwd) 'face `(:foreground  "#b4daff"))))
          (if (= (user-uid) 0)
              (propertize " α " 'face `(:foreground "#226666"))
-             (propertize " λ" 'face `(:foreground  "#b4daff")))
-          (propertize " " 'face `(:foreground  "#fafff6")))))
+           (propertize " λ" 'face `(:foreground  "#b4daff")))
+         (propertize " " 'face `(:foreground  "#fafff6")))))
 
 (setq eshell-highlight-prompt nil)
 #+END_SRC
@@ -421,12 +425,12 @@ Auto-package-update automatically updates and removes old packages
 *** Code
 #+BEGIN_SRC emacs-lisp
 (use-package auto-package-update
-  :defer nil
-  :ensure t
-  :config
-  (setq auto-package-update-delete-old-versions t)
-  (setq auto-package-update-hide-results t)
-  (auto-package-update-maybe))
+    :defer nil
+    :ensure t
+    :config
+    (setq auto-package-update-delete-old-versions t)
+    (setq auto-package-update-hide-results t)
+    (auto-package-update-maybe))
 #+END_SRC
 ** Initialize =diminish=
 *** Description
@@ -434,33 +438,33 @@ Diminish hides minor modes to prevent cluttering your mode line
 *** Code
 #+BEGIN_SRC emacs-lisp
 (use-package diminish
-  :ensure t)
+    :ensure t)
 #+END_SRC
 *** Historical
 22/04/2019: This macro was provided by user [[https://gist.github.com/ld34/44d100b79964407e5ddf41035e3cd32f][ld43]] after I couldn’t figure out how to make diminish work by being at the top of the config file.
 
 #+BEGIN_SRC emacs-lisp
-  ;(defmacro diminish-built-in (&rest modes)
-  ;  "Accepts a list MODES of built-in emacs modes and generates `with-eval-after-load` diminish forms based on the file implementing the mode functionality for each mode."
-  ;  (declare (indent defun))
-  ;  (let* ((get-file-names (lambda (pkg) (file-name-base (symbol-file pkg))))
-  ;	 (diminish-files (mapcar get-file-names modes))
-  ;	 (zip-diminish   (-zip modes diminish-files)))
-  ;    `(progn
-  ;       ,@(cl-loop for (mode . file) in zip-diminish
-  ;		  collect `(with-eval-after-load ,file
-  ;			     (diminish (quote ,mode)))))))
-  ; This bit goes in init.el
-  ;(diminish-built-in
-  ;  beacon-mode
-  ;  which-key-mode
-  ;  page-break-lines-mode
-  ;  undo-tree-mode
-  ;  eldoc-mode
-  ;  abbrev-mode
-  ;  irony-mode
-  ;  company-mode
-  ;  meghanada-mode)
+                                        ;(defmacro diminish-built-in (&rest modes)
+                                        ;  "Accepts a list MODES of built-in emacs modes and generates `with-eval-after-load` diminish forms based on the file implementing the mode functionality for each mode."
+                                        ;  (declare (indent defun))
+                                        ;  (let* ((get-file-names (lambda (pkg) (file-name-base (symbol-file pkg))))
+                                        ;	 (diminish-files (mapcar get-file-names modes))
+                                        ;	 (zip-diminish   (-zip modes diminish-files)))
+                                        ;    `(progn
+                                        ;       ,@(cl-loop for (mode . file) in zip-diminish
+                                        ;		  collect `(with-eval-after-load ,file
+                                        ;			     (diminish (quote ,mode)))))))
+                                        ; This bit goes in init.el
+                                        ;(diminish-built-in
+                                        ;  beacon-mode
+                                        ;  which-key-mode
+                                        ;  page-break-lines-mode
+                                        ;  undo-tree-mode
+                                        ;  eldoc-mode
+                                        ;  abbrev-mode
+                                        ;  irony-mode
+                                        ;  company-mode
+                                        ;  meghanada-mode)
 #+END_SRC
 
 27/05/2019: Since the diminish functionality was always built-in in use-package, there was never a point in using a diminish config. lol silly me
@@ -468,27 +472,27 @@ Diminish hides minor modes to prevent cluttering your mode line
 *** Code
 #+BEGIN_SRC emacs-lisp
 (use-package ef-themes
-  :ensure t)
+    :ensure t)
 #+END_SRC
 ** Initialize =simple-modeline=
 *** Description
 I tried spaceline and powerline and didn't like either.
 *** Code
 #+BEGIN_SRC emacs-lisp
-  ;https://www.gnu.org/software/emacs/manual/html_node/elisp/Standard-Hooks.html
+                                        ;https://www.gnu.org/software/emacs/manual/html_node/elisp/Standard-Hooks.html
 
-  ;; server-after-make-frame-hook seems to work
-  (use-package simple-modeline
+;; server-after-make-frame-hook seems to work
+(use-package simple-modeline
     :ensure t
     :diminish (paredit-mode eldoc-mode lispy-mode visual-line-mode dired-async-mode auto-revert-mode abbrev-mode)
     :hook (server-after-make-frame-hook . simple-modeline-mode)
     :config
     (setq mode-line-misc-info
-             '((notmuch-indicator-mode
-               (" "
-                (:eval notmuch-indicator--counters)))
-              (global-mode-string
-               (" " global-mode-string))))
+          '((notmuch-indicator-mode
+             (" "
+              (:eval notmuch-indicator--counters)))
+            (global-mode-string
+             (" " global-mode-string))))
     (setq simple-modeline-segments
           '((simple-modeline-segment-modified simple-modeline-segment-buffer-name simple-modeline-segment-position simple-modeline-segment-major-mode)
             (simple-modeline-segment-minor-modes simple-modeline-segment-input-method simple-modeline-segment-vc simple-modeline-segment-process simple-modeline-segment-misc-info)))
@@ -505,79 +509,79 @@ The frontend of Lainmacs; without this there'd be no Lain in your Emacs startup 
 *** Code
 #+BEGIN_SRC emacs-lisp
 (use-package dashboard
-  :ensure t
-  :defer nil
-  :preface
-  (defun update-config ()
-    "Update Lainmacs to the latest version."
-    (interactive)
-    (let ((dir (expand-file-name user-emacs-directory)))
-      (if (file-exists-p dir)
-          (progn
-            (message "Lainmacs is updating!")
-            (cd dir)
-            (shell-command "git pull")
-            (message "Update finished. Switch to the messages buffer to see changes and then restart Emacs"))
-        (message "\"%s\" doesn't exist." dir))))
+    :ensure t
+    :defer nil
+    :preface
+    (defun update-config ()
+      "Update Lainmacs to the latest version."
+      (interactive)
+      (let ((dir (expand-file-name user-emacs-directory)))
+        (if (file-exists-p dir)
+            (progn
+              (message "Lainmacs is updating!")
+              (cd dir)
+              (shell-command "git pull")
+              (message "Update finished. Switch to the messages buffer to see changes and then restart Emacs"))
+          (message "\"%s\" doesn't exist." dir))))
 
-  (defun create-scratch-buffer ()
-    "Create a scratch buffer"
-    (interactive)
-    (switch-to-buffer (get-buffer-create "*scratch*"))
-    (lisp-interaction-mode))
-  :config
-  (dashboard-setup-startup-hook)
-  (setq dashboard-items '((recents . 5)))
-  (setq dashboard-banner-logo-title "L A I N M A C S - The schizoid Emacs distribution!")
-  (setq dashboard-startup-banner "~/.emacs.d/lainvector.png")
-  (setq dashboard-center-content t)
-  (setq dashboard-show-shortcuts nil)
-  (setq dashboard-set-init-info t)
-  (setq dashboard-init-info (format "%d packages loaded in %s"
-                                    (length package-activated-list) (emacs-init-time)))
-  (setq dashboard-set-footer nil)
-  (setq dashboard-set-navigator t)
-  (setq dashboard-navigator-buttons
-        `(;; line1
-          ((,nil
-            "Lainmacs on github"
-            "Open Lainmacs github page on your browser"
-            (lambda (&rest _) (browse-url "https://github.com/shampee/Lainmacs"))
-            'default)
-           (nil
-            "Lainmacs crash course"
-            "Open Lainmacs (Witchmacs) introduction to Emacs"
-            (lambda (&rest _) (find-file "~/.emacs.d/Witcheat.org"))
-            'default)
-           (nil
-            "Update Lainmacs"
-            "Get the latest Lainmacs update. Check out the github commits for changes!"
-            (lambda (&rest _) (update-config))
-            'default))
-             
-          ;; line 2
-          ((,nil
-            "Open scratch buffer"
-            "Switch to the scratch buffer"
-            (lambda (&rest _) (create-scratch-buffer))
-            'default)
-           (nil
-            "Open config.org"
-            "Open Lainmacs configuration file for easy editing"
-            (lambda (&rest _) (find-file "~/.emacs.d/config.org"))
-            'default)))))
+    (defun create-scratch-buffer ()
+      "Create a scratch buffer"
+      (interactive)
+      (switch-to-buffer (get-buffer-create "*scratch*"))
+      (lisp-interaction-mode))
+    :config
+    (dashboard-setup-startup-hook)
+    (setq dashboard-items '((recents . 5)))
+    (setq dashboard-banner-logo-title "L A I N M A C S - The schizoid Emacs distribution!")
+    (setq dashboard-startup-banner "~/.emacs.d/lainvector.png")
+    (setq dashboard-center-content t)
+    (setq dashboard-show-shortcuts nil)
+    (setq dashboard-set-init-info t)
+    (setq dashboard-init-info (format "%d packages loaded in %s"
+                                      (length package-activated-list) (emacs-init-time)))
+    (setq dashboard-set-footer nil)
+    (setq dashboard-set-navigator t)
+    (setq dashboard-navigator-buttons
+          `(;; line1
+            ((,nil
+              "Lainmacs on github"
+              "Open Lainmacs github page on your browser"
+              (lambda (&rest _) (browse-url "https://github.com/shampee/Lainmacs"))
+              'default)
+             (nil
+              "Lainmacs crash course"
+              "Open Lainmacs (Witchmacs) introduction to Emacs"
+              (lambda (&rest _) (find-file "~/.emacs.d/Witcheat.org"))
+              'default)
+             (nil
+              "Update Lainmacs"
+              "Get the latest Lainmacs update. Check out the github commits for changes!"
+              (lambda (&rest _) (update-config))
+              'default))
+            
+            ;; line 2
+            ((,nil
+              "Open scratch buffer"
+              "Switch to the scratch buffer"
+              (lambda (&rest _) (create-scratch-buffer))
+              'default)
+             (nil
+              "Open config.org"
+              "Open Lainmacs configuration file for easy editing"
+              (lambda (&rest _) (find-file "~/.emacs.d/config.org"))
+              'default)))))
 #+END_SRC
 *** Notes
 If you pay close attention to the code in dashboard, you'll  notice that it uses custom functions defined under the :preface use-package block. I wrote all of those functions by looking at other people's Emacs distributions (Mainly [[https://github.com/seagle0128/.emacs.d][Centaur Emacs]]) and then experimenting and adapting them to Lainmacs. If you dig around, you'll find the same things I did - maybe even more!
 *** Historical
 22/05/19: On this day, the main maintainers of the dashboard package have added built-in fuinctionality to display init and package load time, thing that I already had implemented much earlier on my own. I have left here my implementation for historical purposes
 #+BEGIN_SRC emacs-lisp
-  ;(insert (concat
-  ;         (propertize (format "%d packages loaded in %s"
-  ;                             (length package-activated-list) (emacs-init-time))
-  ;                     'face 'font-lock-comment-face)))
-  ;
-  ;(dashboard-center-line)
+                                        ;(insert (concat
+                                        ;         (propertize (format "%d packages loaded in %s"
+                                        ;                             (length package-activated-list) (emacs-init-time))
+                                        ;                     'face 'font-lock-comment-face)))
+                                        ;
+                                        ;(dashboard-center-line)
 #+END_SRC
 ** Initialize =which-key=
 *** Description
@@ -585,17 +589,17 @@ Incredibly useful package; if you are in the middle of a command and don't know 
 *** Code
 #+BEGIN_SRC emacs-lisp
 (use-package which-key
-  :ensure t
-  :diminish (which-key-mode)
-  :init
-  (which-key-mode))
+    :ensure t
+    :diminish (which-key-mode)
+    :init
+    (which-key-mode))
 #+END_SRC
 ** Initialize =swiper=
 *** Description
 When doing C-s to search, you get this very nice and neat mini-buffer that you can traverse with the arrow keys (or C-n and C-p) and then press <RET> to select where you want to go
 *** Code
 #+BEGIN_SRC emacs-lisp
-  ;(use-package swiper ;:ensure t ;:bind ("C-s" . 'swiper))
+                                        ;(use-package swiper ;:ensure t ;:bind ("C-s" . 'swiper))
 #+END_SRC
 ** Initialize =evil= mode
 *** Description
@@ -603,41 +607,42 @@ Vim keybindings in Emacs. Please note that Lainmacs has NO other evil-mode compa
 *** Code
 #+BEGIN_SRC emacs-lisp
 ;; TODO: cleanup the mappings
+(setq evil-want-keybinding nil)
+
 (use-package evil
-  :ensure t
-  :defer nil
-  :init
-  (setq evil-want-C-u-scroll t)
-  (setq evil-want-keybinding nil)
-  :config
-  (evil-mode 1) 
-  (define-key evil-normal-state-map (kbd "C-.") 'embark-act)
-  (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
-  (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
-  (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line))
+    :ensure t
+    :defer nil
+    :init
+    (setq evil-want-C-u-scroll t)
+    :config
+    (evil-mode 1) 
+    (define-key evil-normal-state-map (kbd "C-.") 'embark-act)
+    (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
+    (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
+    (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line))
 
 (use-package evil-collection
-  :after evil
-  :ensure t
-  :diminish (evil-collection-unimpaired-mode)
-  :config 
-  (evil-collection-init))
+    :after evil
+    :ensure t
+    :diminish (evil-collection-unimpaired-mode)
+    :config 
+    (evil-collection-init))
 
 (use-package evil-surround
-  :ensure t
-  :config
-  (global-evil-surround-mode 1))
+    :ensure t
+    :config
+    (global-evil-surround-mode 1))
 #+END_SRC
 ** Initialize =hl-todo=
 *** Code
 #+BEGIN_SRC emacs-lisp
-  (use-package hl-todo
+(use-package hl-todo
     :ensure t
     :diminish (hl-todo-mode)
     :init
     (global-hl-todo-mode 1))
 
-  (use-package flycheck-hl-todo
+(use-package flycheck-hl-todo
     :ensure t
     :diminish (flycheck-hl-todo-mode)
     :init (flycheck-hl-todo-setup)
@@ -647,10 +652,10 @@ Vim keybindings in Emacs. Please note that Lainmacs has NO other evil-mode compa
 ** Initialize =highlight-defined=
 *** Code
 #+BEGIN_SRC emacs-lisp
-  (use-package highlight-defined
-   :ensure t
-   :commands highlight-defined-mode
-   :hook (prog-mode . highlight-defined-mode))
+(use-package highlight-defined
+    :ensure t
+    :commands highlight-defined-mode
+    :hook (prog-mode . highlight-defined-mode))
 #+END_SRC
 ** Initialize =avy=
 *** Description
@@ -659,8 +664,8 @@ Avy is a very useful package; instead of having to move your cursor to a line th
 #+BEGIN_SRC emacs-lisp
 (use-package avy
 	:ensure nil)
-	  ;; :bind
-	  ;; ("M-s" . avy-goto-char))
+;; :bind
+;; ("M-s" . avy-goto-char))
 #+END_SRC
 ** Initialize =switch-window=
 *** Description
@@ -675,7 +680,7 @@ Switch window is a neat package because instead of having to painstakingly do C 
    	(setq switch-window-threshold 2)
    	(setq switch-window-shortcut-style 'qwerty)
    	(setq switch-window-qwerty-shortcuts
-         '("a" "s" "d" "f" "j" "k" "l"))
+          '("a" "s" "d" "f" "j" "k" "l"))
    	:bind
    	([remap other-window] . switch-window))
 #+END_SRC
@@ -685,22 +690,22 @@ For the longest time I used the default way of switching and killing buffers in 
 *** Code
 #+BEGIN_SRC emacs-lisp
 (use-package ido
-  :ensure t
-  :defer nil
-  :init
-  (ido-mode 1)
-  :config
-  (setq ido-enable-flex-matching nil)
-  (setq ido-create-new-buffer 'always)
-  (setq ido-everywhere t))
+    :ensure t
+    :defer nil
+    :init
+    (ido-mode 1)
+    :config
+    (setq ido-enable-flex-matching nil)
+    (setq ido-create-new-buffer 'always)
+    (setq ido-everywhere t))
 
 (use-package ido-vertical-mode
-  :ensure t
-  :init
-  (ido-vertical-mode 1))
-  ; This enables arrow keys to select while in ido mode. If you want to
-  ; instead use the default Emacs keybindings, change it to
-  ; "'C-n-and-C-p-only"
+    :ensure t
+    :init
+    (ido-vertical-mode 1))
+                                        ; This enables arrow keys to select while in ido mode. If you want to
+                                        ; instead use the default Emacs keybindings, change it to
+                                        ; "'C-n-and-C-p-only"
 (setq ido-vertical-define-keys 'C-n-C-p-up-and-down)
 #+END_SRC
 ** Initialize =async=
@@ -717,21 +722,21 @@ Utilize asynchronous processes whenever possible
 *** Code
 #+BEGIN_SRC emacs-lisp
 (use-package page-break-lines
-  :ensure t
-  :diminish (page-break-lines-mode visual-line-mode))
+    :ensure t
+    :diminish (page-break-lines-mode visual-line-mode))
 #+END_SRC
 ** Initialize =form-feed-st=
 *** Code
 #+BEGIN_SRC emacs-lisp
 (use-package form-feed-st
-  :ensure t
-  :diminish (form-feed-st-mode)
-  :hook ((prog-mode text-mode) . form-feed-st-mode))
+    :ensure t
+    :diminish (form-feed-st-mode)
+    :hook ((prog-mode text-mode) . form-feed-st-mode))
 #+END_SRC
 ** Initialize =undo-tree=
 *** Code
 #+BEGIN_SRC emacs-lisp
-  (use-package undo-tree
+(use-package undo-tree
     :ensure t
     :diminish (undo-tree-mode)
     :init
@@ -749,73 +754,73 @@ Neat side-bar file and project explorer
 *** Code
 #+BEGIN_SRC emacs-lisp
 (use-package treemacs
-  :ensure t
-  :defer t
-  :init
-  (with-eval-after-load 'winum
-    (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
-  :config
-  (progn
-    (setq treemacs-collapse-dirs                 (if (executable-find "python3") 3 0)
-          treemacs-deferred-git-apply-delay      0.5
-          treemacs-display-in-side-window        t
-          treemacs-eldoc-display                 t
-          treemacs-file-event-delay              5000
-          treemacs-file-follow-delay             0.2
-          treemacs-follow-after-init             t
-          treemacs-git-command-pipe              ""
-          treemacs-goto-tag-strategy             'refetch-index
-          treemacs-indentation                   2
-          treemacs-indentation-string            " "
-          treemacs-is-never-other-window         nil
-          treemacs-max-git-entries               5000
-          treemacs-missing-project-action        'ask
-          treemacs-no-png-images                 nil
-          treemacs-no-delete-other-windows       t
-          treemacs-project-follow-cleanup        nil
-          treemacs-persist-file                  (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
-          treemacs-recenter-distance             0.1
-          treemacs-recenter-after-file-follow    nil
-          treemacs-recenter-after-tag-follow     nil
-          treemacs-recenter-after-project-jump   'always
-          treemacs-recenter-after-project-expand 'on-distance
-          treemacs-show-cursor                   nil
-          treemacs-show-hidden-files             t
-          treemacs-silent-filewatch              nil
-          treemacs-silent-refresh                nil
-          treemacs-sorting                       'alphabetic-desc
-          treemacs-space-between-root-nodes      t
-          treemacs-tag-follow-cleanup            t
-          treemacs-tag-follow-delay              1.5
-          treemacs-width                         30)
-    (treemacs-resize-icons 11)
-    	
-    (treemacs-follow-mode t)
-    (treemacs-filewatch-mode t)
-    (treemacs-fringe-indicator-mode t)
-    (pcase (cons (not (null (executable-find "git")))
-                 (not (null (executable-find "python3"))))
-      (`(t . t)
-       (treemacs-git-mode 'deferred))
-      (`(t . _)
-       (treemacs-git-mode 'simple))))
-  :bind
-  (:map global-map
-        ("M-0"       . treemacs-select-window)
-        ("C-x t 1"   . treemacs-delete-other-windows)
-        ("C-x t t"   . treemacs)
-        ("C-x t B"   . treemacs-bookmark)
-        ("C-x t C-t" . treemacs-find-file)
-        ("C-x t M-t" . treemacs-find-tag)))
+    :ensure t
+    :defer t
+    :init
+    (with-eval-after-load 'winum
+      (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
+    :config
+    (progn
+      (setq treemacs-collapse-dirs                 (if (executable-find "python3") 3 0)
+            treemacs-deferred-git-apply-delay      0.5
+            treemacs-display-in-side-window        t
+            treemacs-eldoc-display                 t
+            treemacs-file-event-delay              5000
+            treemacs-file-follow-delay             0.2
+            treemacs-follow-after-init             t
+            treemacs-git-command-pipe              ""
+            treemacs-goto-tag-strategy             'refetch-index
+            treemacs-indentation                   2
+            treemacs-indentation-string            " "
+            treemacs-is-never-other-window         nil
+            treemacs-max-git-entries               5000
+            treemacs-missing-project-action        'ask
+            treemacs-no-png-images                 nil
+            treemacs-no-delete-other-windows       t
+            treemacs-project-follow-cleanup        nil
+            treemacs-persist-file                  (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
+            treemacs-recenter-distance             0.1
+            treemacs-recenter-after-file-follow    nil
+            treemacs-recenter-after-tag-follow     nil
+            treemacs-recenter-after-project-jump   'always
+            treemacs-recenter-after-project-expand 'on-distance
+            treemacs-show-cursor                   nil
+            treemacs-show-hidden-files             t
+            treemacs-silent-filewatch              nil
+            treemacs-silent-refresh                nil
+            treemacs-sorting                       'alphabetic-desc
+            treemacs-space-between-root-nodes      t
+            treemacs-tag-follow-cleanup            t
+            treemacs-tag-follow-delay              1.5
+            treemacs-width                         30)
+      (treemacs-resize-icons 11)
+      
+      (treemacs-follow-mode t)
+      (treemacs-filewatch-mode t)
+      (treemacs-fringe-indicator-mode t)
+      (pcase (cons (not (null (executable-find "git")))
+                   (not (null (executable-find "python3"))))
+        (`(t . t)
+          (treemacs-git-mode 'deferred))
+        (`(t . _)
+          (treemacs-git-mode 'simple))))
+    :bind
+    (:map global-map
+          ("M-0"       . treemacs-select-window)
+          ("C-x t 1"   . treemacs-delete-other-windows)
+          ("C-x t t"   . treemacs)
+          ("C-x t B"   . treemacs-bookmark)
+          ("C-x t C-t" . treemacs-find-file)
+          ("C-x t M-t" . treemacs-find-tag)))
 
 (use-package treemacs-evil
-  :after treemacs evil
-  :ensure t)
+    :after treemacs evil
+    :ensure t)
 
 (use-package treemacs-icons-dired
-  :after treemacs dired
-  :ensure t
-  :config (treemacs-icons-dired-mode))
+    :after treemacs dired
+    :ensure t
+    :config (treemacs-icons-dired-mode))
 #+END_SRC
 ** Initialize =magit=
 *** Description
@@ -823,40 +828,40 @@ Git porcelain for Emacs
 *** Code
 #+BEGIN_SRC emacs-lisp
 (use-package magit
-  :ensure t)
+    :ensure t)
 #+END_SRC
 ** Initialize =git-gutter=
 *** Code
 #+BEGIN_SRC emacs-lisp
 (use-package git-gutter
-  :ensure t
-  :diminish (git-gutter-mode)
-  :init
-  (global-git-gutter-mode 1))
+    :ensure t
+    :diminish (git-gutter-mode)
+    :init
+    (global-git-gutter-mode 1))
 #+END_SRC
 ** Initialize =helpful=
 *** Code
 #+BEGIN_SRC emacs-lisp
-  (use-package helpful
-  :defer nil :ensure t
-  :config
-  (global-set-key (kbd "C-h f") #'helpful-callable)
-  (global-set-key (kbd "C-h v") #'helpful-variable)
-  (global-set-key (kbd "C-h k") #'helpful-key)
-  (global-set-key (kbd "C-h x") #'helpful-command)
-  (global-set-key (kbd "C-c C-d") #'helpful-at-point))
+(use-package helpful
+    :defer nil :ensure t
+    :config
+    (global-set-key (kbd "C-h f") #'helpful-callable)
+    (global-set-key (kbd "C-h v") #'helpful-variable)
+    (global-set-key (kbd "C-h k") #'helpful-key)
+    (global-set-key (kbd "C-h x") #'helpful-command)
+    (global-set-key (kbd "C-c C-d") #'helpful-at-point))
 #+END_SRC
 ** Initialize =dired-posframe=
 *** Code
 #+BEGIN_SRC emacs-lisp
-  (use-package dired-posframe
+(use-package dired-posframe
     :ensure t
     :bind (:map dired-mode-map ("C-*" . dired-posframe-show)))
 #+END_SRC
 ** Initialize =devdocs=
 *** Code
 #+BEGIN_SRC emacs-lisp
-  (use-package devdocs
+(use-package devdocs
     :defer nil :ensure t
     :config
     (global-set-key (kbd "C-h D") #'devdocs-lookup))
@@ -866,82 +871,82 @@ Git porcelain for Emacs
 Vertico provides a performant and minimalistic vertical completion UI based on the default completion system.
 *** Code
 #+BEGIN_SRC emacs-lisp
-    ;; Enable vertico
-  (use-package vertico
-   :defer  t
-   :ensure t
-   :init
-   (vertico-mode))
-    ;; Different scroll margin
-    ;; (setq vertico-scroll-margin 0)
+;; Enable vertico
+(use-package vertico
+    :defer  t
+    :ensure t
+    :init
+    (vertico-mode))
+;; Different scroll margin
+;; (setq vertico-scroll-margin 0)
 
-    ;; Show more candidates
-    ;; (setq vertico-count 20)
+;; Show more candidates
+;; (setq vertico-count 20)
 
-    ;; Grow and shrink the Vertico minibuffer
-    ;; (setq vertico-resize t)
+;; Grow and shrink the Vertico minibuffer
+;; (setq vertico-resize t)
 
-    ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
-    ;; (setq vertico-cycle t)
+;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
+;; (setq vertico-cycle t)
 
-  (use-package vertico-posframe
-   :defer  t
-   :ensure t
-   :init
-   (vertico-posframe-mode 1))
+(use-package vertico-posframe
+    :defer  t
+    :ensure t
+    :init
+    (vertico-posframe-mode 1))
 
-    ;; Persist history over Emacs restarts. Vertico sorts by history position.
-  (use-package savehist
-      :init
-      (savehist-mode))
+;; Persist history over Emacs restarts. Vertico sorts by history position.
+(use-package savehist
+    :init
+  (savehist-mode))
 
-    ;; A few more useful configurations...
-  (use-package emacs
-      :init
-      ;; Add prompt indicator to `completing-read-multiple'.
-      ;; We display [CRM<separator>], e.g., [CRM,] if the separator is a comma.
-      (defun crm-indicator (args)
-       (cons (format "[CRM%s] %s"
-                       (replace-regexp-in-string
-                        "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
-                        crm-separator)
-                       (car args))
-             (cdr args)))
-      (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
+;; A few more useful configurations...
+(use-package emacs
+    :init
+  ;; Add prompt indicator to `completing-read-multiple'.
+  ;; We display [CRM<separator>], e.g., [CRM,] if the separator is a comma.
+  (defun crm-indicator (args)
+    (cons (format "[CRM%s] %s"
+                  (replace-regexp-in-string
+                   "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
+                   crm-separator)
+                  (car args))
+          (cdr args)))
+  (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
 
-      ;; Do not allow the cursor in the minibuffer prompt
-      (setq minibuffer-prompt-properties
-          '(read-only t cursor-intangible t face minibuffer-prompt))
-      (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
+  ;; Do not allow the cursor in the minibuffer prompt
+  (setq minibuffer-prompt-properties
+        '(read-only t cursor-intangible t face minibuffer-prompt))
+  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
 
-      ;; Emacs 28: Hide commands in M-x which do not work in the current mode.
-      ;; Vertico commands are hidden in normal buffers.
-      ;; (setq read-extended-command-predicate
-      ;;       #'command-completion-default-include-p)
+  ;; Emacs 28: Hide commands in M-x which do not work in the current mode.
+  ;; Vertico commands are hidden in normal buffers.
+  ;; (setq read-extended-command-predicate
+  ;;       #'command-completion-default-include-p)
 
-      ;; Enable recursive minibuffers
-      (setq enable-recursive-minibuffers t))
+  ;; Enable recursive minibuffers
+  (setq enable-recursive-minibuffers t))
 
-    ;; Optionally use the `orderless' completion style.
-  (use-package orderless
-   :ensure t
-   :init
+;; Optionally use the `orderless' completion style.
+(use-package orderless
+    :ensure t
+    :init
     ;; Configure a custom style dispatcher (see the Consult wiki)
     ;; (setq orderless-style-dispatchers '(+orderless-dispatch)
     ;;       orderless-component-separator #'orderless-escapable-split-on-space)
     (setq completion-styles '(orderless basic)
-            completion-category-defaults nil
-            completion-category-overrides '((file (styles partial-completion)))))
+          completion-category-defaults nil
+          completion-category-overrides '((file (styles partial-completion)))))
 
-  (define-key vertico-map "?" #'minibuffer-completion-help)
-  (define-key vertico-map (kbd "M-RET") #'minibuffer-force-complete-and-exit)
-  (define-key vertico-map (kbd "TAB") #'minibuffer-complete)
+(define-key vertico-map "?" #'minibuffer-completion-help)
+(define-key vertico-map (kbd "M-RET") #'minibuffer-force-complete-and-exit)
+(define-key vertico-map (kbd "TAB") #'minibuffer-complete)
 #+END_SRC
 ** Initialize =consult=
 *** Code
 #+BEGIN_SRC emacs-lisp
-  ;; Example configuration for Consult
-  (use-package consult
+;; Example configuration for Consult
+(use-package consult
     :ensure t
     ;; Replace bindings. Lazily loaded due by `use-package'.
     :bind (;; C-c bindings (mode-specific-map)
@@ -1047,24 +1052,24 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
 
     ;; By default `consult-project-function' uses `project-root' from project.el.
     ;; Optionally configure a different project root function.
-    ;;;; 1. project.el (the default)
+  ;;;; 1. project.el (the default)
     ;; (setq consult-project-function #'consult--default-project--function)
-    ;;;; 2. vc.el (vc-root-dir)
+  ;;;; 2. vc.el (vc-root-dir)
     ;; (setq consult-project-function (lambda (_) (vc-root-dir)))
-    ;;;; 3. locate-dominating-file
+  ;;;; 3. locate-dominating-file
     ;; (setq consult-project-function (lambda (_) (locate-dominating-file "." ".git")))
-    ;;;; 4. projectile.el (projectile-project-root)
+  ;;;; 4. projectile.el (projectile-project-root)
     ;; (autoload 'projectile-project-root "projectile")
     ;; (setq consult-project-function (lambda (_) (projectile-project-root)))
-    ;;;; 5. No project support
+  ;;;; 5. No project support
     ;; (setq consult-project-function nil)
-  )
+    )
 #+END_SRC
 ** Initialize =marginalia= and =embark=
 *** Code
 #+BEGIN_SRC emacs-lisp
-    ;; Enable rich annotations using the Marginalia package
-  (use-package marginalia
+;; Enable rich annotations using the Marginalia package
+(use-package marginalia
     :ensure t
     ;; Either bind `marginalia-cycle' globally or only in the minibuffer
     :bind (("M-A" . marginalia-cycle)
@@ -1077,7 +1082,7 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
     ;; Must be in the :init section of use-package such that the mode gets
     ;; enabled right away. Note that this forces loading the package.
     (marginalia-mode))
-  (use-package embark
+(use-package embark
     :ensure t
 
     :bind
@@ -1092,8 +1097,8 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
 
     ;; Show the Embark target at point via Eldoc.  You may adjust the Eldoc
     ;; strategy, if you want to see the documentation from multiple providers.
-  ;; (add-hook 'eldoc-documentation-functions #'embark-eldoc-first-target)
-     (setq eldoc-documentation-strategy #'eldoc-documentation-compose-eagerly)
+    ;; (add-hook 'eldoc-documentation-functions #'embark-eldoc-first-target)
+    (setq eldoc-documentation-strategy #'eldoc-documentation-compose-eagerly)
 
     :config
 
@@ -1103,16 +1108,16 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
                    nil
                    (window-parameters (mode-line-format . none)))))
 
-  ;; Consult users will also want the embark-consult package.
-  (use-package embark-consult
+;; Consult users will also want the embark-consult package.
+(use-package embark-consult
     :ensure t ; only need to install it, embark loads it after consult if found
     :hook
     (embark-collect-mode . consult-preview-at-point-mode))
-  #+END_SRC
+#+END_SRC
 ** Initialize =corfu=
 *** Code
 #+BEGIN_SRC emacs-lisp
-  (use-package corfu
+(use-package corfu
     :ensure t
     :defer nil
     ;; Optional customizations
@@ -1138,15 +1143,15 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
     (global-corfu-mode)
     (corfu-popupinfo-mode)
     (setq corfu-auto t
-      corfu-popupinfo-delay (cons 0.5 0.5)
-      corfu-quit-no-match 'separator)
+          corfu-popupinfo-delay (cons 0.5 0.5)
+          corfu-quit-no-match 'separator)
     :config
     (define-key corfu-map (kbd "C-n") #'corfu-next)
     (define-key corfu-map (kbd "C-p") #'corfu-previous))
 
-  ;; A few more useful configurations...
+;; A few more useful configurations...
 (use-package emacs
-  :init
+    :init
   ;; TAB cycle if there are only few candidates
   (setq completion-cycle-threshold 3)
 
@@ -1162,65 +1167,65 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
 ** Initialize =reformatter=
 *** Code
 #+BEGIN_SRC emacs-lisp
-  (use-package reformatter
-  :defer nil :ensure t)
+(use-package reformatter
+    :defer nil :ensure t)
 #+END_SRC
 ** Initialize =vterm=
 *** Code
 #+BEGIN_SRC emacs-lisp
 (use-package vterm
-  :ensure t)
+    :ensure t)
 #+END_SRC
 ** Initialize =eat=
 *** Code
 #+BEGIN_SRC emacs-lisp
 (use-package eat
-  :ensure t
-  :pin nongnu
-  :custom
-  (eat-kill-buffer-on-exit t)
-  :config
-  (delete [?\C-u] eat-semi-char-non-bound-keys) ; make C-u work in Eat terminals like in normal terminals
-  (delete [?\C-g] eat-semi-char-non-bound-keys) ; ditto for C-g
-  (eat-update-semi-char-mode-map)
-  ;; XXX: Awkward workaround for the need to call eat-reload after changing Eat's keymaps,
-  ;; but reloading from :config section causes infinite recursion because :config wraps with-eval-after-load.
-  (defvar eat--prevent-use-package-config-recursion nil)
-  (unless eat--prevent-use-package-config-recursion
-    (setq eat--prevent-use-package-config-recursion t)
-    (eat-reload))
-  (makunbound 'eat--prevent-use-package-config-recursion))
+    :ensure t
+    :pin nongnu
+    :custom
+    (eat-kill-buffer-on-exit t)
+    :config
+    (delete [?\C-u] eat-semi-char-non-bound-keys) ; make C-u work in Eat terminals like in normal terminals
+    (delete [?\C-g] eat-semi-char-non-bound-keys) ; ditto for C-g
+    (eat-update-semi-char-mode-map)
+    ;; XXX: Awkward workaround for the need to call eat-reload after changing Eat's keymaps,
+    ;; but reloading from :config section causes infinite recursion because :config wraps with-eval-after-load.
+    (defvar eat--prevent-use-package-config-recursion nil)
+    (unless eat--prevent-use-package-config-recursion
+      (setq eat--prevent-use-package-config-recursion t)
+      (eat-reload))
+    (makunbound 'eat--prevent-use-package-config-recursion))
 #+END_SRC
 ** Initialize =projectile=
 *** Code
 #+BEGIN_SRC emacs-lisp
-  (use-package projectile
+(use-package projectile
     :ensure t)
-  (use-package consult-projectile
+(use-package consult-projectile
     :ensure t)
 #+END_SRC
 ** Initialize =perspective-exwm=
 *** Code
 #+BEGIN_SRC emacs-lisp
 (use-package perspective-exwm
-  :straight t
-  :config
-  (setq perspective-exwm-override-initial-name
-        '((0 . "misc")
-          (1 . "main")
-          (2 . "dev 1")
-          (3 . "dev 2")
-          (4 . "media")
-          (5 . "comms 1")
-          (6 . "comms 2")
-          (7 . "lab 1")
-          (8 . "lab 2")
-          (9 . "config"))))
- 
+    :straight t
+    :config
+    (setq perspective-exwm-override-initial-name
+          '((0 . "misc")
+            (1 . "main")
+            (2 . "dev 1")
+            (3 . "dev 2")
+            (4 . "media")
+            (5 . "comms 1")
+            (6 . "comms 2")
+            (7 . "lab 1")
+            (8 . "lab 2")
+            (9 . "config"))))
+
 (use-package perspective
-  :custom
+    :custom
   (persp-mode-prefix-key (kbd "C-c M-p")))
- 
+
 (defun my/exwm-configure-window ()
   (interactive)
   (pcase exwm-class-name
@@ -1233,13 +1238,13 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
       :workspace-index 4
       :persp-name "media"))))
 
-;(remove-hook 'exwm-manage-finish-hook #'my/exwm-configure-window)
+                                        ;(remove-hook 'exwm-manage-finish-hook #'my/exwm-configure-window)
 (add-hook 'exwm-manage-finish-hook #'my/exwm-configure-window)
 #+END_SRC
 ** Initialize =notmuch=
 *** Code
 #+BEGIN_SRC emacs-lisp
-  (use-package notmuch
+(use-package notmuch
     :ensure t
     :config 
     ;; this doesn't work for some reason? only works through customize
@@ -1262,26 +1267,26 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
               (goto-char init)
               (throw 'break t)))))))
 
-; (use-package notmuch-notify
-;   ;; :ensure t
-;   :straight t
-;   ;; (Recommended) activate stats message when refreshing `notmuch-hello' buffer
-;   :hook (notmuch-hello-refresh . notmuch-notify-hello-refresh-status-message)
-;   :config
-;   ;; (Recommended) activate system-wise notification timer
-;   (setq notmuch-notify-excluded-tags '("Org-Mode" "FromMe"))
-;   (setq notmuch-notify-refresh-interval 2)
-;   (setq notmuch-notify-alert-profiles
-;         `((:name "inbox"
-;            :search-term "tag:inbox"
-;            :severity urgent
-;            :title "Notmuch inbox:"
-;            :icon ,(expand-file-name "img/inbox.jpg" user-emacs-directory)
-;            :audio ,(expand-file-name "audio/kalimba.wav" user-emacs-directory))
-;           (:name "default")))
-;   (notmuch-notify-set-refresh-timer))
+                                        ; (use-package notmuch-notify
+                                        ;   ;; :ensure t
+                                        ;   :straight t
+                                        ;   ;; (Recommended) activate stats message when refreshing `notmuch-hello' buffer
+                                        ;   :hook (notmuch-hello-refresh . notmuch-notify-hello-refresh-status-message)
+                                        ;   :config
+                                        ;   ;; (Recommended) activate system-wise notification timer
+                                        ;   (setq notmuch-notify-excluded-tags '("Org-Mode" "FromMe"))
+                                        ;   (setq notmuch-notify-refresh-interval 2)
+                                        ;   (setq notmuch-notify-alert-profiles
+                                        ;         `((:name "inbox"
+                                        ;            :search-term "tag:inbox"
+                                        ;            :severity urgent
+                                        ;            :title "Notmuch inbox:"
+                                        ;            :icon ,(expand-file-name "img/inbox.jpg" user-emacs-directory)
+                                        ;            :audio ,(expand-file-name "audio/kalimba.wav" user-emacs-directory))
+                                        ;           (:name "default")))
+                                        ;   (notmuch-notify-set-refresh-timer))
 
-  (use-package notmuch-indicator
+(use-package notmuch-indicator
     :ensure t
     :init (notmuch-indicator-mode))
 #+END_SRC
@@ -1289,7 +1294,7 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
 ** Initialize =aria2=
 *** Code
 #+BEGIN_SRC emacs-lisp
-  (use-package aria2
+(use-package aria2
     :ensure t
     :config
     (setq aria2-add-evil-quirks t)) 
@@ -1297,12 +1302,12 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
 ** Initialize =ultra-scroll=
 *** Code
 #+BEGIN_SRC emacs-lisp
-  (use-package ultra-scroll
+(use-package ultra-scroll
     :ensure t
-    ;:vc (:url "https://github.com/jdtsmith/ultra-scroll") ; if desired (emacs>=v30)
+                                        ;:vc (:url "https://github.com/jdtsmith/ultra-scroll") ; if desired (emacs>=v30)
     :init
     (setq scroll-conservatively 3 ; or whatever value you prefer, since v0.4
-            scroll-margin 0)        ; important: scroll-margin>0 not yet supported
+          scroll-margin 0)        ; important: scroll-margin>0 not yet supported
     :config
     (ultra-scroll-mode 1))
 
@@ -1310,73 +1315,84 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
 ** Initialize =discover=
 *** Code
 #+BEGIN_SRC emacs-lisp
-  (use-package discover
+(use-package discover
     :ensure t)
 #+END_SRC
 ** Initialize =mpv=
 *** Code
 #+BEGIN_SRC emacs-lisp
-  (use-package mpv
+(use-package mpv
     :ensure t)
-  (defun mpv-at-point ()
-    (mpv-play-url (ffap-guesser)))
+(defun mpv-at-point ()
+  (mpv-play-url (ffap-guesser)))
 #+END_SRC
 ** Initialize =emojify=
 *** Code
 #+BEGIN_SRC emacs-lisp
-  (use-package emojify
+(use-package emojify
     :ensure t)
 
 #+END_SRC
 ** Initialize =lingva=
 *** Code
 #+BEGIN_SRC emacs-lisp
-  (use-package lingva
+(use-package lingva
     :ensure t)
 #+END_SRC
 ** Initialize =ligature=
 *** Code
 #+BEGIN_SRC emacs-lisp
 (use-package ligature
-  :straight t
-  :config
-  ;; Enable all Iosevka ligatures in programming modes
-  (ligature-set-ligatures
-   'prog-mode
-   '("<---" "<--"  "<<-" "<-" "->" "-->" "--->" "<->" "<-->" "<--->" "<---->" "<!--"
-     "<==" "<===" "<=" "=>" "=>>" "==>" "===>" ">=" "<=>" "<==>" "<===>" "<====>" "<!---"
-     "<~~" "<~" "~>" "~~>" "::" ":::" "==" "!=" "===" "!=="
-     ":=" ":-" ":+" "<*" "<*>" "*>" "<|" "<|>" "|>" "+:" "-:" "=:" "<******>" "++" "+++"))
-  ;; Enables ligature checks globally in all buffers. You can also do it
-  ;; per mode with `ligature-mode'.
-  (global-ligature-mode t))
+    :straight t
+    :config
+    ;; Enable all Iosevka ligatures in programming modes
+    (ligature-set-ligatures
+     'prog-mode
+     '("<---" "<--"  "<<-" "<-" "->" "-->" "--->" "<->" "<-->" "<--->" "<---->" "<!--"
+       "<==" "<===" "<=" "=>" "=>>" "==>" "===>" ">=" "<=>" "<==>" "<===>" "<====>" "<!---"
+       "<~~" "<~" "~>" "~~>" "::" ":::" "==" "!=" "===" "!=="
+       ":=" ":-" ":+" "<*" "<*>" "*>" "<|" "<|>" "|>" "+:" "-:" "=:" "<******>" "++" "+++"))
+    ;; Enables ligature checks globally in all buffers. You can also do it
+    ;; per mode with `ligature-mode'.
+    (global-ligature-mode t))
 #+END_SRC
 ** Initialize =reader=
 *** Description
 A performant drop-in replacement for =doc-view= / =nov.el= / =pdf-tools=
 *** Code
 #+BEGIN_SRC emacs-lisp
-  (use-package reader
-      :straight '(reader :type git :host codeberg :repo "divyaranjan/emacs-reader"
-              :files ("*.el" "render-core.so")
-              :pre-build ("make" "all")))
+(use-package reader
+    :straight '(reader :type git :host codeberg :repo "divyaranjan/emacs-reader"
+                :files ("*.el" "render-core.so")
+                :pre-build ("make" "all")))
 #+END_SRC
 ** Initialize =olivetti=
 *** Code
 #+BEGIN_SRC emacs-lisp
-  (use-package olivetti
-      :ensure t)
+(use-package olivetti
+    :ensure t)
+#+END_SRC
+** Initialize =fj=
+*** Code
+#+BEGIN_SRC emacs-lisp
+(use-package fj
+    :straight (fj :type git :host codeberg :repo "martianh/fj.el")
+    :config
+    (setq fj-user "x4"
+          fj-host "https://codeberg.org"
+          )
+    )
 #+END_SRC
 * Programming section
 ** C/C++
 *** Code
 #+BEGIN_SRC emacs-lisp
-  (defun my-c-mode-hook ()
-    (define-key c-mode-map (kbd "C-c C-c") (lambda () (interactive) (compile "make -k")))
-    (setq c-basic-offset 2
-          c-indent-level 2
-          c-default-style "gnu"))
-  (add-hook 'c-mode-common-hook 'my-c-mode-hook)
+(defun my-c-mode-hook ()
+  (define-key c-mode-map (kbd "C-c C-c") (lambda () (interactive) (compile "make -k")))
+  (setq c-basic-offset 2
+        c-indent-level 2
+        c-default-style "gnu"))
+(add-hook 'c-mode-common-hook 'my-c-mode-hook)
 
 #+END_SRC
 ** Initialize =yasnippet=
@@ -1385,36 +1401,36 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
 *** Code
 #+BEGIN_SRC emacs-lisp
 (use-package yasnippet
-:ensure t
-:diminish (yas-minor-mode)
-:hook
-((c-mode c++-mode zig-mode python-mode) . yas-minor-mode)
-:config
-(yas-reload-all))
+    :ensure t
+    :diminish (yas-minor-mode)
+    :hook
+    ((c-mode c++-mode zig-mode python-mode) . yas-minor-mode)
+    :config
+    (yas-reload-all))
 
 (use-package yasnippet-snippets
-:ensure t)
+    :ensure t)
 #+END_SRC
 ** Initialize =lsp=
 *** Code
 #+BEGIN_SRC emacs-lisp
 (use-package lsp-mode
-:defer t :ensure t
-:init
-;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
-(setq lsp-keymap-prefix "C-c l")
-(setq lsp-enable-on-type-formatting nil)
-  :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
-         ;(clojure-mode . lsp)
-         ((haskell-mode c-mode scala-mode) . lsp)
-         ;; if you want which-key integration
-         (lsp-mode . lsp-enable-which-key-integration))
-  :commands lsp)
+    :defer t :ensure t
+    :init
+    ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+    (setq lsp-keymap-prefix "C-c l")
+    (setq lsp-enable-on-type-formatting nil)
+    :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+                                        ;(clojure-mode . lsp)
+           ((haskell-mode c-mode scala-mode) . lsp)
+           ;; if you want which-key integration
+           (lsp-mode . lsp-enable-which-key-integration))
+    :commands lsp)
 
 (use-package consult-lsp
-  :defer t :ensure t
-  :config
-  (define-key lsp-mode-map [remap xref-find-apropos] #'consult-lsp-symbols))
+    :defer t :ensure t
+    :config
+    (define-key lsp-mode-map [remap xref-find-apropos] #'consult-lsp-symbols))
 
 (use-package lsp-ui :ensure t :commands lsp-ui-mode)
 (use-package lsp-treemacs :ensure t :commands lsp-treemacs-errors-list)
@@ -1427,328 +1443,330 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
 ** Lisp/Scheme
 *** Code
 #+BEGIN_SRC emacs-lisp
-  (defvar electrify-return-match
-    "[\]}\)\"]"
-    "If this regexp matches the text after the cursor, do an \"electric\"
-    return.")
+(defvar electrify-return-match
+  "[\]}\)\"]"
+  "If this regexp matches the text after the cursor, do an \"electric\"
+  return.")
 
-  (defun electrify-return-if-match (arg)
-    "If the text after the cursor matches `electrify-return-match' then
-    open and indent an empty line between the cursor and the text. Move the
-    cursor to the new line."
-    (interactive "P")
-    (let ((case-fold-search nil))
-        (if (looking-at electrify-return-match)
+(defun electrify-return-if-match (arg)
+  "If the text after the cursor matches `electrify-return-match' then
+  open and indent an empty line between the cursor and the text. Move the
+  cursor to the new line."
+  (interactive "P")
+  (let ((case-fold-search nil))
+    (if (looking-at electrify-return-match)
         (save-excursion (newline-and-indent)))
-        (newline arg)
-        (indent-according-to-mode)))
+    (newline arg)
+    (indent-according-to-mode)))
 
-    ;; Using local-set-key in a mode-hook is a better idea.
-    ;;;;(global-set-key (kbd "RET") 'electrify-return-if-match)
+;; Using local-set-key in a mode-hook is a better idea.
+  ;;;;(global-set-key (kbd "RET") 'electrify-return-if-match)
 
-  (defun setup-lisp-stuff ()
-      (paredit-mode t)
-      (turn-on-eldoc-mode)
-      (eldoc-add-command 'paredit-backward-delete 'paredit-close-round)
-      (local-set-key (kbd "RET") 'electrify-return-if-match)
-      (eldoc-add-command 'electrify-return-if-match)
-      (show-paren-mode t))
+(defun setup-lisp-stuff ()
+  (paredit-mode t)
+  (turn-on-eldoc-mode)
+  (eldoc-add-command 'paredit-backward-delete 'paredit-close-round)
+  (local-set-key (kbd "RET") 'electrify-return-if-match)
+  (eldoc-add-command 'electrify-return-if-match)
+  (show-paren-mode t))
 
-  ;; FIXME: this is hacky and just for now
-  (add-to-list 'auto-mode-alist '("\\.gc\\'" . lisp-mode))
-  (add-hook 'lisp-mode-hook 'setup-goal)
+;; FIXME: this is hacky and just for now
+(add-to-list 'auto-mode-alist '("\\.gc\\'" . lisp-mode))
+(add-hook 'lisp-mode-hook 'setup-goal)
 
-  (defun setup-goal ()
+(defun setup-goal ()
   ;; if we are in a gc file, change indent settings for GOAL
   (when (and (stringp buffer-file-name)
-              (string-match "\\.gc\\'" buffer-file-name))
-      (put 'with-pp      'common-lisp-indent-function 0)
-      (put 'while        'common-lisp-indent-function 1)
-      (put 'rlet         'common-lisp-indent-function 1)
-      (put 'until        'common-lisp-indent-function 1)
-      (put 'countdown    'common-lisp-indent-function 1)
-      (put 'defun-debug  'common-lisp-indent-function 2)
-      (put 'defenum      'common-lisp-indent-function 2)
+             (string-match "\\.gc\\'" buffer-file-name))
+    (put 'with-pp      'common-lisp-indent-function 0)
+    (put 'while        'common-lisp-indent-function 1)
+    (put 'rlet         'common-lisp-indent-function 1)
+    (put 'until        'common-lisp-indent-function 1)
+    (put 'countdown    'common-lisp-indent-function 1)
+    (put 'defun-debug  'common-lisp-indent-function 2)
+    (put 'defenum      'common-lisp-indent-function 2)
 
-      ;; indent for common lisp, this makes it look nicer
-      (custom-set-variables '(lisp-indent-function 'common-lisp-indent-function))
-      (autoload 'common-lisp-indent-function "cl-indent" "Common Lisp indent.")))
+    ;; indent for common lisp, this makes it look nicer
+    (custom-set-variables '(lisp-indent-function 'common-lisp-indent-function))
+    (autoload 'common-lisp-indent-function "cl-indent" "Common Lisp indent.")))
 
-  (use-package emacs
+(use-package emacs
     :ensure t
     :config (require 'ulisp-mode))
 
-  ; Paredit
-  (use-package paredit
+                                        ; Paredit
+(use-package paredit
     :defer nil
     :diminish (paredit-mode eldoc-mode)
     :ensure t
     :hook
     ((racket-mode lisp-mode ulisp-mode scheme-mode emacs-lisp-mode clojure-mode clojurec-mode janet-ts-mode) . paredit-mode))
 
-  ; Lispy
-  (use-package lispy
+                                        ; Lispy
+(use-package lispy
     :defer nil
     :ensure t
     :diminish (lispy-mode)
     :hook
     ((racket-mode lisp-mode ulisp-mode scheme-mode emacs-lisp-mode clojure-mode janet-ts-mode) . lispy-mode))
 
-  ; Elsa
-  (use-package elsa
-   :defer nil :ensure t
-   :config (elsa-setup-font-lock))
+                                        ; Elsa
+(use-package elsa
+    :defer nil :ensure t
+    :config (elsa-setup-font-lock))
 
-  ; flycheck-elsa
-  (use-package flycheck-elsa
-   :defer nil :ensure t
-   :config (setq flycheck-elsa-backend 'eask)
-   :hook (emacs-lisp-mode . flycheck-elsa-setup))
+                                        ; flycheck-elsa
+(use-package flycheck-elsa
+    :defer nil :ensure t
+    :config (setq flycheck-elsa-backend 'eask)
+    :hook (emacs-lisp-mode . flycheck-elsa-setup))
 
-  ; Sly
-  (use-package sly
+                                        ; Sly
+(use-package sly
     :ensure t
     :config
+    (load "~/quicklisp/log4sly-setup.el")
+    (global-log4sly-mode 1)
     (define-key sly-mode-map (kbd "C-c C-b") #'sly-eval-buffer)
     (setq inferior-lisp-program "sbcl"))
 
-  (use-package sly-asdf
+(use-package sly-asdf
     :ensure t)
-  (use-package sly-overlay
+(use-package sly-overlay
     :ensure t)
-  (use-package sly-quicklisp
+(use-package sly-quicklisp
     :ensure t)
-  (use-package sly-macrostep
+(use-package sly-macrostep
     :ensure t)
-  (use-package sly-repl-ansi-color
+(use-package sly-repl-ansi-color
     :ensure t)
 
 
-  ; Schemes
-  (use-package geiser
+                                        ; Schemes
+(use-package geiser
     :defer nil
     :ensure t
     :config
     (setq geiser-guile-load-init-file t))
 
-  (use-package macrostep-geiser
+(use-package macrostep-geiser
     :defer nil
     :ensure t)
 
-  (use-package geiser-guile
+(use-package geiser-guile
     :defer nil
     :ensure t)
 
-  (use-package geiser-chicken
+(use-package geiser-chicken
     :defer nil
     :ensure t)
 
-  (use-package geiser-chez
+(use-package geiser-chez
     :defer nil
     :ensure t)
 
-  (use-package geiser-chibi
+(use-package geiser-chibi
     :defer nil
     :ensure t)
 
-  (use-package racket-mode
+(use-package racket-mode
     :defer nil
     :ensure t
     :config 
     (define-key racket-mode-map (kbd "C-c C-d") #'racket-repl-describe))
 
-  (with-eval-after-load 'lsp-mode
-    (setq-default lsp-auto-guess-root t)
+(with-eval-after-load 'lsp-mode
+  (setq-default lsp-auto-guess-root t)
 
-    (lsp-register-client
-     (make-lsp-client :new-connection (lsp-stdio-connection "/usr/bin/racket-langserver")
-                      :major-modes '(racket-mode)
-                      :server-id 'racket-langserver
-                      :multi-root t))) ;; Ensures lsp-mode sends "workspaceFolders" to the server
+  (lsp-register-client
+   (make-lsp-client :new-connection (lsp-stdio-connection "/usr/bin/racket-langserver")
+                    :major-modes '(racket-mode)
+                    :server-id 'racket-langserver
+                    :multi-root t))) ;; Ensures lsp-mode sends "workspaceFolders" to the server
 
-  (add-hook 'racket-mode-hook #'lsp-deferred)
+(add-hook 'racket-mode-hook #'lsp-deferred)
 
-  ; Clojure
-  (use-package clojure-mode
+                                        ; Clojure
+(use-package clojure-mode
     :defer nil
     :ensure t)
 
-  (use-package cider
+(use-package cider
     :ensure t :defer t
     :config
     (with-eval-after-load 'cider
       (define-key cider-mode-map (kbd "C-c C-b") #'cider-eval-buffer))
     (setq
-        ;; not squiggly-related, but I like it
-        cider-repl-history-file ".cider-repl-history" 
-        ;; not necessary, but useful for trouble-shooting
-        nrepl-log-messages t))
+     ;; not squiggly-related, but I like it
+     cider-repl-history-file ".cider-repl-history" 
+     ;; not necessary, but useful for trouble-shooting
+     nrepl-log-messages t))
 
-  (use-package flycheck-clojure
+(use-package flycheck-clojure
     :ensure t
     :after cider
     :defer t
     :commands (flycheck-clojure-setup)               ;; autoload
     :config
     (eval-after-load 'flycheck
-       '(setq flycheck-display-errors-function #'flycheck-pos-tip-error-messages))
+      '(setq flycheck-display-errors-function #'flycheck-pos-tip-error-messages))
     (add-hook 'after-init-hook #'global-flycheck-mode))
 #+END_SRC
 ** GLSL
 *** Code
 #+BEGIN_SRC emacs-lisp
-  (use-package glsl-mode
+(use-package glsl-mode
     :ensure t
     :mode ("\\.fs\\'" "\\.vs\\'"))
 
-  (with-eval-after-load 'lsp-mode
-    (setq-default lsp-auto-guess-root t)
+(with-eval-after-load 'lsp-mode
+  (setq-default lsp-auto-guess-root t)
 
-    (lsp-register-client
-     (make-lsp-client :new-connection (lsp-stdio-connection "/usr/bin/glsl_analyzer") ;; Adjust the path here
-                      :major-modes '(glsl-mode)
-                      :server-id 'glsl_analyzer
-                      :multi-root t))) ;; Ensures lsp-mode sends "workspaceFolders" to the server
+  (lsp-register-client
+   (make-lsp-client :new-connection (lsp-stdio-connection "/usr/bin/glsl_analyzer") ;; Adjust the path here
+                    :major-modes '(glsl-mode)
+                    :server-id 'glsl_analyzer
+                    :multi-root t))) ;; Ensures lsp-mode sends "workspaceFolders" to the server
 
-  (add-hook 'glsl-mode-hook #'lsp-deferred)
+(add-hook 'glsl-mode-hook #'lsp-deferred)
 #+END_SRC
 ** Zig
 *** Code
 #+BEGIN_SRC emacs-lisp
-  (use-package zig-mode
+(use-package zig-mode
     :ensure t)
 
-  (use-package zig-ts-mode
+(use-package zig-ts-mode
     :ensure t)
 #+END_SRC
 ** Python
 *** Code
 #+BEGIN_SRC emacs-lisp
-  ;; (use-package auto-virtualenv
-  ;;   :ensure t
-  ;;   :config
-  ;;   (setq auto-virtualenv-verbose t)
-  ;;   (setq auto-virtualenv-reload-lsp t)
-  ;;   (setq auto-virtualenv-global-dirs
-  ;;     '("~/.virtualenvs/" "~/.pyenv/versions/" "~/.envs/" "~/.conda/" "~/.conda/envs/" "venv/" ".venv/"))
-  ;;   (auto-virtualenv-setup))
+;; (use-package auto-virtualenv
+;;   :ensure t
+;;   :config
+;;   (setq auto-virtualenv-verbose t)
+;;   (setq auto-virtualenv-reload-lsp t)
+;;   (setq auto-virtualenv-global-dirs
+;;     '("~/.virtualenvs/" "~/.pyenv/versions/" "~/.envs/" "~/.conda/" "~/.conda/envs/" "venv/" ".venv/"))
+;;   (auto-virtualenv-setup))
 #+END_SRC
 ** Odin
 *** Code
 #+BEGIN_SRC emacs-lisp
-  (use-package odin-mode
+(use-package odin-mode
     :straight (odin-mode :type git :host github :repo "mattt-b/odin-mode")
     :mode ("\\.odin\\'" . odin-mode)
     :config 
     (define-key odin-mode-map (kbd "C-c C-b")
-                (lambda () (interactive)
-                  (compile "odin build . -debug")))
+      (lambda () (interactive)
+        (compile "odin build . -debug")))
     (define-key odin-mode-map (kbd "C-c C-l")
-                (lambda () (interactive)
-                  (compile "odin build . -build-mode:shared -debug")))
+      (lambda () (interactive)
+        (compile "odin build . -build-mode:shared -debug")))
     (define-key odin-mode-map (kbd "C-c C-t")
-                (lambda () (interactive)
-                  (compile "odin test .")))
+      (lambda () (interactive)
+        (compile "odin test .")))
     (define-key odin-mode-map (kbd "C-c C-r")
-                (lambda () (interactive)
-                  (compile "odin run . -debug"))))
+      (lambda () (interactive)
+        (compile "odin run . -debug"))))
 
-    ;; Set up OLS as the language server for Odin, ensuring lsp-mode is loaded first
-  (with-eval-after-load 'lsp-mode
-    (setq-default lsp-auto-guess-root t) ;; Helps find the ols.json file with Projectile or project.el
-    (add-to-list 'lsp-language-id-configuration '(odin-mode . "odin"))
-    (add-to-list 'lsp-language-id-configuration '(odin-ts-mode . "odin"))
+;; Set up OLS as the language server for Odin, ensuring lsp-mode is loaded first
+(with-eval-after-load 'lsp-mode
+  (setq-default lsp-auto-guess-root t) ;; Helps find the ols.json file with Projectile or project.el
+  (add-to-list 'lsp-language-id-configuration '(odin-mode . "odin"))
+  (add-to-list 'lsp-language-id-configuration '(odin-ts-mode . "odin"))
 
-    (lsp-register-client
-     (make-lsp-client :new-connection (lsp-stdio-connection "/home/goober/.local/bin/ols") ;; Adjust the path here
-                      :major-modes '(odin-mode odin-ts-mode)
-                      :server-id 'ols
-                      :multi-root nil)))
+  (lsp-register-client
+   (make-lsp-client :new-connection (lsp-stdio-connection "/home/goober/.local/bin/ols") ;; Adjust the path here
+                    :major-modes '(odin-mode odin-ts-mode)
+                    :server-id 'ols
+                    :multi-root nil)))
 
-  ;; Add a hook to autostart OLS
-  (add-hook 'odin-mode-hook #'lsp-deferred)
+;; Add a hook to autostart OLS
+(add-hook 'odin-mode-hook #'lsp-deferred)
 #+END_SRC
 ** Rust
 *** Code
 #+BEGIN_SRC emacs-lisp
-  (use-package rust-mode
+(use-package rust-mode
     :ensure t)
 
-  (with-eval-after-load 'lsp-mode
-    (setq-default lsp-auto-guess-root t) ;; Helps find the ols.json file with Projectile or project.el
-    (add-to-list 'lsp-language-id-configuration '(rust-mode . "rust")))
-    
+(with-eval-after-load 'lsp-mode
+  (setq-default lsp-auto-guess-root t) ;; Helps find the ols.json file with Projectile or project.el
+  (add-to-list 'lsp-language-id-configuration '(rust-mode . "rust")))
 
-  (add-hook 'rust-mode-hook #'lsp-deferred)
+
+(add-hook 'rust-mode-hook #'lsp-deferred)
 #+END_SRC
 ** Go
 *** Code
 #+BEGIN_SRC emacs-lisp
-  (use-package go-mode
+(use-package go-mode
     :ensure t)
 
-  (with-eval-after-load 'lsp-mode
-    (setq-default lsp-auto-guess-root t) ;; Helps find the ols.json file with Projectile or project.el
+(with-eval-after-load 'lsp-mode
+  (setq-default lsp-auto-guess-root t) ;; Helps find the ols.json file with Projectile or project.el
 
-    (add-to-list 'lsp-language-id-configuration '(go-mode . "go")))
-    
+  (add-to-list 'lsp-language-id-configuration '(go-mode . "go")))
 
-  (add-hook 'go-mode-hook #'lsp-deferred)
+
+(add-hook 'go-mode-hook #'lsp-deferred)
 #+END_SRC
 ** Scala
 *** Code
 #+BEGIN_SRC emacs-lisp
-  (use-package scala-mode
+(use-package scala-mode
     :interpreter ("scala" . scala-mode)
     :ensure t)
 
-  (use-package sbt-mode
+(use-package sbt-mode
     :ensure t
     :commands sbt-start sbt-command
     :config
     ;; WORKAROUND: https://github.com/ensime/emacs-sbt-mode/issues/31
     ;; allows using SPACE when in the minibuffer
     (substitute-key-definition
-      'minibuffer-complete-word
-      'self-insert-command
-      minibuffer-local-completion-map)
-      ;; sbt-supershell kills sbt-mode:  https://github.com/hvesalai/emacs-sbt-mode/issues/152
-      (setq sbt:program-options '("-Dsbt.supershell=false")))
+     'minibuffer-complete-word
+     'self-insert-command
+     minibuffer-local-completion-map)
+    ;; sbt-supershell kills sbt-mode:  https://github.com/hvesalai/emacs-sbt-mode/issues/152
+    (setq sbt:program-options '("-Dsbt.supershell=false")))
 
-  (use-package lsp-metals
+(use-package lsp-metals
     :ensure t)
 
-  ;; (with-eval-after-load 'lsp-mode
-  ;;   (setq-default lsp-auto-guess-root t) ;; Helps find the ols.json file with Projectile or project.el
-  ;;   (lsp-register-client
-  ;;     (make-lsp-client :new-connection (lsp-stdio-connection "/home/goober/.local/share/coursier/bin/metals")
-  ;;                      :major-modes '(scala-mode)
-  ;;                      :server-id 'lsp-metals
-  ;;                      :multi-root t)) ;; Ensures lsp-mode sends "workspaceFolders" to the server
-  ;;   (add-to-list 'lsp-language-id-configuration '(scala-mode . "scala")))
-    
+;; (with-eval-after-load 'lsp-mode
+;;   (setq-default lsp-auto-guess-root t) ;; Helps find the ols.json file with Projectile or project.el
+;;   (lsp-register-client
+;;     (make-lsp-client :new-connection (lsp-stdio-connection "/home/goober/.local/share/coursier/bin/metals")
+;;                      :major-modes '(scala-mode)
+;;                      :server-id 'lsp-metals
+;;                      :multi-root t)) ;; Ensures lsp-mode sends "workspaceFolders" to the server
+;;   (add-to-list 'lsp-language-id-configuration '(scala-mode . "scala")))
 
-  ;; (add-hook 'scala-mode-hook #'lsp-deferred)
+
+;; (add-hook 'scala-mode-hook #'lsp-deferred)
 #+END_SRC
 ** Janet
 *** Code
 #+BEGIN_SRC emacs-lisp
-  (use-package janet-ts-mode
+(use-package janet-ts-mode
     :straight (:host github
-               :repo "sogaiu/janet-ts-mode"
-               :files ("*.el")))
+                     :repo "sogaiu/janet-ts-mode"
+                     :files ("*.el")))
 
-  (require 'inf-janet)
-  (autoload 'inf-janet "inf-janet" "Run an inferior Janet process" t)
-  (add-hook 'janet-ts-mode-hook 'inf-janet-minor-mode)
+(require 'inf-janet)
+(autoload 'inf-janet "inf-janet" "Run an inferior Janet process" t)
+(add-hook 'janet-ts-mode-hook 'inf-janet-minor-mode)
 
-  (with-eval-after-load 'lsp-mode
-    (setq-default lsp-auto-guess-root t) ;; Helps find the ols.json file with Projectile or project.el
+(with-eval-after-load 'lsp-mode
+  (setq-default lsp-auto-guess-root t) ;; Helps find the ols.json file with Projectile or project.el
 
-    (lsp-register-client
-      (make-lsp-client :new-connection (lsp-stdio-connection "/usr/local/bin/janet-lsp")
-                       :major-modes '(janet-ts-mode)
-                       :server-id 'janet-lsp
-                       :multi-root t))
+  (lsp-register-client
+   (make-lsp-client :new-connection (lsp-stdio-connection "/usr/local/bin/janet-lsp")
+                    :major-modes '(janet-ts-mode)
+                    :server-id 'janet-lsp
+                    :multi-root t))
   (add-to-list 'lsp-language-id-configuration '(janet-ts-mode . "janet")))
 #+END_SRC
