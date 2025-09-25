@@ -228,6 +228,8 @@ One of the main selling points of Emacs! no Emacs distribution is complete witho
         org-src-fontify-natively t
         org-src-tab-acts-natively t
         org-edit-src-content-indentation 0)
+  (setq olivetti-lighter ""
+        olivetti-body-width 120)
   (dolist (face '((org-level-1 . 1.35)
                   (org-level-2 . 1.3)
                   (org-level-3 . 1.2)
@@ -1370,7 +1372,10 @@ A performant drop-in replacement for =doc-view= / =nov.el= / =pdf-tools=
 *** Code
 #+BEGIN_SRC emacs-lisp
 (use-package olivetti
-    :ensure t)
+    :ensure t
+    :config
+    (setq olivetti-lighter ""
+          olivetti-body-width 120))
 #+END_SRC
 ** Initialize =fj=
 *** Code
