@@ -245,7 +245,6 @@ One of the main selling points of Emacs! no Emacs distribution is complete witho
   (set-face-attribute 'org-document-title nil :font "Aporetic Serif Mono" :weight 'bold :height 1.8)
   (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch :height 1.0)
   (set-face-attribute 'org-code nil :inherit '(shadow fixed-pitch) :height 0.85)
-  (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch) :height 0.85)
   (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch) :height 0.85)
   (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
   (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
@@ -259,9 +258,8 @@ One of the main selling points of Emacs! no Emacs distribution is complete witho
   (add-hook 'org-mode-hook #'(lambda () (visual-line-mode 1))))
 
 (use-package org-indent
-    :config
-  (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
-  :diminish org-indent-mode)
+    :config (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch) :height 0.85)
+    :diminish org-indent-mode)
 
 (use-package org-pandoc-import
     :straight (:host github
