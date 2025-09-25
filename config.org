@@ -482,7 +482,7 @@ Diminish hides minor modes to prevent cluttering your mode line
 I tried spaceline and powerline and didn't like either.
 *** Code
 #+BEGIN_SRC emacs-lisp
-                                        ;https://www.gnu.org/software/emacs/manual/html_node/elisp/Standard-Hooks.html
+;;https://www.gnu.org/software/emacs/manual/html_node/elisp/Standard-Hooks.html
 
 ;; server-after-make-frame-hook seems to work
 (use-package simple-modeline
@@ -1376,7 +1376,8 @@ A performant drop-in replacement for =doc-view= / =nov.el= / =pdf-tools=
     :ensure t
     :config
     (setq olivetti-lighter ""
-          olivetti-body-width 120))
+          olivetti-body-width 120
+          olivetti-style t))
 #+END_SRC
 ** Initialize =fj=
 *** Code
@@ -1759,8 +1760,8 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
 #+BEGIN_SRC emacs-lisp
 (use-package janet-ts-mode
     :straight (:host github
-                     :repo "sogaiu/janet-ts-mode"
-                     :files ("*.el")))
+               :repo "sogaiu/janet-ts-mode"
+               :files ("*.el")))
 
 (require 'inf-janet)
 (autoload 'inf-janet "inf-janet" "Run an inferior Janet process" t)
