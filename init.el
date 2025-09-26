@@ -91,6 +91,8 @@
 (setq display-time-default-load-average nil)
 (display-time-mode t)
 
+(server-start)
+
 ;; If you run Emacs as a daemon through systemd.
 (when (daemonp)
   (exec-path-from-shell-initialize))
