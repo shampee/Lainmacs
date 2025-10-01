@@ -619,6 +619,7 @@ Vim keybindings in Emacs. Please note that Lainmacs has NO other evil-mode compa
     (setq evil-want-C-u-scroll t)
     :config
     (evil-mode 1) 
+    (define-key evil-normal-state-map (kbd "C-c C-m") 'magit)
     (define-key evil-normal-state-map (kbd "C-.") 'embark-act)
     (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
     (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
@@ -831,9 +832,7 @@ Git porcelain for Emacs
 *** Code
 #+BEGIN_SRC emacs-lisp
 (use-package magit
-    :ensure t
-    :config
-    (define-key evil-normal-state-map (kbd "C-c C-m") 'magit)
+    :ensure t)
 #+END_SRC
 ** Initialize =git-gutter=
 *** Code
