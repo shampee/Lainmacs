@@ -73,9 +73,11 @@
 (load-theme 'doric-water t)
 
 ;; Set font
-(set-frame-font "Aporetic Serif Mono 12" nil t)
-(add-to-list 'default-frame-alist '(font . "Aporetic Serif Mono 12"))
-; (setcar default-frame-alist '(font . "Iosevka Comfy 12"))
+;; (set-frame-font "Aporetic Serif Mono 12" nil t)
+(set-frame-font "Ttyp0 OTB 11" nil t)
+(add-to-list 'default-frame-alist '(font . "Ttyp0 OTB 11"))
+;; (add-to-list 'default-frame-alist '(font . "Aporetic Serif Mono 12"))
+;; (setf (alist-get 'font default-frame-alist) "Ttyp0 OTB 11")
 
 ;; Load config.org for init.el configuration
 (org-babel-load-file (expand-file-name "~/.emacs.d/config.org"))
