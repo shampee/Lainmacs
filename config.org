@@ -625,17 +625,18 @@ Vim keybindings in Emacs. Please note that Lainmacs has NO other evil-mode compa
     (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
     (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line))
 
-(use-package evil-collection
-    :after evil
-    :ensure t
-    :diminish (evil-collection-unimpaired-mode)
-    :config 
-    (evil-collection-init))
-
 (use-package evil-surround
     :ensure t
     :config
     (global-evil-surround-mode 1))
+
+(use-package evil-collection
+    :after evil
+    :ensure t
+    :demand t
+    :diminish (evil-collection-unimpaired-mode)
+    :config 
+    (evil-collection-init))
 #+END_SRC
 ** Initialize =hl-todo=
 *** Code
