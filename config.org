@@ -1366,6 +1366,16 @@ A performant drop-in replacement for =doc-view= / =nov.el= / =pdf-tools=
           )
     )
 #+END_SRC
+** Initialize =indent-bars=
+*** Code
+#+BEGIN_SRC emacs-lisp
+(use-package indent-bars
+  :hook ((python-mode yaml-mode c-mode c++-mode) . indent-bars-mode)
+  :custom
+  (indent-bars-color-by-depth)
+  (indent-bars-treesit-support t)
+  (indent-bars-treesit-wrap '((c argument_list parameter_list init_declarator parenthesized_expression))))
+#+END_SRC
 * Programming section
 ** C/C++
 *** Code
