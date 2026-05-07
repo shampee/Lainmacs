@@ -1432,7 +1432,7 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
 (use-package dap-mode)
 #+END_SRC
 ** Lisp/Scheme
-*** Code
+*** Various customizations and packages
 #+BEGIN_SRC emacs-lisp
 (defvar electrify-return-match
   "[\]}\)\"]"
@@ -1485,7 +1485,7 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
     :ensure t
     :config (require 'ulisp-mode))
 
-                                        ; Paredit
+; Paredit
 (use-package paredit
     :defer nil
     :diminish (paredit-mode eldoc-mode)
@@ -1493,7 +1493,7 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
     :hook
     ((racket-mode lisp-mode ulisp-mode scheme-mode emacs-lisp-mode clojure-mode clojurec-mode janet-ts-mode) . paredit-mode))
 
-                                        ; Lispy
+; Lispy
 (use-package lispy
     :defer nil
     :ensure t
@@ -1501,24 +1501,32 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
     :hook
     ((racket-mode lisp-mode ulisp-mode scheme-mode emacs-lisp-mode clojure-mode janet-ts-mode) . lispy-mode))
 
-                                        ; Elsa
+; Elsa
 (use-package elsa
     :defer nil :ensure t
     :config (elsa-setup-font-lock))
 
-                                        ; flycheck-elsa
+; flycheck-elsa
 (use-package flycheck-elsa
     :defer nil :ensure t
     :config (setq flycheck-elsa-backend 'eask)
     :hook (emacs-lisp-mode . flycheck-elsa-setup))
 
-                                        ; Sly
+; Sly
 (use-package sly
     :ensure t
     :config
-    (load "~/quicklisp/log4sly-setup.el")
-    (global-log4sly-mode 1)
-    (define-key sly-mode-map (kbd "C-c C-b") #'sly-eval-buffer)
+    (setq sly-lisp-implementations
+          '((esp-scheme
+             ("esp-scheme-repl" "--swank" "4005")
+             :coding-system utf-8-unix)
+            (esp32
+             ;; Connects via socat bridge to hardware
+             (lambda () (sly-connect "127.0.0.1" 4005))
+             :coding-system utf-8-unix)))
+    ;; (load "~/quicklisp/log4sly-setup.el")
+    ;; (global-log4sly-mode 1)
+    ;; (define-key sly-mode-map (kbd "C-c C-b") #'sly-eval-buffer)
     (setq inferior-lisp-program "sbcl"))
 
 (use-package sly-asdf
@@ -1533,7 +1541,9 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
     :ensure t)
 
 
-                                        ; Schemes
+#+END_SRC
+*** Scheme
+#+BEGIN_SRC emacs-lisp
 (use-package geiser
     :defer nil
     :ensure t
@@ -1560,6 +1570,10 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
     :defer nil
     :ensure t)
 
+(use-package esp-scheme-mode
+  :load-path "~/.emacs.d/site-lisp/esp-scheme-mode.el"
+  :mode "\\.escm\\'")
+
 (use-package racket-mode
     :defer nil
     :ensure t
@@ -1577,7 +1591,9 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
 
 (add-hook 'racket-mode-hook #'lsp-deferred)
 
-                                        ; Clojure
+#+END_SRC
+*** Clojure
+#+BEGIN_SRC emacs-lisp
 (use-package clojure-mode
     :defer nil
     :ensure t)
