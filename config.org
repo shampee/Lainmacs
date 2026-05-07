@@ -1707,7 +1707,17 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
 *** Code
 #+BEGIN_SRC emacs-lisp
 (use-package rust-mode
-    :ensure t)
+    :ensure t
+    :config
+    (define-key rust-mode-map (kbd "C-c C-c")
+      (lambda () (interactive)
+        (compile "cargo build")))
+    (define-key rust-mode-map (kbd "C-c C-r")
+      (lambda () (interactive)
+        (compile "cargo run")))
+    (define-key rust-mode-map (kbd "C-c C-f")
+      (lambda () (interactive)
+        (compile "cargo test"))))
 
 (with-eval-after-load 'lsp-mode
   (setq-default lsp-auto-guess-root t) ;; Helps find the ols.json file with Projectile or project.el
