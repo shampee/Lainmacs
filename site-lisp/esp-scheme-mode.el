@@ -41,13 +41,18 @@
     "tcp-listen" "tcp-accept" "listener-close"
 
     ;; Arithmetic
+    "+" "-" "*" "/" "=" "<" "<=" ">" ">="
     "expt" "sqrt" "log" "truncate" "floor"
     "ceiling" "round" "modulo" "remainder"
     "abs" "sin" "cos" "tan" "acos" "asin"
-    "atan" "atan2"
+    "atan" "atan2" "min" "max"
+    "1+" "1-" "2*" "2/"
+
+    ;; Iteration
+    "map" "for-each"
 
     ;; List
-    "list-ref" "list-tail" "list-last"
+    "append" "list-ref" "list-tail" "list-last"
 
     ;; String
     "substring" "string-length" "string-ref" "string-append"
@@ -72,15 +77,16 @@
     "bytes->list" "list->bytes"
     "bytes->string" "string->bytes"
     "string->number" "number->string"
-    "string->codepoint"
     "vector->list" "list->vector"
+    "symbol->string" "string->symbol"
+    "string->codepoint"
 
     ;; Type predicates
     "number?" "symbol?" "string?" "boolean?" "pair?" "procedure?"
     "port?" "stream?" "listener?" "bytes?" "record?" "vector?"
 
     ;; Equality
-    "eq?" "equal?"
+    "eq?" "equal?" "null?" "even?" "odd?" "positive?" "negative?" "zero?"
     ;; IO
     "display" "displayln" "newline"
     ;; Error
