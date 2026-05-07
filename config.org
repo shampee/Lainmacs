@@ -1380,11 +1380,11 @@ A performant drop-in replacement for =doc-view= / =nov.el= / =pdf-tools=
 #+BEGIN_SRC emacs-lisp
 (defun my-c-mode-hook ()
   (define-key c-mode-map (kbd "C-c C-c") (lambda () (interactive) (compile "make -k")))
+  (define-key c-mode-map (kbd "C-c C-r") (lambda () (interactive) (compile "make debug")))
   (setq c-basic-offset 2
         c-indent-level 2
         c-default-style "gnu"))
 (add-hook 'c-mode-common-hook 'my-c-mode-hook)
-
 #+END_SRC
 ** Initialize =yasnippet=
 *** Description
