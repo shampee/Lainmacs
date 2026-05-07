@@ -1362,9 +1362,7 @@ A performant drop-in replacement for =doc-view= / =nov.el= / =pdf-tools=
     :straight (fj :type git :host codeberg :repo "martianh/fj.el")
     :config
     (setq fj-user "x4"
-          fj-host "https://codeberg.org"
-          )
-    )
+          fj-host "https://codeberg.org"))
 #+END_SRC
 ** Initialize =indent-bars=
 *** Code
