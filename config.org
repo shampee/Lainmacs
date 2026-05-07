@@ -1413,7 +1413,7 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
     (setq lsp-enable-on-type-formatting nil)
     :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
                                         ;(clojure-mode . lsp)
-           ((haskell-mode c-mode scala-mode) . lsp)
+           ((c-mode scala-mode) . lsp)
            ;; if you want which-key integration
            (lsp-mode . lsp-enable-which-key-integration))
     :commands lsp)
