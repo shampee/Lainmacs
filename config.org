@@ -644,7 +644,6 @@ Vim keybindings in Emacs. Please note that Lainmacs has NO other evil-mode compa
 (use-package evil-collection
     :after evil
     :ensure t
-    :demand t
     :diminish (evil-collection-unimpaired-mode)
     :config 
     (evil-collection-init))
