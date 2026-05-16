@@ -45,14 +45,15 @@
     "expt" "sqrt" "log" "truncate" "floor"
     "ceiling" "round" "modulo" "remainder"
     "abs" "sin" "cos" "tan" "acos" "asin"
-    "atan" "atan2" "min" "max"
-    "1+" "1-" "2*" "2/"
+    "atan" "atan2" "min" "max" "gcd" "lcm"
+    "sum" "product" "1+" "1-" "2*" "2/"
 
     ;; Iteration
-    "map" "for-each"
+    "map" "for-each" "foldl" "foldr" "reduce" "zip"
 
     ;; List
-    "append" "list-ref" "list-tail" "list-last"
+    "first" "second" "third" "fourth" "fifth" "sixth" "seventh"
+    "eight" "nineth" "tenth" "append" "list-ref" "list-tail" "list-last"
 
     ;; String
     "substring" "string-length" "string-ref" "string-append"
@@ -61,6 +62,11 @@
     ;; Vector
     "make-vector" "vector" "vector-append" "vector-append!"
     "vector-length" "vector-ref" "vector-set!" "vector-fill!" "vector-copy"
+    "vector-map" "vector-for-each" "vector-filter" "vector-foldl" "vector-foldr"
+    "vector-reduce" "vector-any" "vector-every" "vector-take" "vector-drop" "vector-zip"
+    "vector-apply" "vector-find" "vector-index" "vector-flatten" "vector-count"
+    "vector-reverse" "vector-reverse!" "vector-sort" "vector-sort!" "vector-unique"
+    "vector-contains?" "vector-range" "vector-push!" "vector-pop!"
 
     ;; Bits and bitwise
     "bitwise-and" "bitwise-or" "bitwise-xor" "bitwise-not" "bit-set?" "bit-count"
@@ -80,6 +86,7 @@
     "vector->list" "list->vector"
     "symbol->string" "string->symbol"
     "string->codepoint"
+    "exact->inexact" "inexact->exact"
 
     ;; Type predicates
     "number?" "symbol?" "string?" "boolean?" "pair?" "procedure?"
@@ -94,14 +101,15 @@
 
 (defvar esp-scheme-keywords
   `("quote" "quasiquote" "if" "when" "unless"
-            "with-exception-handler" "raise" "define"
+            "with-exception-handler" "raise" "define" "undefine"
             "define-record-type" "lambda" "begin"
             "set!" "let" "let*" "letrec" "and"
-            "or" "cond" "not" "else" "define-module" "import"))
+            "or" "cond" "not" "else"
+            "define-module" "unload-module" "unload-module/keep-cache" "import"))
 
 
 (defvar esp-scheme-globals
-  '("spi2" "spi3" "i2c0" "i2c1" "rfid"))
+  '("pi" "1/pi" "2/pi" "pi/2" "pi/3" "pi/4" "pi/6" "pi/8" "tau"))
 
 (defvar esp-scheme-font-lock-keywords
   `(;; ESP builtins
@@ -115,17 +123,17 @@
      . font-lock-keyword-face)
     ;; Pre-bound hardware globals
     (,(regexp-opt esp-scheme-globals 'symbols)
-     . font-lock-constant-face)
-    ;; Booleans
-    ("#[tf]\\b"    . font-lock-constant-face)
-    ;; Numeric literals — #x #b #o
+     . font-lock-type-face)
+    ;; Bytevector
+    ("#u8(.+)"     . font-lock-string-face)
+    ;; Vector
+    ("#(.+)"       . font-lock-string-face)
+    ;; Boolean
+    ("#[tf]\\b"    . font-lock-type-face)
+    ;; Numeric literals
     ("#x[0-9a-fA-F]+" . font-lock-number-face)
     ("#b[01]+"        . font-lock-number-face)
-    ("#o[0-7]+"       . font-lock-number-face)
-    ;; Bytevector prefix — must come before vector prefix
-    ("#u8(.+)" . font-lock-string-face)
-    ;; Vector prefix
-    ("#(.+)"   . font-lock-string-face))
+    ("#o[0-7]+"       . font-lock-number-face))
   "Font lock keywords for esp-scheme-mode.")
 
 
