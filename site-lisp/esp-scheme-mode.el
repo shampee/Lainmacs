@@ -25,7 +25,7 @@
 
 (defvar esp-scheme-builtins
   '(;; System
-    "esp-reset" "heap-free" "delay-ms"
+    "esp-reset" "heap-stats" "heap-free" "heap-used" "delay-ms"
     ;; GPIO
     "pin-output" "pin-input" "pin-set!" "pin-get" "pin-toggle!"
     ;; SPI
