@@ -430,6 +430,28 @@ Eshell cannot handle ncurses programs and in certain interpreters (Python, GHCi)
 
 (global-set-key (kbd "<s-C-return>") 'eshell-other-window)
 #+END_SRC
+*** Evil: insert at the boundaries of the enclosing bracket pair
+#+BEGIN_SRC emacs-lisp
+(defun lain/evil-insert-at-open-paren ()
+  "Enter insert state just after the opening bracket of the enclosing pair."
+  (interactive)
+  (condition-case nil
+      (progn
+        (backward-up-list 1 t t)
+        (forward-char 1)
+        (evil-insert-state))
+    (scan-error (user-error "No enclosing bracket pair found"))))
+
+(defun lain/evil-insert-at-close-paren ()
+  "Enter insert state just before the closing bracket of the enclosing pair."
+  (interactive)
+  (condition-case nil
+      (progn
+        (up-list 1 t t)
+        (backward-char 1)
+        (evil-insert-state))
+    (scan-error (user-error "No enclosing bracket pair found"))))
+#+END_SRC
 #+BEGIN_SRC emacs-lisp
 #+END_SRC
 * Use-Package section
@@ -634,7 +656,9 @@ Vim keybindings in Emacs. Please note that Lainmacs has NO other evil-mode compa
     (define-key evil-normal-state-map (kbd "C-.") 'embark-act)
     (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
     (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
-    (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line))
+    (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
+    (define-key evil-normal-state-map (kbd "g(") 'lain/evil-insert-at-open-paren)
+    (define-key evil-normal-state-map (kbd "g)") 'lain/evil-insert-at-close-paren))
 
 (use-package evil-surround
     :ensure t
