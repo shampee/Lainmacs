@@ -1408,6 +1408,7 @@ A performant drop-in replacement for =doc-view= / =nov.el= / =pdf-tools=
         c-indent-level 2
         c-default-style "gnu"))
 (add-hook 'c-mode-common-hook 'my-c-mode-hook)
+(add-hook 'cpp-mode-common-hook 'my-c-mode-hook)
 #+END_SRC
 ** Initialize =yasnippet=
 *** Description
@@ -1436,7 +1437,7 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
     (setq lsp-enable-on-type-formatting nil)
     :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
                                         ;(clojure-mode . lsp)
-           ((c-mode scala-mode) . lsp)
+           ((c-mode c++-mode scala-mode) . lsp)
            ;; if you want which-key integration
            (lsp-mode . lsp-enable-which-key-integration))
     :commands lsp)
