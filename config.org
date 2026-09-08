@@ -1620,7 +1620,23 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
 #+BEGIN_SRC emacs-lisp
 (use-package clojure-mode
     :defer nil
-    :ensure t)
+    :ensure t
+    :hook (clojure-mode . rainbow-delimiters-mode)
+    :config
+    (defvar clojure-prettify-symbols-alist
+      '(("fn"  .  995)
+        ("->>" .  "↠")
+        ("->"  .  "→")
+        ("<-"  .  "←")
+        ("=>"  .  "⇒")
+        ("<="  .  "≤")
+        (">="  .  "≥")))
+    (add-hook 'clojure-mode-hook 'yas-minor-mode)
+    (add-hook 'clojure-mode-hook
+              (lambda ()
+                (setq prettify-symbols-alist clojure-prettify-symbols-alist)
+                (keymap-unset lispy-mode-map-lispy "[")
+                (keymap-unset lispy-mode-map-lispy "]"))))
 
 (use-package cider
     :ensure t :defer t
