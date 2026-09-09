@@ -1618,7 +1618,7 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
     :hook (clojure-mode . rainbow-delimiters-mode)
     :config
     (defvar clojure-prettify-symbols-alist
-      '(("fn"  .  995)
+      '(("fn"  .  955)
         ("->>" .  "↠")
         ("->"  .  "→")
         ("<-"  .  "←")
