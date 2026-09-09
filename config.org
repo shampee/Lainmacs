@@ -504,12 +504,6 @@ Diminish hides minor modes to prevent cluttering your mode line
 #+END_SRC
 
 27/05/2019: Since the diminish functionality was always built-in in use-package, there was never a point in using a diminish config. lol silly me
-** Initialize =ef-themes=
-*** Code
-#+BEGIN_SRC emacs-lisp
-(use-package ef-themes
-    :ensure t)
-#+END_SRC
 ** Initialize =simple-modeline=
 *** Description
 I tried spaceline and powerline and didn't like either.
@@ -1866,13 +1860,6 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
            ("C-c d i r" . 'inf-elixir-send-region)
            ("C-c d i b" . 'inf-elixir-send-buffer)
            ("C-c d i R" . 'inf-elixir-reload-module)))
-
-;; (use-package smartparens
-;;     :ensure t
-;;     :hook (elixir-ts-mode)
-;;     :config
-;;     ;; load default config
-;;     (require 'smartparens-config))
 
 (with-eval-after-load 'lsp-mode
   (setq-default lsp-auto-guess-root t)
