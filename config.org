@@ -27,7 +27,7 @@ git clone https://github.com/shampee/Lainmacs ~/.emacs.d
 #+END_SRC
 After running this command, the first time you run Emacs will download all of the specified packages in the config.org file, so please be patient!
 
-Also, to get autocompletion on C, C++ and Java files, you'll need to install the corresponding company backend servers first (you'll be automatically prompted to do so the first time you open a relevant file)
+For C, C++ and Java completion, install the corresponding language servers. Corfu displays completion candidates from their completion-at-point backends.
 * Dependencies
 * Things-to-do
 - Add and configure some extra packages
@@ -59,18 +59,33 @@ Emacs breaks certain modes when it has line-numbers-mode enabled, (like docview 
 #+END_SRC
 ** Disable most gui elements
 #+BEGIN_SRC emacs-lisp
-(tool-bar-mode -1)
+(when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (menu-bar-mode -1)
-(scroll-bar-mode -1)
+(when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 #+END_SRC
 ** Enable copypasting outside of Emacs
 #+BEGIN_SRC emacs-lisp
 (setq x-select-enable-clipboard t)
 #+END_SRC
-** Disable automatic creation of backup files
+** Backups and crash recovery
+Store recovery files in private directories under the Emacs cache.
 #+BEGIN_SRC emacs-lisp
-(setq make-backup-files nil)
-(setq auto-save-default nil)
+(let* ((recovery-dir (expand-file-name ".cache/recovery/" user-emacs-directory))
+       (backup-dir (expand-file-name "backups/" recovery-dir))
+       (auto-save-dir (expand-file-name "auto-save/" recovery-dir)))
+  (dolist (directory (list recovery-dir backup-dir auto-save-dir))
+    (make-directory directory t)
+    (set-file-modes directory #o700))
+  (setq make-backup-files t
+        auto-save-default t
+        backup-directory-alist `(("." . ,backup-dir))
+        auto-save-file-name-transforms `((".*" ,auto-save-dir t))
+        auto-save-list-file-prefix (expand-file-name ".saves-" recovery-dir)
+        backup-by-copying t
+        version-control t
+        kept-new-versions 6
+        kept-old-versions 2
+        delete-old-versions t))
 #+END_SRC
 ** Enable conservative scrolling
 #+BEGIN_SRC emacs-lisp
@@ -122,7 +137,7 @@ Emacs breaks certain modes when it has line-numbers-mode enabled, (like docview 
 #+BEGIN_SRC emacs-lisp
 (defalias 'yes-or-no-p 'y-or-n-p)
 #+END_SRC
-** Easier resize bindigs
+** Easier resize bindings
 Super - Control - <arrow>
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "s-C-<left>") 'shrink-window-horizontally)
@@ -138,9 +153,9 @@ Super - Control - <arrow>
 #+BEGIN_SRC emacs-lisp
 (setq use-package-always-defer t)
 #+END_SRC
-** Disable checking packages because of a bug
+** Verify signed packages
 #+BEGIN_SRC emacs-lisp
-(setq package-check-signature nil)
+(setq package-check-signature 'allow-unsigned)
 #+END_SRC
 ** Set default browser
 #+BEGIN_SRC emacs-lisp
@@ -156,22 +171,34 @@ Super - Control - <arrow>
 #+END_SRC
 ** Ergonomic additional site-lisp directory
 #+BEGIN_SRC emacs-lisp
-(unless (file-directory-p "~/.emacs.d/site-lisp") (make-directory "~/.emacs.d/site-lisp"))
-(add-to-list 'load-path "~/.emacs.d/site-lisp")
+(let ((directory (expand-file-name "site-lisp/" user-emacs-directory)))
+  (make-directory directory t)
+  (add-to-list 'load-path directory))
 #+END_SRC
 ** Ergonomic Info directory
 #+BEGIN_SRC emacs-lisp
-(unless (file-directory-p "~/.emacs.d/info") (make-directory "~/.emacs.d/info"))
-(add-to-list 'Info-directory-list "~/emacs.d/info")
+(make-directory (expand-file-name "info/" user-emacs-directory) t)
+(with-eval-after-load 'info
+  (add-to-list 'Info-directory-list
+               (expand-file-name "info/" user-emacs-directory)))
 #+END_SRC
 ** Compilation mode ansi colors
 #+BEGIN_SRC emacs-lisp
 (use-package ansi-color
     :hook (compilation-filter . ansi-color-compilation-filter))
 #+END_SRC
+** Dictionary lookup
+#+BEGIN_SRC emacs-lisp
+(with-eval-after-load 'evil
+  (define-key evil-normal-state-map (kbd "z d") #'dictionary-lookup-definition))
+#+END_SRC
 ** Display column number in the modeline
 #+BEGIN_SRC emacs-lisp
 (column-number-mode t)
+#+END_SRC
+** Upgrade builtins
+#+BEGIN_SRC emacs-lisp
+(setq package-install-upgrade-built-in t)
 #+END_SRC
 * Secrets
 #+BEGIN_SRC emacs-lisp
@@ -211,7 +238,7 @@ Super - Control - <arrow>
 (defvar m/smtp-server nil              "Our SMTP server")
 (defvar m/smtp-service nil             "Our SMTP service port")
 
-(let ((m/secret-file "~/.emacs.d/.secret.el"))
+(let ((m/secret-file (expand-file-name ".secret.el" user-emacs-directory)))
   (when (file-readable-p m/secret-file)
     (load m/secret-file)))
 #+END_SRC
@@ -315,14 +342,15 @@ One of the main selling points of Emacs! no Emacs distribution is complete witho
 
 (use-package org-remark
     :ensure t
+    :demand t
+    :bind (("C-c n m" . org-remark-mark)
+           :map org-remark-mode-map
+           ("C-c n o" . org-remark-open)
+           ("C-c n ]" . org-remark-view-next)
+           ("C-c n [" . org-remark-view-prev)
+           ("C-c n r" . org-remark-remove))
     :config
-    (define-key global-map (kbd "C-c n m") #'org-remark-mark)
-    (with-eval-after-load 'org-remark
-      (define-key org-remark-mode-map (kbd "C-c n o") #'org-remark-open)
-      (define-key org-remark-mode-map (kbd "C-c n ]") #'org-remark-view-next)
-      (define-key org-remark-mode-map (kbd "C-c n [") #'org-remark-view-prev)
-      (define-key org-remark-mode-map (kbd "C-c n r") #'org-remark-remove))
-    (org-remark-global-tracking-mode +1))
+    (org-remark-global-tracking-mode 1))
 
 ;; (use-package org-social
 ;;     :vc (:url "https://github.com/tanrax/org-social.el" :rev :newest)
@@ -354,7 +382,7 @@ One of the main selling points of Emacs! no Emacs distribution is complete witho
       erc-fill-function 'erc-fill-static
       erc-fill-static-center 5
       erc-image-inline-rescale 'window
-      erc-sound-path '("~/.emacs.d/audio")
+      erc-sound-path (list (expand-file-name "audio/" user-emacs-directory))
       erc-default-sound "kalimba.wav"
       erc-auto-query 'window-noselect ;; 'bury
       erc-public-away-p nil
@@ -372,12 +400,22 @@ One of the main selling points of Emacs! no Emacs distribution is complete witho
         ("irc.lainchan.org" "#lainchan" "#questions"))
       erc-modules
       '(autojoin button completion fill irccontrols list log match menu move-to-prompt netsplit networks noncommands notifications readonly ring sound stamp track hl-nicks spelling))
+(defun my-erc-tls-port (port)
+  "Use the standard TLS port for unset or conventional plaintext PORT."
+  (if (member port '(nil 6667 "6667")) 6697 port))
+
 (defun join-irc ()
-  (setq erc-initialized-p t)
-  (erc-select :server m/erc-server :port m/erc-port :nick m/erc-nick :password m/erc-password)
-  (erc-select :server lib/server :port lib/port :nick lib/nick :password lib/password)
-  (erc-select :server riz/server :port riz/port :nick riz/nick :password riz/password)
-  (erc-tls :server lain/server :port lain/port :nick lain/nick :password lain/password))
+  "Connect to the configured IRC networks over TLS."
+  (interactive)
+  (when m/erc-server
+    (erc-tls :server m/erc-server :port (my-erc-tls-port m/erc-port)
+             :nick m/erc-nick :password m/erc-password))
+  (erc-tls :server lib/server :port (my-erc-tls-port lib/port)
+           :nick lib/nick :password lib/password)
+  (erc-tls :server riz/server :port (my-erc-tls-port riz/port)
+           :nick riz/nick :password riz/password)
+  (erc-tls :server lain/server :port (my-erc-tls-port lain/port)
+           :nick lain/nick :password lain/password))
 #+END_SRC
 * Eshell
 ** Why Eshell?
@@ -457,16 +495,15 @@ Eshell cannot handle ncurses programs and in certain interpreters (Python, GHCi)
 * Use-Package section
 ** Initialize =auto-package-update=
 *** Description
-Auto-package-update automatically updates and removes old packages
+Run =M-x auto-package-update-now= when you want to update packages. Keep previous versions and inspect the results.
 *** Code
 #+BEGIN_SRC emacs-lisp
 (use-package auto-package-update
-    :defer nil
     :ensure t
-    :config
-    (setq auto-package-update-delete-old-versions t)
-    (setq auto-package-update-hide-results t)
-    (auto-package-update-maybe))
+    :commands (auto-package-update-now auto-package-update-maybe)
+    :custom
+    (auto-package-update-delete-old-versions nil)
+    (auto-package-update-hide-results nil))
 #+END_SRC
 ** Initialize =diminish=
 *** Description
@@ -509,13 +546,10 @@ Diminish hides minor modes to prevent cluttering your mode line
 I tried spaceline and powerline and didn't like either.
 *** Code
 #+BEGIN_SRC emacs-lisp
-;;https://www.gnu.org/software/emacs/manual/html_node/elisp/Standard-Hooks.html
-
-;; server-after-make-frame-hook seems to work
 (use-package simple-modeline
     :ensure t
     :diminish (paredit-mode eldoc-mode lispy-mode visual-line-mode dired-async-mode auto-revert-mode abbrev-mode)
-    :hook (server-after-make-frame-hook . simple-modeline-mode)
+    :demand t
     :config
     (setq mode-line-misc-info
           '((notmuch-indicator-mode
@@ -531,7 +565,8 @@ I tried spaceline and powerline and didn't like either.
       "Display the current value of `mode-line-misc-info' in the modeline."
       (let ((misc-info (string-trim (format-mode-line mode-line-misc-info 'simple-modeline-space))))
         (unless (string= misc-info "")
-          (concat " " misc-info " ")))))
+        (concat " " misc-info " "))))
+    (simple-modeline-mode 1))
 #+END_SRC
 ** Initialize =dashboard=
 *** Description
@@ -563,7 +598,7 @@ The frontend of Lainmacs; without this there'd be no Lain in your Emacs startup 
     (dashboard-setup-startup-hook)
     (setq dashboard-items '((recents . 5)))
     (setq dashboard-banner-logo-title "L A I N M A C S - The schizoid Emacs distribution!")
-    (setq dashboard-startup-banner "~/.emacs.d/lainvector.png")
+    (setq dashboard-startup-banner (expand-file-name "lainvector.png" user-emacs-directory))
     (setq dashboard-center-content t)
     (setq dashboard-show-shortcuts nil)
     (setq dashboard-set-init-info t)
@@ -581,7 +616,7 @@ The frontend of Lainmacs; without this there'd be no Lain in your Emacs startup 
              (nil
               "Lainmacs crash course"
               "Open Lainmacs (Witchmacs) introduction to Emacs"
-              (lambda (&rest _) (find-file "~/.emacs.d/Witcheat.org"))
+              (lambda (&rest _) (find-file (expand-file-name "Witcheat.org" user-emacs-directory)))
               'default)
              (nil
               "Update Lainmacs"
@@ -598,7 +633,7 @@ The frontend of Lainmacs; without this there'd be no Lain in your Emacs startup 
              (nil
               "Open config.org"
               "Open Lainmacs configuration file for easy editing"
-              (lambda (&rest _) (find-file "~/.emacs.d/config.org"))
+              (lambda (&rest _) (find-file (expand-file-name "config.org" user-emacs-directory)))
               'default)))))
 #+END_SRC
 *** Notes
@@ -624,13 +659,6 @@ Incredibly useful package; if you are in the middle of a command and don't know 
     :init
     (which-key-mode))
 #+END_SRC
-** Initialize =swiper=
-*** Description
-When doing C-s to search, you get this very nice and neat mini-buffer that you can traverse with the arrow keys (or C-n and C-p) and then press <RET> to select where you want to go
-*** Code
-#+BEGIN_SRC emacs-lisp
-                                        ;(use-package swiper ;:ensure t ;:bind ("C-s" . 'swiper))
-#+END_SRC
 ** Initialize =evil= mode
 *** Description
 Vim keybindings in Emacs. Please note that Lainmacs has NO other evil-mode compatibility packages because I like to KISS. This might change in the future
@@ -654,14 +682,10 @@ Vim keybindings in Emacs. Please note that Lainmacs has NO other evil-mode compa
     (define-key evil-normal-state-map (kbd "g(") 'lain/evil-insert-at-open-paren)
     (define-key evil-normal-state-map (kbd "g)") 'lain/evil-insert-at-close-paren))
 
-(use-package evil-surround
-    :ensure t
-    :config
-    (global-evil-surround-mode 1))
-
 (use-package evil-collection
     :after evil
     :ensure t
+    :demand t
     :diminish (evil-collection-unimpaired-mode)
     :config 
     (evil-collection-init))
@@ -716,30 +740,6 @@ Switch window is a neat package because instead of having to painstakingly do C 
           '("a" "s" "d" "f" "j" "k" "l"))
    	:bind
    	([remap other-window] . switch-window))
-#+END_SRC
-** Initialize =ido= and =ido-vertical=
-*** Description
-For the longest time I used the default way of switching and killing buffers in Emacs. Same for finding files. Ido-mode made these three tasks IMMENSELY easier and more intuitive. Please not that I still use the default way M - x works because I believe all you really need for it is which-key
-*** Code
-#+BEGIN_SRC emacs-lisp
-(use-package ido
-    :ensure t
-    :defer nil
-    :init
-    (ido-mode 1)
-    :config
-    (setq ido-enable-flex-matching nil)
-    (setq ido-create-new-buffer 'always)
-    (setq ido-everywhere t))
-
-(use-package ido-vertical-mode
-    :ensure t
-    :init
-    (ido-vertical-mode 1))
-                                        ; This enables arrow keys to select while in ido mode. If you want to
-                                        ; instead use the default Emacs keybindings, change it to
-                                        ; "'C-n-and-C-p-only"
-(setq ido-vertical-define-keys 'C-n-C-p-up-and-down)
 #+END_SRC
 ** Initialize =async=
 *** Description
@@ -906,10 +906,15 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
 #+BEGIN_SRC emacs-lisp
 ;; Enable vertico
 (use-package vertico
-    :defer  t
     :ensure t
+    :demand t
     :init
-    (vertico-mode))
+    ;; Disable Ido when reloading an older configuration in this session.
+    (when (fboundp 'ido-vertical-mode) (ido-vertical-mode -1))
+    (when (fboundp 'ido-everywhere) (ido-everywhere -1))
+    (when (fboundp 'ido-mode) (ido-mode -1))
+    :config
+    (vertico-mode 1))
 ;; Different scroll margin
 ;; (setq vertico-scroll-margin 0)
 
@@ -923,15 +928,16 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
 ;; (setq vertico-cycle t)
 
 (use-package vertico-posframe
-    :defer  t
     :ensure t
-    :init
+    :after vertico
+    :demand t
+    :config
     (vertico-posframe-mode 1))
 
 ;; Persist history over Emacs restarts. Vertico sorts by history position.
 (use-package savehist
     :init
-  (savehist-mode))
+    (savehist-mode 1))
 
 ;; A few more useful configurations...
 (use-package emacs
@@ -1300,6 +1306,7 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
 #+BEGIN_SRC emacs-lisp
 (use-package ultra-scroll
     :ensure t
+    :demand t
                                         ;:vc (:url "https://github.com/jdtsmith/ultra-scroll") ; if desired (emacs>=v30)
     :init
     (setq scroll-conservatively 3 ; or whatever value you prefer, since v0.4
@@ -1320,7 +1327,22 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
 (use-package mpv
     :ensure t)
 (defun mpv-at-point ()
+  "Play the URL at point with mpv."
+  (interactive)
+  (require 'mpv)
   (mpv-play-url (ffap-guesser)))
+#+END_SRC
+** Initialize =smudge=
+*** Code
+#+BEGIN_SRC emacs-lisp
+;; (use-package smudge
+;;     :ensure t
+;;     :bind-keymap ("C-c s" . smudge-command-map)
+;;     :custom
+;;     (smudge-player-use-transient-map t)
+;;     :config
+;;     (setq smudge-transport 'connect)
+;;     (setq smudge-status-location nil))
 #+END_SRC
 ** Initialize =emojify=
 *** Code
@@ -1340,6 +1362,7 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
 #+BEGIN_SRC emacs-lisp
 (use-package ligature
     :straight t
+    :demand t
     :config
     ;; Enable all Iosevka ligatures in programming modes
     (ligature-set-ligatures
@@ -1350,7 +1373,7 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
        ":=" ":-" ":+" "<*" "<*>" "*>" "<|" "<|>" "|>" "+:" "-:" "=:" "<******>" "++" "+++"))
     ;; Enables ligature checks globally in all buffers. You can also do it
     ;; per mode with `ligature-mode'.
-    (global-ligature-mode t))
+    (global-ligature-mode 1))
 #+END_SRC
 ** Initialize =reader=
 *** Description
@@ -1381,6 +1404,34 @@ A performant drop-in replacement for =doc-view= / =nov.el= / =pdf-tools=
     (setq fj-user "x4"
           fj-host "https://codeberg.org"))
 #+END_SRC
+** Initialize =embr= 
+*** Code
+#+BEGIN_SRC emacs-lisp
+(use-package embr
+    :defer t
+    :straight (:host github
+                     :repo "emacs-os/embr.el"
+                     :files ("*.el" "*.py" "*.sh" "native/*.c" "native/Makefile"))
+    ;; :hook (embr-mode . embr-vimium-mode)
+    :config
+    (setq embr-browser-engine 'cloakbrowser
+          embr-hover-rate 30
+          embr-viewport-sizing 'dynamic
+          embr-screen-width (display-pixel-width)
+          embr-screen-height (display-pixel-height)
+          embr-color-scheme 'dark
+          embr-search-engine 'google
+          embr-scroll-method 'instant
+          embr-scroll-step 100
+          embr-frame-source 'screencast
+          embr-render-backend 'default
+          embr-display-method 'headless
+          embr-home-url "about:blank"
+          embr-session-restore t
+          embr-tab-bar t
+          embr-proxy-rules nil))
+
+#+END_SRC
 ** Initialize =indent-bars=
 *** Code
 #+BEGIN_SRC emacs-lisp
@@ -1391,18 +1442,43 @@ A performant drop-in replacement for =doc-view= / =nov.el= / =pdf-tools=
   (indent-bars-treesit-support t)
   (indent-bars-treesit-wrap '((c argument_list parameter_list init_declarator parenthesized_expression))))
 #+END_SRC
+** Initialize =gptel=
+*** Code
+#+BEGIN_SRC emacs-lisp
+(use-package gptel
+    :defer t
+    :ensure t
+    :config
+    (setq gptel-model 'gpt-6.1-sol
+          gptel-backend (gptel-make-openai-oauth "OpenAI-sub")))
+
+(use-package gptel-agent :defer t :ensure t)
+#+END_SRC
 * Programming section
 ** C/C++
 *** Code
 #+BEGIN_SRC emacs-lisp
 (defun my-c-mode-hook ()
-  (define-key c-mode-map (kbd "C-c C-c") (lambda () (interactive) (compile "make -k")))
-  (define-key c-mode-map (kbd "C-c C-r") (lambda () (interactive) (compile "make debug")))
-  (setq c-basic-offset 2
-        c-indent-level 2
-        c-default-style "gnu"))
-(add-hook 'c-mode-common-hook 'my-c-mode-hook)
-(add-hook 'cpp-mode-common-hook 'my-c-mode-hook)
+  "Use GNU indentation and buffer-local build keys in C and C++."
+  (when (derived-mode-p 'c-mode 'c++-mode)
+    (c-set-style "gnu")
+    (setq-local c-basic-offset 2)
+    ;; Major-mode maps are shared; copy before installing local bindings.
+    (use-local-map (copy-keymap (current-local-map)))
+    (local-set-key (kbd "C-c C-c")
+                   (lambda () (interactive) (compile "make -k")))
+    (local-set-key (kbd "C-c C-r")
+                   (lambda () (interactive) (compile "make debug")))))
+(add-hook 'c-mode-common-hook #'my-c-mode-hook)
+#+END_SRC
+** Java
+*** Code
+#+BEGIN_SRC emacs-lisp
+(use-package lsp-java
+    :ensure t)
+
+(add-hook 'java-mode-hook #'lsp)
+(add-hook 'java-mode-hook #'yas-minor-mode)
 #+END_SRC
 ** Initialize =yasnippet=
 *** Description
@@ -1437,14 +1513,13 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
     :commands lsp)
 
 (use-package consult-lsp
-    :defer t :ensure t
-    :config
-    (define-key lsp-mode-map [remap xref-find-apropos] #'consult-lsp-symbols))
+    :ensure t
+    :after lsp-mode
+    :bind (:map lsp-mode-map
+                ([remap xref-find-apropos] . consult-lsp-symbols)))
 
 (use-package lsp-ui :ensure t :commands lsp-ui-mode)
 (use-package lsp-treemacs :ensure t :commands lsp-treemacs-errors-list)
-
-(use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
 
 ;; optionally if you want to use debugger
 (use-package dap-mode)
@@ -1479,25 +1554,31 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
   (eldoc-add-command 'electrify-return-if-match)
   (show-paren-mode t))
 
-;; FIXME: this is hacky and just for now
+;(add-hook '3b-mode-hook 'setup-lisp-stuff)
+
 (add-to-list 'auto-mode-alist '("\\.gc\\'" . lisp-mode))
-(add-hook 'lisp-mode-hook 'setup-goal)
+
+(defconst my-goal-indent-overrides
+  '((with-pp . 0) (while . 1) (rlet . 1) (until . 1)
+    (countdown . 1) (defun-debug . 2) (defenum . 2))
+  "GOAL forms understood by Common Lisp's local indentation API.")
 
 (defun setup-goal ()
-  ;; if we are in a gc file, change indent settings for GOAL
-  (when (and (stringp buffer-file-name)
-             (string-match "\\.gc\\'" buffer-file-name))
-    (put 'with-pp      'common-lisp-indent-function 0)
-    (put 'while        'common-lisp-indent-function 1)
-    (put 'rlet         'common-lisp-indent-function 1)
-    (put 'until        'common-lisp-indent-function 1)
-    (put 'countdown    'common-lisp-indent-function 1)
-    (put 'defun-debug  'common-lisp-indent-function 2)
-    (put 'defenum      'common-lisp-indent-function 2)
+  "Apply GOAL indentation only in the current .gc buffer."
+  (when (and buffer-file-name (string-match-p "\\.gc\\'" buffer-file-name))
+    (require 'cl-indent)
+    (setq-local lisp-indent-function #'common-lisp-indent-function)
+    ;; cl-indent consults this alist without changing symbol properties.
+    (setq-local lisp-indent-local-overrides
+                (append my-goal-indent-overrides lisp-indent-local-overrides))))
+(add-hook 'lisp-mode-hook #'setup-goal)
 
-    ;; indent for common lisp, this makes it look nicer
-    (custom-set-variables '(lisp-indent-function 'common-lisp-indent-function))
-    (autoload 'common-lisp-indent-function "cl-indent" "Common Lisp indent.")))
+(defun my-structured-lisp-pairing ()
+  "Let Paredit or Lispy handle pairing in this buffer."
+  (when (or (bound-and-true-p paredit-mode) (bound-and-true-p lispy-mode))
+    (electric-pair-local-mode -1)))
+(add-hook 'paredit-mode-hook #'my-structured-lisp-pairing)
+(add-hook 'lispy-mode-hook #'my-structured-lisp-pairing)
 
 (use-package emacs
     :ensure t
@@ -1509,7 +1590,7 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
     :diminish (paredit-mode eldoc-mode)
     :ensure t
     :hook
-    ((racket-mode lisp-mode ulisp-mode scheme-mode emacs-lisp-mode clojure-mode clojurec-mode janet-ts-mode) . paredit-mode))
+    ((racket-mode lisp-mode ulisp-mode scheme-mode emacs-lisp-mode clojure-mode clojurec-mode janet-ts-mode 3b-mode) . paredit-mode))
 
 ; Lispy
 (use-package lispy
@@ -1517,7 +1598,7 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
     :ensure t
     :diminish (lispy-mode)
     :hook
-    ((racket-mode lisp-mode ulisp-mode scheme-mode emacs-lisp-mode clojure-mode janet-ts-mode) . lispy-mode))
+    ((racket-mode lisp-mode ulisp-mode scheme-mode emacs-lisp-mode clojure-mode janet-ts-mode 3b-mode) . lispy-mode))
 
 ; Elsa
 (use-package elsa
@@ -1531,21 +1612,23 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
     :hook (emacs-lisp-mode . flycheck-elsa-setup))
 
 ; Sly
+(defun my-sly-connect-esp32 ()
+  "Connect SLY to the ESP32's existing local socat bridge."
+  (interactive)
+  (require 'sly)
+  (sly-connect "127.0.0.1" 4005))
+
 (use-package sly
     :ensure t
+    :commands (sly sly-connect)
     :config
     (setq sly-lisp-implementations
-          '((esp-scheme
+          '((sbcl ("sbcl") :coding-system utf-8-unix)
+            (esp-scheme
              ("esp-scheme-repl" "--swank" "4005")
-             :coding-system utf-8-unix)
-            (esp32
-             ;; Connects via socat bridge to hardware
-             (lambda () (sly-connect "127.0.0.1" 4005))
-             :coding-system utf-8-unix)))
-    ;; (load "~/quicklisp/log4sly-setup.el")
-    ;; (global-log4sly-mode 1)
-    ;; (define-key sly-mode-map (kbd "C-c C-b") #'sly-eval-buffer)
-    (setq inferior-lisp-program "sbcl"))
+             :coding-system utf-8-unix))
+          sly-default-lisp 'sbcl
+          inferior-lisp-program "sbcl"))
 
 (use-package sly-asdf
     :ensure t)
@@ -1589,7 +1672,8 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
     :ensure t)
 
 (use-package esp-scheme-mode
-  :load-path "~/.emacs.d/site-lisp/esp-scheme-mode.el"
+  :ensure nil
+  :load-path (lambda () (expand-file-name "site-lisp" user-emacs-directory))
   :mode "\\.escm\\'")
 
 (use-package racket-mode
@@ -1612,30 +1696,82 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
 #+END_SRC
 *** Clojure
 #+BEGIN_SRC emacs-lisp
+(defun clojure/fancify-symbols (mode)
+  "Pretty symbols for Clojure's anonymous functions and sets,
+   like (λ [a] (+ a 5)), ƒ(+ % 5), and ∈{2 4 6}."
+  (font-lock-add-keywords
+   mode
+   `(("(\\(fn\\)[[[:space:]]"
+      (0 (progn (compose-region (match-beginning 1)
+                                (match-end 1) "λ")
+                nil)))
+     ("\\(#\\)("
+      (0 (progn (compose-region (match-beginning 1)
+                                (match-end 1) "ƒ")
+                nil)))
+     ("\\(#\\){"
+      (0 (progn (compose-region (match-beginning 1)
+                                (match-end 1) "∈")
+                nil)))
+     ("\\(->\\)"
+      (0 (progn (compose-region (match-beginning 1)
+                                (match-end 1) "→")
+                nil)))
+     ("\\(<-\\)"
+      (0 (progn (compose-region (match-beginning 1)
+                                (match-end 1) "←")
+                nil)))
+     ("\\(->>\\)"
+      (0 (progn (compose-region (match-beginning 1)
+                                (match-end 1) "↠")
+                nil)))
+     ("\\(=>\\)"
+      (0 (progn (compose-region (match-beginning 1)
+                                (match-end 1) "⇒")
+                nil)))
+     ("\\(<=\\)"
+      (0 (progn (compose-region (match-beginning 1)
+                                (match-end 1) "≤")
+                nil)))
+     ("\\(>=\\)"
+      (0 (progn (compose-region (match-beginning 1)
+                                (match-end 1) "≥")
+                nil))))))
+
+(use-package flycheck-clj-kondo
+  :ensure t)
+
+(defun my-clojure-lispy-keys ()
+  "Exclude bracket keys from Lispy in this Clojure buffer only."
+  (let ((map (keymap-canonicalize
+              (copy-keymap
+               (or (cdr (assq 'lispy-mode minor-mode-overriding-map-alist))
+                   lispy-mode-map)))))
+    (dolist (key '("[" "]" "{" "}"))
+      ;; Flatten Lispy's composed maps so excluded keys fall through to Paredit.
+      (define-key map (kbd key) nil))
+    (setq-local minor-mode-overriding-map-alist
+                (cons (cons 'lispy-mode map)
+                      (assq-delete-all 'lispy-mode
+                                       (copy-sequence minor-mode-overriding-map-alist))))))
+
 (use-package clojure-mode
     :defer nil
     :ensure t
-    :hook (clojure-mode . rainbow-delimiters-mode)
     :config
-    (defvar clojure-prettify-symbols-alist
-      '(("fn"  .  955)
-        ("->>" .  "↠")
-        ("->"  .  "→")
-        ("<-"  .  "←")
-        ("=>"  .  "⇒")
-        ("<="  .  "≤")
-        (">="  .  "≥")))
-    (add-hook 'clojure-mode-hook 'yas-minor-mode)
+    (require 'flycheck-clj-kondo)
     (add-hook 'clojure-mode-hook
               (lambda ()
-                (setq prettify-symbols-alist clojure-prettify-symbols-alist)
-                (keymap-unset lispy-mode-map-lispy "[")
-                (keymap-unset lispy-mode-map-lispy "]"))))
+                (flycheck-mode)
+                (my-clojure-lispy-keys)
+                (rainbow-delimiters-mode)
+                (yas-minor-mode))))
 
 (use-package cider
     :ensure t :defer t
     :config
     (with-eval-after-load 'cider
+      (define-key clojure-mode-map (kbd "C-c t") #'cider-test-menu)
       (define-key cider-mode-map (kbd "C-c C-b") #'cider-eval-buffer))
     (setq
      ;; not squiggly-related, but I like it
@@ -1643,16 +1779,30 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
      ;; not necessary, but useful for trouble-shooting
      nrepl-log-messages t))
 
+(clojure/fancify-symbols 'cider-repl-mode)
+(clojure/fancify-symbols 'clojure-mode)
+(clojure/fancify-symbols 'clojurec-mode)
+(clojure/fancify-symbols 'clojurescript-mode)
+
 (use-package flycheck-clojure
     :ensure t
-    :after cider
-    :defer t
-    :commands (flycheck-clojure-setup)               ;; autoload
+    :after (cider flycheck)
+    :demand t
     :config
-    (eval-after-load 'flycheck
-      '(setq flycheck-display-errors-function #'flycheck-pos-tip-error-messages))
-    (add-hook 'after-init-hook #'global-flycheck-mode))
+    (flycheck-clojure-setup)
+    (setq flycheck-display-errors-function #'flycheck-pos-tip-error-messages)
+    (if after-init-time
+        (global-flycheck-mode 1)
+      (add-hook 'after-init-hook #'global-flycheck-mode)))
 #+END_SRC
+*** 3b
+#+BEGIN_SRC emacs-lisp
+(use-package 3b-mode
+  :ensure nil
+  :load-path (lambda () (expand-file-name "site-lisp" user-emacs-directory))
+  :mode "\\.3b\\'")
+#+END_SRC
+
 ** GLSL
 *** Code
 #+BEGIN_SRC emacs-lisp
@@ -1729,7 +1879,7 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
   (add-to-list 'lsp-language-id-configuration '(odin-ts-mode . "odin"))
 
   (lsp-register-client
-   (make-lsp-client :new-connection (lsp-stdio-connection "/home/goober/.local/bin/ols") ;; Adjust the path here
+   (make-lsp-client :new-connection (lsp-stdio-connection (expand-file-name "~/.local/bin/ols"))
                     :major-modes '(odin-mode odin-ts-mode)
                     :server-id 'ols
                     :multi-root nil)))
@@ -1822,7 +1972,7 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
 (add-hook 'janet-ts-mode-hook 'inf-janet-minor-mode)
 
 (with-eval-after-load 'lsp-mode
-  (setq-default lsp-auto-guess-root t) ;; Helps find the ols.json file with Projectile or project.el
+  (setq-default lsp-auto-guess-root t)
 
   (lsp-register-client
    (make-lsp-client :new-connection (lsp-stdio-connection "/usr/local/bin/janet-lsp")
@@ -1844,13 +1994,11 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
 
 (use-package mix
     :ensure t
-    :config
-    (add-hook 'elixir-ts-mode-hook 'mix-minor-mode))
+    :hook (elixir-ts-mode . mix-minor-mode))
 
 (use-package exunit
     :ensure t
-    :config
-    (add-hook 'elixir-ts-mode-hook 'exunit-mode))
+    :hook (elixir-ts-mode . exunit-mode))
 
 (use-package inf-elixir
     :ensure t
