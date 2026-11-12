@@ -41,6 +41,11 @@ For C, C++ and Java completion, install the corresponding language servers. Corf
 - +Clean up/organize init.el+
   + Clean up/organize config.org
 - Optimize startup time
+* Lexical binding
+This block must stay the first =emacs-lisp= block so the cookie lands on the first line of the tangled =config.el=.
+#+BEGIN_SRC emacs-lisp
+;;; config.el --- Tangled from config.org  -*- lexical-binding: t; -*-
+#+END_SRC
 * QoL section
 Minor quality-of-life modifications for a more pleasant Emacs experience
 ** Enable line numbers
@@ -63,10 +68,6 @@ Emacs breaks certain modes when it has line-numbers-mode enabled, (like docview 
 (menu-bar-mode -1)
 (when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 #+END_SRC
-** Enable copypasting outside of Emacs
-#+BEGIN_SRC emacs-lisp
-(setq x-select-enable-clipboard t)
-#+END_SRC
 ** Backups and crash recovery
 Store recovery files in private directories under the Emacs cache.
 #+BEGIN_SRC emacs-lisp
@@ -86,10 +87,6 @@ Store recovery files in private directories under the Emacs cache.
         kept-new-versions 6
         kept-old-versions 2
         delete-old-versions t))
-#+END_SRC
-** Enable conservative scrolling
-#+BEGIN_SRC emacs-lisp
-(setq scroll-conservatively 100)
 #+END_SRC
 ** Disable ring-bell
 #+BEGIN_SRC emacs-lisp
@@ -135,7 +132,7 @@ Store recovery files in private directories under the Emacs cache.
 #+END_SRC
 ** Transform yes-or-no questions into y-or-n
 #+BEGIN_SRC emacs-lisp
-(defalias 'yes-or-no-p 'y-or-n-p)
+(setq use-short-answers t)
 #+END_SRC
 ** Easier resize bindings
 Super - Control - <arrow>
@@ -249,6 +246,7 @@ One of the main selling points of Emacs! no Emacs distribution is complete witho
 #+BEGIN_SRC emacs-lisp
 (use-package org
     :config
+  (diminish 'buffer-face-mode "")
   (setq org-fontify-whole-heading-line t
         org-adapt-indentation t
         org-hide-leading-stars t
@@ -257,9 +255,7 @@ One of the main selling points of Emacs! no Emacs distribution is complete witho
         org-ellipsis "  …"
         org-src-fontify-natively t
         org-src-tab-acts-natively t
-        org-edit-src-content-indentation 0)
-  (setq olivetti-lighter ""
-        olivetti-body-width 120)
+        org-src-content-indentation 0)
   (dolist (face '((org-level-1 . 1.35)
                   (org-level-2 . 1.3)
                   (org-level-3 . 1.2)
@@ -282,16 +278,14 @@ One of the main selling points of Emacs! no Emacs distribution is complete witho
   (add-hook 'org-mode-hook 'org-indent-mode)
   (add-hook 'org-mode-hook 'variable-pitch-mode)
   (add-hook 'org-mode-hook 'olivetti-mode)
-  (add-hook 'org-mode-hook #'(lambda () (visual-line-mode 1))))
+  (add-hook 'org-mode-hook #'visual-line-mode))
 
 (use-package org-indent
     :config (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch) :height 0.85)
     :diminish org-indent-mode)
 
 (use-package org-pandoc-import
-    :straight (:host github
-                     :repo "tecosaur/org-pandoc-import"
-                     :files ("*.el" "filters" "preprocessors")))
+    :vc (:url "https://github.com/tecosaur/org-pandoc-import" :rev :newest))
 
 (use-package htmlize
     :ensure t)
@@ -318,8 +312,8 @@ One of the main selling points of Emacs! no Emacs distribution is complete witho
     (require 'org-roam-protocol))
 
 (use-package org-roam-bibtex
+    :ensure t
     :after org-roam
-    :load-path "~/opt/org-roam-bibtex/" ; Modify with your own path where you cloned the repositorya<
     :config
     (require 'org-ref)) ; optional: if using Org-ref v2 or v3 citation links
 
@@ -333,16 +327,15 @@ One of the main selling points of Emacs! no Emacs distribution is complete witho
           orgmdb-video-dir
           (list (concat (getenv "HOME") "/xtra/kino")
                 (concat (getenv "HOME") "/ext")))
-    (require 'orgmdb)
-    (with-eval-after-load 'orgmdb
-      (define-key org-mode-map (kbd "C-c a") #'orgmdb-act)
-      (define-key org-mode-map (kbd "C-c f") #'orgmdb-act-on-movie)
-      (define-key org-mode-map (kbd "C-c s") #'orgmdb-act-on-show)
-      (define-key org-mode-map (kbd "C-c e") #'orgmdb-act-on-episode)))
+    (define-key org-mode-map (kbd "C-c a") #'orgmdb-act)
+    (define-key org-mode-map (kbd "C-c f") #'orgmdb-act-on-movie)
+    (define-key org-mode-map (kbd "C-c s") #'orgmdb-act-on-show)
+    (define-key org-mode-map (kbd "C-c e") #'orgmdb-act-on-episode))
 
 (use-package org-remark
     :ensure t
     :demand t
+    :diminish org-remark-global-tracking-mode
     :bind (("C-c n m" . org-remark-mark)
            :map org-remark-mode-map
            ("C-c n o" . org-remark-open)
@@ -490,8 +483,6 @@ Eshell cannot handle ncurses programs and in certain interpreters (Python, GHCi)
         (evil-insert-state))
     (scan-error (user-error "No enclosing bracket pair found"))))
 #+END_SRC
-#+BEGIN_SRC emacs-lisp
-#+END_SRC
 * Use-Package section
 ** Initialize =auto-package-update=
 *** Description
@@ -513,34 +504,6 @@ Diminish hides minor modes to prevent cluttering your mode line
 (use-package diminish
     :ensure t)
 #+END_SRC
-*** Historical
-22/04/2019: This macro was provided by user [[https://gist.github.com/ld34/44d100b79964407e5ddf41035e3cd32f][ld43]] after I couldn’t figure out how to make diminish work by being at the top of the config file.
-
-#+BEGIN_SRC emacs-lisp
-                                        ;(defmacro diminish-built-in (&rest modes)
-                                        ;  "Accepts a list MODES of built-in emacs modes and generates `with-eval-after-load` diminish forms based on the file implementing the mode functionality for each mode."
-                                        ;  (declare (indent defun))
-                                        ;  (let* ((get-file-names (lambda (pkg) (file-name-base (symbol-file pkg))))
-                                        ;	 (diminish-files (mapcar get-file-names modes))
-                                        ;	 (zip-diminish   (-zip modes diminish-files)))
-                                        ;    `(progn
-                                        ;       ,@(cl-loop for (mode . file) in zip-diminish
-                                        ;		  collect `(with-eval-after-load ,file
-                                        ;			     (diminish (quote ,mode)))))))
-                                        ; This bit goes in init.el
-                                        ;(diminish-built-in
-                                        ;  beacon-mode
-                                        ;  which-key-mode
-                                        ;  page-break-lines-mode
-                                        ;  undo-tree-mode
-                                        ;  eldoc-mode
-                                        ;  abbrev-mode
-                                        ;  irony-mode
-                                        ;  company-mode
-                                        ;  meghanada-mode)
-#+END_SRC
-
-27/05/2019: Since the diminish functionality was always built-in in use-package, there was never a point in using a diminish config. lol silly me
 ** Initialize =simple-modeline=
 *** Description
 I tried spaceline and powerline and didn't like either.
@@ -602,10 +565,15 @@ The frontend of Lainmacs; without this there'd be no Lain in your Emacs startup 
     (setq dashboard-center-content t)
     (setq dashboard-show-shortcuts nil)
     (setq dashboard-set-init-info t)
-    (setq dashboard-init-info (format "%d packages loaded in %s"
-                                      (length package-activated-list) (emacs-init-time)))
-    (setq dashboard-set-footer nil)
-    (setq dashboard-set-navigator t)
+    (setq dashboard-startupify-list
+          '(dashboard-insert-banner
+            dashboard-insert-newline
+            dashboard-insert-banner-title
+            dashboard-insert-newline
+            dashboard-insert-navigator
+            dashboard-insert-newline
+            dashboard-insert-init-info
+            dashboard-insert-items))
     (setq dashboard-navigator-buttons
           `(;; line1
             ((,nil
@@ -638,16 +606,6 @@ The frontend of Lainmacs; without this there'd be no Lain in your Emacs startup 
 #+END_SRC
 *** Notes
 If you pay close attention to the code in dashboard, you'll  notice that it uses custom functions defined under the :preface use-package block. I wrote all of those functions by looking at other people's Emacs distributions (Mainly [[https://github.com/seagle0128/.emacs.d][Centaur Emacs]]) and then experimenting and adapting them to Lainmacs. If you dig around, you'll find the same things I did - maybe even more!
-*** Historical
-22/05/19: On this day, the main maintainers of the dashboard package have added built-in fuinctionality to display init and package load time, thing that I already had implemented much earlier on my own. I have left here my implementation for historical purposes
-#+BEGIN_SRC emacs-lisp
-                                        ;(insert (concat
-                                        ;         (propertize (format "%d packages loaded in %s"
-                                        ;                             (length package-activated-list) (emacs-init-time))
-                                        ;                     'face 'font-lock-comment-face)))
-                                        ;
-                                        ;(dashboard-center-line)
-#+END_SRC
 ** Initialize =which-key=
 *** Description
 Incredibly useful package; if you are in the middle of a command and don't know what to type next, just wait a second and you'll get a nice buffer with all possible completions
@@ -714,16 +672,6 @@ Vim keybindings in Emacs. Please note that Lainmacs has NO other evil-mode compa
     :commands highlight-defined-mode
     :hook (prog-mode . highlight-defined-mode))
 #+END_SRC
-** Initialize =avy=
-*** Description
-Avy is a very useful package; instead of having to move your cursor to a line that is very far away, just do M - s and type the character that you want to move to. Maybe this is for you? It's not for me.
-*** Code
-#+BEGIN_SRC emacs-lisp
-(use-package avy
-	:ensure nil)
-;; :bind
-;; ("M-s" . avy-goto-char))
-#+END_SRC
 ** Initialize =switch-window=
 *** Description
 Switch window is a neat package because instead of having to painstakingly do C - x o until you're in the window you want  to edit, you can just do C - x o and pick the one you want to move to according to the letter it is assigned to
@@ -750,13 +698,6 @@ Utilize asynchronous processes whenever possible
    	:ensure t
    	:init
    	(dired-async-mode 1))
-#+END_SRC
-** Initialize =page-break-lines=
-*** Code
-#+BEGIN_SRC emacs-lisp
-(use-package page-break-lines
-    :ensure t
-    :diminish (page-break-lines-mode visual-line-mode))
 #+END_SRC
 ** Initialize =form-feed-st=
 *** Code
@@ -788,55 +729,53 @@ Neat side-bar file and project explorer
 #+BEGIN_SRC emacs-lisp
 (use-package treemacs
     :ensure t
-    :defer t
     :init
     (with-eval-after-load 'winum
       (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
     :config
-    (progn
-      (setq treemacs-collapse-dirs                 (if (executable-find "python3") 3 0)
-            treemacs-deferred-git-apply-delay      0.5
-            treemacs-display-in-side-window        t
-            treemacs-eldoc-display                 t
-            treemacs-file-event-delay              5000
-            treemacs-file-follow-delay             0.2
-            treemacs-follow-after-init             t
-            treemacs-git-command-pipe              ""
-            treemacs-goto-tag-strategy             'refetch-index
-            treemacs-indentation                   2
-            treemacs-indentation-string            " "
-            treemacs-is-never-other-window         nil
-            treemacs-max-git-entries               5000
-            treemacs-missing-project-action        'ask
-            treemacs-no-png-images                 nil
-            treemacs-no-delete-other-windows       t
-            treemacs-project-follow-cleanup        nil
-            treemacs-persist-file                  (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
-            treemacs-recenter-distance             0.1
-            treemacs-recenter-after-file-follow    nil
-            treemacs-recenter-after-tag-follow     nil
-            treemacs-recenter-after-project-jump   'always
-            treemacs-recenter-after-project-expand 'on-distance
-            treemacs-show-cursor                   nil
-            treemacs-show-hidden-files             t
-            treemacs-silent-filewatch              nil
-            treemacs-silent-refresh                nil
-            treemacs-sorting                       'alphabetic-desc
-            treemacs-space-between-root-nodes      t
-            treemacs-tag-follow-cleanup            t
-            treemacs-tag-follow-delay              1.5
-            treemacs-width                         30)
-      (treemacs-resize-icons 11)
-      
-      (treemacs-follow-mode t)
-      (treemacs-filewatch-mode t)
-      (treemacs-fringe-indicator-mode t)
-      (pcase (cons (not (null (executable-find "git")))
-                   (not (null (executable-find "python3"))))
-        (`(t . t)
-          (treemacs-git-mode 'deferred))
-        (`(t . _)
-          (treemacs-git-mode 'simple))))
+    (setq treemacs-collapse-dirs                 (if (executable-find "python3") 3 0)
+          treemacs-deferred-git-apply-delay      0.5
+          treemacs-display-in-side-window        t
+          treemacs-eldoc-display                 t
+          treemacs-file-event-delay              5000
+          treemacs-file-follow-delay             0.2
+          treemacs-follow-after-init             t
+          treemacs-git-command-pipe              ""
+          treemacs-goto-tag-strategy             'refetch-index
+          treemacs-indentation                   2
+          treemacs-indentation-string            " "
+          treemacs-is-never-other-window         nil
+          treemacs-max-git-entries               5000
+          treemacs-missing-project-action        'ask
+          treemacs-no-png-images                 nil
+          treemacs-no-delete-other-windows       t
+          treemacs-project-follow-cleanup        nil
+          treemacs-persist-file                  (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
+          treemacs-recenter-distance             0.1
+          treemacs-recenter-after-file-follow    nil
+          treemacs-recenter-after-tag-follow     nil
+          treemacs-recenter-after-project-jump   'always
+          treemacs-recenter-after-project-expand 'on-distance
+          treemacs-show-cursor                   nil
+          treemacs-show-hidden-files             t
+          treemacs-silent-filewatch              nil
+          treemacs-silent-refresh                nil
+          treemacs-sorting                       'alphabetic-desc
+          treemacs-space-between-root-nodes      t
+          treemacs-tag-follow-cleanup            t
+          treemacs-tag-follow-delay              1.5
+          treemacs-width                         30)
+    (treemacs-resize-icons 11)
+    
+    (treemacs-follow-mode t)
+    (treemacs-filewatch-mode t)
+    (treemacs-fringe-indicator-mode t)
+    (pcase (cons (not (null (executable-find "git")))
+                 (not (null (executable-find "python3"))))
+      (`(t . t)
+        (treemacs-git-mode 'deferred))
+      (`(t . _)
+        (treemacs-git-mode 'simple)))
     :bind
     (:map global-map
           ("M-0"       . treemacs-select-window)
@@ -876,13 +815,12 @@ Git porcelain for Emacs
 *** Code
 #+BEGIN_SRC emacs-lisp
 (use-package helpful
-    :defer nil :ensure t
-    :config
-    (global-set-key (kbd "C-h f") #'helpful-callable)
-    (global-set-key (kbd "C-h v") #'helpful-variable)
-    (global-set-key (kbd "C-h k") #'helpful-key)
-    (global-set-key (kbd "C-h x") #'helpful-command)
-    (global-set-key (kbd "C-c C-d") #'helpful-at-point))
+    :ensure t
+    :bind (("C-h f" . helpful-callable)
+           ("C-h v" . helpful-variable)
+           ("C-h k" . helpful-key)
+           ("C-h x" . helpful-command)
+           ("C-c C-d" . helpful-at-point)))
 #+END_SRC
 ** Initialize =dired-posframe=
 *** Code
@@ -895,9 +833,8 @@ Git porcelain for Emacs
 *** Code
 #+BEGIN_SRC emacs-lisp
 (use-package devdocs
-    :defer nil :ensure t
-    :config
-    (global-set-key (kbd "C-h D") #'devdocs-lookup))
+    :ensure t
+    :bind ("C-h D" . devdocs-lookup))
 #+END_SRC
 ** Initialize =vertico=
 *** Description
@@ -908,11 +845,6 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
 (use-package vertico
     :ensure t
     :demand t
-    :init
-    ;; Disable Ido when reloading an older configuration in this session.
-    (when (fboundp 'ido-vertical-mode) (ido-vertical-mode -1))
-    (when (fboundp 'ido-everywhere) (ido-everywhere -1))
-    (when (fboundp 'ido-mode) (ido-mode -1))
     :config
     (vertico-mode 1))
 ;; Different scroll margin
@@ -964,7 +896,14 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
   ;;       #'command-completion-default-include-p)
 
   ;; Enable recursive minibuffers
-  (setq enable-recursive-minibuffers t))
+  (setq enable-recursive-minibuffers t)
+
+  ;; TAB cycle if there are only few candidates
+  (setq completion-cycle-threshold 3)
+
+  ;; Enable indentation+completion using the TAB key.
+  ;; `completion-at-point' is often bound to M-TAB.
+  (setq tab-always-indent 'complete))
 
 ;; Optionally use the `orderless' completion style.
 (use-package orderless
@@ -1076,8 +1015,8 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
      consult-theme :preview-key '(:debounce 0.2 any)
      consult-ripgrep consult-git-grep consult-grep
      consult-bookmark consult-recent-file consult-xref
-     consult--source-bookmark consult--source-file-register
-     consult--source-recent-file consult--source-project-recent-file
+     consult-source-bookmark consult-source-file-register
+     consult-source-recent-file consult-source-project-recent-file
      ;; :preview-key "M-."
      :preview-key '(:debounce 0.4 any))
 
@@ -1103,6 +1042,10 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
   ;;;; 5. No project support
     ;; (setq consult-project-function nil)
     )
+
+;; Backs the M-g f binding above.
+(use-package consult-flycheck
+    :ensure t)
 #+END_SRC
 ** Initialize =marginalia= and =embark=
 *** Code
@@ -1187,27 +1130,6 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
     :config
     (define-key corfu-map (kbd "C-n") #'corfu-next)
     (define-key corfu-map (kbd "C-p") #'corfu-previous))
-
-;; A few more useful configurations...
-(use-package emacs
-    :init
-  ;; TAB cycle if there are only few candidates
-  (setq completion-cycle-threshold 3)
-
-  ;; Emacs 28: Hide commands in M-x which do not apply to the current mode.
-  ;; Corfu commands are hidden, since they are not supposed to be used via M-x.
-  ;; (setq read-extended-command-predicate
-  ;;       #'command-completion-default-include-p)
-
-  ;; Enable indentation+completion using the TAB key.
-  ;; `completion-at-point' is often bound to M-TAB.
-  (setq tab-always-indent 'complete))
-#+END_SRC
-** Initialize =reformatter=
-*** Code
-#+BEGIN_SRC emacs-lisp
-(use-package reformatter
-    :defer nil :ensure t)
 #+END_SRC
 ** Initialize =vterm=
 *** Code
@@ -1248,11 +1170,8 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
 #+BEGIN_SRC emacs-lisp
 (use-package notmuch
     :ensure t
-    :config 
-    ;; this doesn't work for some reason? only works through customize
+    :config
     (evil-collection-init 'notmuch)
-    (setq notmuch-search-oldest-first nil)
-    (setq send-mail-function 'sendmail-send-it) 
 
     (defun my-next-unread ()
       (interactive)
@@ -1268,25 +1187,6 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
               (message "No more unread messages.")
               (goto-char init)
               (throw 'break t)))))))
-
-                                        ; (use-package notmuch-notify
-                                        ;   ;; :ensure t
-                                        ;   :straight t
-                                        ;   ;; (Recommended) activate stats message when refreshing `notmuch-hello' buffer
-                                        ;   :hook (notmuch-hello-refresh . notmuch-notify-hello-refresh-status-message)
-                                        ;   :config
-                                        ;   ;; (Recommended) activate system-wise notification timer
-                                        ;   (setq notmuch-notify-excluded-tags '("Org-Mode" "FromMe"))
-                                        ;   (setq notmuch-notify-refresh-interval 2)
-                                        ;   (setq notmuch-notify-alert-profiles
-                                        ;         `((:name "inbox"
-                                        ;            :search-term "tag:inbox"
-                                        ;            :severity urgent
-                                        ;            :title "Notmuch inbox:"
-                                        ;            :icon ,(expand-file-name "img/inbox.jpg" user-emacs-directory)
-                                        ;            :audio ,(expand-file-name "audio/kalimba.wav" user-emacs-directory))
-                                        ;           (:name "default")))
-                                        ;   (notmuch-notify-set-refresh-timer))
 
 (use-package notmuch-indicator
     :ensure t
@@ -1332,18 +1232,6 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
   (require 'mpv)
   (mpv-play-url (ffap-guesser)))
 #+END_SRC
-** Initialize =smudge=
-*** Code
-#+BEGIN_SRC emacs-lisp
-;; (use-package smudge
-;;     :ensure t
-;;     :bind-keymap ("C-c s" . smudge-command-map)
-;;     :custom
-;;     (smudge-player-use-transient-map t)
-;;     :config
-;;     (setq smudge-transport 'connect)
-;;     (setq smudge-status-location nil))
-#+END_SRC
 ** Initialize =emojify=
 *** Code
 #+BEGIN_SRC emacs-lisp
@@ -1361,7 +1249,7 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
 *** Code
 #+BEGIN_SRC emacs-lisp
 (use-package ligature
-    :straight t
+    :ensure t
     :demand t
     :config
     ;; Enable all Iosevka ligatures in programming modes
@@ -1375,15 +1263,14 @@ Vertico provides a performant and minimalistic vertical completion UI based on t
     ;; per mode with `ligature-mode'.
     (global-ligature-mode 1))
 #+END_SRC
-** Initialize =reader=
+** Initialize =emureader=
 *** Description
 A performant drop-in replacement for =doc-view= / =nov.el= / =pdf-tools=
 *** Code
 #+BEGIN_SRC emacs-lisp
-(use-package reader
-    :straight '(reader :type git :host codeberg :repo "divyaranjan/emacs-reader"
-                :files ("*.el" "render-core.so")
-                :pre-build ("make" "all")))
+;; The dynamic module is built on first use, or with M-x emureader-build.
+(use-package emureader
+    :vc (:url "https://codeberg.org/MonadicSheep/emureader" :rev :newest))
 #+END_SRC
 ** Initialize =olivetti=
 *** Code
@@ -1399,7 +1286,7 @@ A performant drop-in replacement for =doc-view= / =nov.el= / =pdf-tools=
 *** Code
 #+BEGIN_SRC emacs-lisp
 (use-package fj
-    :straight (fj :type git :host codeberg :repo "martianh/fj.el")
+    :ensure t
     :config
     (setq fj-user "x4"
           fj-host "https://codeberg.org"))
@@ -1409,9 +1296,7 @@ A performant drop-in replacement for =doc-view= / =nov.el= / =pdf-tools=
 #+BEGIN_SRC emacs-lisp
 (use-package embr
     :defer t
-    :straight (:host github
-                     :repo "emacs-os/embr.el"
-                     :files ("*.el" "*.py" "*.sh" "native/*.c" "native/Makefile"))
+    :vc (:url "https://github.com/emacs-os/embr.el" :rev :newest)
     ;; :hook (embr-mode . embr-vimium-mode)
     :config
     (setq embr-browser-engine 'cloakbrowser
@@ -1505,6 +1390,8 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
     ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
     (setq lsp-keymap-prefix "C-c l")
     (setq lsp-enable-on-type-formatting nil)
+    ;; Find project roots (e.g. ols.json) via project.el or Projectile.
+    (setq lsp-auto-guess-root t)
     :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
                                         ;(clojure-mode . lsp)
            ((c-mode c++-mode scala-mode) . lsp)
@@ -1527,35 +1414,6 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
 ** Lisp/Scheme
 *** Various customizations and packages
 #+BEGIN_SRC emacs-lisp
-(defvar electrify-return-match
-  "[\]}\)\"]"
-  "If this regexp matches the text after the cursor, do an \"electric\"
-  return.")
-
-(defun electrify-return-if-match (arg)
-  "If the text after the cursor matches `electrify-return-match' then
-  open and indent an empty line between the cursor and the text. Move the
-  cursor to the new line."
-  (interactive "P")
-  (let ((case-fold-search nil))
-    (if (looking-at electrify-return-match)
-        (save-excursion (newline-and-indent)))
-    (newline arg)
-    (indent-according-to-mode)))
-
-;; Using local-set-key in a mode-hook is a better idea.
-  ;;;;(global-set-key (kbd "RET") 'electrify-return-if-match)
-
-(defun setup-lisp-stuff ()
-  (paredit-mode t)
-  (turn-on-eldoc-mode)
-  (eldoc-add-command 'paredit-backward-delete 'paredit-close-round)
-  (local-set-key (kbd "RET") 'electrify-return-if-match)
-  (eldoc-add-command 'electrify-return-if-match)
-  (show-paren-mode t))
-
-;(add-hook '3b-mode-hook 'setup-lisp-stuff)
-
 (add-to-list 'auto-mode-alist '("\\.gc\\'" . lisp-mode))
 
 (defconst my-goal-indent-overrides
@@ -1580,13 +1438,12 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
 (add-hook 'paredit-mode-hook #'my-structured-lisp-pairing)
 (add-hook 'lispy-mode-hook #'my-structured-lisp-pairing)
 
-(use-package emacs
-    :ensure t
-    :config (require 'ulisp-mode))
+(use-package ulisp-mode
+  :ensure nil
+  :mode "\\.ulisp\\'")
 
 ; Paredit
 (use-package paredit
-    :defer nil
     :diminish (paredit-mode eldoc-mode)
     :ensure t
     :hook
@@ -1594,7 +1451,6 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
 
 ; Lispy
 (use-package lispy
-    :defer nil
     :ensure t
     :diminish (lispy-mode)
     :hook
@@ -1602,12 +1458,13 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
 
 ; Elsa
 (use-package elsa
-    :defer nil :ensure t
-    :config (elsa-setup-font-lock))
+    :ensure t
+    ;; Adds font-lock keywords to the current buffer only, so run it per buffer.
+    :hook (emacs-lisp-mode . elsa-setup-font-lock))
 
 ; flycheck-elsa
 (use-package flycheck-elsa
-    :defer nil :ensure t
+    :ensure t
     :config (setq flycheck-elsa-backend 'eask)
     :hook (emacs-lisp-mode . flycheck-elsa-setup))
 
@@ -1646,29 +1503,24 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
 *** Scheme
 #+BEGIN_SRC emacs-lisp
 (use-package geiser
-    :defer nil
     :ensure t
     :config
     (setq geiser-guile-load-init-file t))
 
 (use-package macrostep-geiser
-    :defer nil
-    :ensure t)
+    :ensure t
+    :hook (geiser-mode . macrostep-geiser-setup))
 
 (use-package geiser-guile
-    :defer nil
     :ensure t)
 
 (use-package geiser-chicken
-    :defer nil
     :ensure t)
 
 (use-package geiser-chez
-    :defer nil
     :ensure t)
 
 (use-package geiser-chibi
-    :defer nil
     :ensure t)
 
 (use-package esp-scheme-mode
@@ -1677,14 +1529,11 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
   :mode "\\.escm\\'")
 
 (use-package racket-mode
-    :defer nil
     :ensure t
     :config 
     (define-key racket-mode-map (kbd "C-c C-d") #'racket-repl-describe))
 
 (with-eval-after-load 'lsp-mode
-  (setq-default lsp-auto-guess-root t)
-
   (lsp-register-client
    (make-lsp-client :new-connection (lsp-stdio-connection "/usr/bin/racket-langserver")
                     :major-modes '(racket-mode)
@@ -1756,7 +1605,6 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
                                        (copy-sequence minor-mode-overriding-map-alist))))))
 
 (use-package clojure-mode
-    :defer nil
     :ensure t
     :config
     (require 'flycheck-clj-kondo)
@@ -1770,9 +1618,8 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
 (use-package cider
     :ensure t :defer t
     :config
-    (with-eval-after-load 'cider
-      (define-key clojure-mode-map (kbd "C-c t") #'cider-test-menu)
-      (define-key cider-mode-map (kbd "C-c C-b") #'cider-eval-buffer))
+    (define-key clojure-mode-map (kbd "C-c t") #'cider-test-menu)
+    (define-key cider-mode-map (kbd "C-c C-b") #'cider-eval-buffer)
     (setq
      ;; not squiggly-related, but I like it
      cider-repl-history-file ".cider-repl-history" 
@@ -1790,10 +1637,17 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
     :demand t
     :config
     (flycheck-clojure-setup)
-    (setq flycheck-display-errors-function #'flycheck-pos-tip-error-messages)
     (if after-init-time
         (global-flycheck-mode 1)
       (add-hook 'after-init-hook #'global-flycheck-mode)))
+
+;; Show Flycheck errors in a popup tooltip.
+(use-package flycheck-pos-tip
+    :ensure t
+    :after flycheck
+    :demand t
+    :config
+    (flycheck-pos-tip-mode 1))
 #+END_SRC
 *** 3b
 #+BEGIN_SRC emacs-lisp
@@ -1811,8 +1665,6 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
     :mode ("\\.fs\\'" "\\.vs\\'"))
 
 (with-eval-after-load 'lsp-mode
-  (setq-default lsp-auto-guess-root t)
-
   (lsp-register-client
    (make-lsp-client :new-connection (lsp-stdio-connection "/usr/bin/glsl_analyzer") ;; Adjust the path here
                     :major-modes '(glsl-mode)
@@ -1830,23 +1682,11 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
 (use-package zig-ts-mode
     :ensure t)
 #+END_SRC
-** Python
-*** Code
-#+BEGIN_SRC emacs-lisp
-;; (use-package auto-virtualenv
-;;   :ensure t
-;;   :config
-;;   (setq auto-virtualenv-verbose t)
-;;   (setq auto-virtualenv-reload-lsp t)
-;;   (setq auto-virtualenv-global-dirs
-;;     '("~/.virtualenvs/" "~/.pyenv/versions/" "~/.envs/" "~/.conda/" "~/.conda/envs/" "venv/" ".venv/"))
-;;   (auto-virtualenv-setup))
-#+END_SRC
 ** Odin
 *** Code
 #+BEGIN_SRC emacs-lisp
 (use-package odin-mode
-    :straight (odin-mode :type git :host github :repo "mattt-b/odin-mode")
+    :vc (:url "https://github.com/mattt-b/odin-mode" :rev :newest)
     :mode ("\\.odin\\'" . odin-mode)
     :config 
     (define-key odin-mode-map (kbd "C-c C-c")
@@ -1865,16 +1705,8 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
       (lambda () (interactive)
         (compile "odin run . -debug"))))
 
-;; (defun my-odin-hook ()
-;;   (setq-default tab-width 4)
-;;   (setq-default tab-stop-list (number-sequence 4 100 4))
-;;   (setq-default indent-tabs-mode 1))
-
-;; (add-hook 'odin-mode-hook #'my-odin-hook)
-
 ;; Set up OLS as the language server for Odin, ensuring lsp-mode is loaded first
 (with-eval-after-load 'lsp-mode
-  (setq-default lsp-auto-guess-root t) ;; Helps find the ols.json file with Projectile or project.el
   (add-to-list 'lsp-language-id-configuration '(odin-mode . "odin"))
   (add-to-list 'lsp-language-id-configuration '(odin-ts-mode . "odin"))
 
@@ -1903,11 +1735,6 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
       (lambda () (interactive)
         (compile "cargo test"))))
 
-(with-eval-after-load 'lsp-mode
-  (setq-default lsp-auto-guess-root t) ;; Helps find the ols.json file with Projectile or project.el
-  (add-to-list 'lsp-language-id-configuration '(rust-mode . "rust")))
-
-
 (add-hook 'rust-mode-hook #'lsp-deferred)
 #+END_SRC
 ** Go
@@ -1915,12 +1742,6 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
 #+BEGIN_SRC emacs-lisp
 (use-package go-mode
     :ensure t)
-
-(with-eval-after-load 'lsp-mode
-  (setq-default lsp-auto-guess-root t) ;; Helps find the ols.json file with Projectile or project.el
-
-  (add-to-list 'lsp-language-id-configuration '(go-mode . "go")))
-
 
 (add-hook 'go-mode-hook #'lsp-deferred)
 #+END_SRC
@@ -1946,34 +1767,14 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
 
 (use-package lsp-metals
     :ensure t)
-
-;; (with-eval-after-load 'lsp-mode
-;;   (setq-default lsp-auto-guess-root t) ;; Helps find the ols.json file with Projectile or project.el
-;;   (lsp-register-client
-;;     (make-lsp-client :new-connection (lsp-stdio-connection "/home/goober/.local/share/coursier/bin/metals")
-;;                      :major-modes '(scala-mode)
-;;                      :server-id 'lsp-metals
-;;                      :multi-root t)) ;; Ensures lsp-mode sends "workspaceFolders" to the server
-;;   (add-to-list 'lsp-language-id-configuration '(scala-mode . "scala")))
-
-
-;; (add-hook 'scala-mode-hook #'lsp-deferred)
 #+END_SRC
 ** Janet
 *** Code
 #+BEGIN_SRC emacs-lisp
 (use-package janet-ts-mode
-    :straight (:host github
-               :repo "sogaiu/janet-ts-mode"
-               :files ("*.el")))
-
-(require 'inf-janet)
-(autoload 'inf-janet "inf-janet" "Run an inferior Janet process" t)
-(add-hook 'janet-ts-mode-hook 'inf-janet-minor-mode)
+    :vc (:url "https://github.com/sogaiu/janet-ts-mode" :rev :newest))
 
 (with-eval-after-load 'lsp-mode
-  (setq-default lsp-auto-guess-root t)
-
   (lsp-register-client
    (make-lsp-client :new-connection (lsp-stdio-connection "/usr/local/bin/janet-lsp")
                     :major-modes '(janet-ts-mode)
@@ -2010,8 +1811,6 @@ Yasnippet provides useful snippets, nothing to do with Company but still useful 
            ("C-c d i R" . 'inf-elixir-reload-module)))
 
 (with-eval-after-load 'lsp-mode
-  (setq-default lsp-auto-guess-root t)
-
   (lsp-register-client
    (make-lsp-client :new-connection (lsp-stdio-connection "/usr/local/bin/elixir-lsp")
                     :major-modes '(elixir-ts-mode)
